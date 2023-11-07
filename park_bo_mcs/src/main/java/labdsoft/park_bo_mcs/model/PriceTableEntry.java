@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -14,23 +13,18 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Park {
+public class PriceTableEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, unique = true)
-    private Long parkID;
+    private Long entryId;
 
     @Column(nullable = false)
-    private Long parkNumber;
+    private String period;
+
+    @ElementCollection
+    @CollectionTable(name = "price_table_thresholds")
+    private List<ThresholdCost> thresholds;
 
     @Column(nullable = false)
-    private int maxOcuppancy;
-
-    @Embedded
-    @Column(nullable = false)
-    private ParkyConfig parkyConfig;
-
-    @Embedded
-    @Column(nullable = false)
-    private Location location;
+    private Long parkId;
 }

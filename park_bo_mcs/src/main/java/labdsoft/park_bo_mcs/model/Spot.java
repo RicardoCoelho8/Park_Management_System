@@ -33,5 +33,5 @@ public class Spot {
     private boolean operational;
 
     @Column(nullable = false)
-    private Long parkid;
+    private Long parkID;
 }

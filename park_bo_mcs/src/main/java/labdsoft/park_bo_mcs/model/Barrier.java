@@ -24,5 +24,5 @@ public class Barrier {
     private State state;
 
     @Column(nullable = false)
-    private Long parkid;
+    private Long parkID;
 }

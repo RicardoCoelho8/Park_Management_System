@@ -24,5 +24,5 @@ public class Display {
     private State state;
 
     @Column(nullable = false)
-    private Long parkid;
+    private Long parkID;
 }
