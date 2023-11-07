@@ -1,0 +1,98 @@
+package labdsoft.park_bo_mcs.bootstrapper;
+
+import labdsoft.park_bo_mcs.model.*;
+import labdsoft.park_bo_mcs.repositories.BarrierRepository;
+import labdsoft.park_bo_mcs.repositories.DisplayRepository;
+import labdsoft.park_bo_mcs.repositories.ParkRepository;
+import labdsoft.park_bo_mcs.repositories.SpotRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Component
+//@Profile("bootstrap")
+public class ParkBootstrapper implements CommandLineRunner {
+
+    @Autowired
+    private ParkRepository pRepo;
+    @Autowired
+    private SpotRepository sRepo;
+    @Autowired
+    private BarrierRepository bRepo;
+    @Autowired
+    private DisplayRepository dRepo;
+
+    @Override
+    public void run(String... args) {
+        values(1L, 10, createSampleParkyConfig(), Location.builder().latitude(40.36841685539075).longitude(-8.659655996430294).build());
+        values(2L, 10, createSampleParkyConfig(), Location.builder().latitude(41.15932631626018).longitude(-8.659665314733802).build());
+        values(3L, 10, createSampleParkyConfig(), Location.builder().latitude(40.63197951206417).longitude(-8.631234173497187).build());
+        values(4L, 10, createSampleParkyConfig(), Location.builder().latitude(41.538183003885216).longitude(-8.431420332359862).build());
+        values(5L, 10, createSampleParkyConfig(), Location.builder().latitude(41.17643631180696).longitude(-8.55806931330527).build());
+
+
+    }
+
+    private void createSampleSpots(Long id){
+        List<Spot> list_spots = new ArrayList<>();
+
+        list_spots.add(Spot.builder().spotNumber("A1").spotType(1).floorLevel("A").occupied(false).operational(true).parkid(id).build());
+        list_spots.add(Spot.builder().spotNumber("A2").spotType(1).floorLevel("A").occupied(false).operational(true).parkid(id).build());
+        list_spots.add(Spot.builder().spotNumber("A3").spotType(1).floorLevel("A").occupied(false).operational(true).parkid(id).build());
+        list_spots.add(Spot.builder().spotNumber("A4").spotType(1).floorLevel("A").occupied(false).operational(true).parkid(id).build());
+        list_spots.add(Spot.builder().spotNumber("A5").spotType(1).floorLevel("A").occupied(false).operational(true).parkid(id).build());
+        list_spots.add(Spot.builder().spotNumber("B1").spotType(1).floorLevel("B").occupied(false).operational(true).parkid(id).build());
+        list_spots.add(Spot.builder().spotNumber("B2").spotType(1).floorLevel("B").occupied(false).operational(true).parkid(id).build());
+        list_spots.add(Spot.builder().spotNumber("B3").spotType(1).floorLevel("B").occupied(false).operational(true).parkid(id).build());
+        list_spots.add(Spot.builder().spotNumber("B4").spotType(1).floorLevel("B").occupied(false).operational(true).parkid(id).build());
+        list_spots.add(Spot.builder().spotNumber("B5").spotType(1).floorLevel("B").occupied(false).operational(true).parkid(id).build());
+
+        sRepo.saveAll(list_spots);
+    }
+
+    private ParkyConfig createSampleParkyConfig(){
+        return ParkyConfig.builder().parkiesPerHour(15).parkiesPerMinute(1).build();
+    }
+
+    private void createSampleBarriers(Long id){
+        List<Barrier> list_barriers = new ArrayList<>();
+
+        list_barriers.add(Barrier.builder().barrierNumber("B1.1").state(State.ACTIVE).parkid(id).build());
+        list_barriers.add(Barrier.builder().barrierNumber("B1.2").state(State.ACTIVE).parkid(id).build());
+        list_barriers.add(Barrier.builder().barrierNumber("B2.1").state(State.ACTIVE).parkid(id).build());
+        list_barriers.add(Barrier.builder().barrierNumber("B2.2").state(State.ACTIVE).parkid(id).build());
+        list_barriers.add(Barrier.builder().barrierNumber("B3.1").state(State.DISABLED).parkid(id).build());
+        list_barriers.add(Barrier.builder().barrierNumber("B3.2").state(State.DISABLED).parkid(id).build());
+
+        bRepo.saveAll(list_barriers);
+    }
+
+    private void createSampleDisplays(Long id){
+        List<Display> list_displays = new ArrayList<>();
+
+        list_displays.add(Display.builder().displayNumber("D1.1").state(State.ACTIVE).parkid(id).build());
+        list_displays.add(Display.builder().displayNumber("D1.2").state(State.ACTIVE).parkid(id).build());
+        list_displays.add(Display.builder().displayNumber("D1.3").state(State.ACTIVE).parkid(id).build());
+        list_displays.add(Display.builder().displayNumber("D2.1").state(State.ACTIVE).parkid(id).build());
+        list_displays.add(Display.builder().displayNumber("D2.2").state(State.ACTIVE).parkid(id).build());
+        list_displays.add(Display.builder().displayNumber("D2.3").state(State.ACTIVE).parkid(id).build());
+        list_displays.add(Display.builder().displayNumber("D3.1").state(State.DISABLED).parkid(id).build());
+        list_displays.add(Display.builder().displayNumber("D3.2").state(State.DISABLED).parkid(id).build());
+        list_displays.add(Display.builder().displayNumber("D3.3").state(State.DISABLED).parkid(id).build());
+
+        dRepo.saveAll(list_displays);
+    }
+
+    private void values(Long parkNumber, int maxOcuppancy, ParkyConfig parkyConfig, Location location){
+        if (pRepo.findByParkNumber(parkNumber).isEmpty()) {
+            Park p1 = Park.builder().parkNumber(parkNumber).maxOcuppancy(maxOcuppancy).parkyConfig(parkyConfig).location(location).build();
+            pRepo.save(p1);
+            createSampleSpots(p1.getParkID());
+            createSampleBarriers(p1.getParkID());
+            createSampleDisplays(p1.getParkID());
+        }
+    }
+}
