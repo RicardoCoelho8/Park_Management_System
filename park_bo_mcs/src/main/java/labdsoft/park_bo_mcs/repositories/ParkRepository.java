@@ -7,7 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface ParkRepository extends CrudRepository<Park, Long> {
-    @Query("SELECT p FROM Park p WHERE p.parkNumber = ?1")
-    Optional<Park> findByParkNumber(Long parkNumber);
+    Park findByParkNumber(Long parkNumber);
 }
 
