@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import labdsoft.user_bo_mcs.model.UserDTO;
 import labdsoft.user_bo_mcs.model.UserOnCreation;
+import labdsoft.user_bo_mcs.model.VehicleOnCreation;
 import labdsoft.user_bo_mcs.services.UserService;
 
 import java.util.List;
@@ -34,6 +35,8 @@ class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserDTO> create(@RequestBody UserOnCreation userBody) {
+        logger.info("Received create user request " + userBody);
+
         try {
             final UserDTO user = service.create(userBody);
             logger.info("Successfully created user!");
@@ -41,20 +44,38 @@ class UserController {
         }
         catch( Exception e ) {
             logger.info(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+            throw new ResponseStatusException( HttpStatus.CONFLICT, e.getMessage(), e);
         }
     }
     @Operation(summary = "gets all users")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<UserDTO>> getAll() {
+        logger.info("Received get all users request");
         try {
             final List<UserDTO> users = service.getAll();
+            logger.info("Successfully retrieved all users!");
             return new ResponseEntity<List<UserDTO>>(users, HttpStatus.OK);
         }
         catch( Exception e ) {
             logger.info(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            throw new ResponseStatusException( HttpStatus.CONFLICT, e.getMessage(), e);
+        }
+    }
+
+    @Operation(summary = "Add Vehicle for user")
+    @PutMapping("/{userId}/vehicle")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<UserDTO> addUserVehicle(@PathVariable Long userId, @RequestBody VehicleOnCreation vehicle) {
+        logger.info("Received add vehicle " + vehicle + " to user " + userId + " request");
+        try {
+            final UserDTO user = service.addVehicle(userId, vehicle);
+            logger.info("Successfully added vehicle!");
+            return new ResponseEntity<UserDTO>(user, HttpStatus.CREATED);
+        }
+        catch( Exception e ) {
+            logger.info(e.getMessage());
+            throw new ResponseStatusException( HttpStatus.CONFLICT, e.getMessage(), e);
         }
     }
 

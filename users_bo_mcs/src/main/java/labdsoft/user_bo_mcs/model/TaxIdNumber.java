@@ -4,6 +4,7 @@ package labdsoft.user_bo_mcs.model;
 
 import org.apache.commons.lang3.Validate;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TaxIdNumber {
 
+    @Column(unique = true)
     private Integer nif;
 
     public TaxIdNumber(final Integer number) {

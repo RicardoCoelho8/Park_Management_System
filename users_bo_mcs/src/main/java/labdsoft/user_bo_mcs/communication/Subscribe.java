@@ -1,10 +1,13 @@
 package labdsoft.user_bo_mcs.communication;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
 import jakarta.annotation.PostConstruct;
+import labdsoft.user_bo_mcs.model.User;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -32,9 +35,12 @@ public class Subscribe {
             String message = new String(delivery.getBody(), "UTF-8");
 
             String[] components = message.split("\\|");
+            ObjectMapper objectMapper = new ObjectMapper();
 
             switch (exchangeName) {
                 case "exchange_user":
+                    User user = objectMapper.readValue(components[1], User.class);
+                    System.out.println("Received user communication " + user);
                     break;
             }
         };

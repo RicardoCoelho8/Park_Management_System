@@ -1,5 +1,8 @@
 package labdsoft.user_bo_mcs.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,8 +32,17 @@ public class User {
     @Embedded
     private TaxIdNumber nif;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<ParkingHistory> parkingHistory;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Vehicle> vehicles;
+
     @Column(nullable = false)
     private String accountNumber;
+
+    @Embedded
+    private ParkyWallet parkies;
 
 
     public User(Name name, Email email, Password password, String accountNumber, TaxIdNumber nif) {
@@ -39,11 +51,21 @@ public class User {
         this.password = password;
         this.accountNumber = accountNumber;
         this.nif = nif;
+        this.parkingHistory = new HashSet<>();
+        this.vehicles = new HashSet<>();
+        this.parkies = new ParkyWallet(0);
     }
 
-    // missing subscription (probably won't be necessary), parking history, vehicle
+    public boolean addVehicle(Vehicle vehicle) {
+        if (this.vehicles.size() >= 3) {
+            return false;
+        }
+        return this.vehicles.add(vehicle);
+    }
+
+    // missing  Subscription (probably won't be necessary)
     public UserDTO toDto() {
-        return new UserDTO(this.userId, this.name.getFirstName(), this.name.getLastName(), this.email.email(), this.accountNumber, this.getNif().number());
+        return new UserDTO(this.userId, this.name.getFirstName(), this.name.getLastName(), this.email.email(), this.accountNumber, this.getNif().number(), this.parkingHistory, this.parkies.parkies(), this.vehicles);
     }
 
 }

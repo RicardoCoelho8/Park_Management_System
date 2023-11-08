@@ -1,6 +1,8 @@
 package labdsoft.user_bo_mcs.model;
 
 
+import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,5 +23,11 @@ public class UserDTO {
     private String accountNumber;
 
     private int nif;
+
+    private Set<ParkingHistory> parkingHistory;
+
+    private int totalParkies;
+
+    private Set<Vehicle> vehicles;
 
 }
