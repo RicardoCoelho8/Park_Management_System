@@ -8,7 +8,11 @@ import com.rabbitmq.client.DeliverCallback;
 import jakarta.annotation.PostConstruct;
 import labdsoft.user_bo_mcs.model.User;
 
+import java.util.Arrays;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,9 +20,17 @@ public class Subscribe {
     @Value("${spring.rabbitmq.host}")
     private String host;
 
+    @Autowired
+    private Environment env;
+
     @PostConstruct
     public void postConstruct() throws Exception {
-        this.subscribe("exchange_user"); //define an exchange for your model
+        // temp solution
+        if (!Arrays.asList(this.env.getActiveProfiles()).contains("test")) {    
+            System.out.println("I STILL RAN LOL!");
+            System.out.println(this.env.getActiveProfiles());
+            this.subscribe("exchange_user"); //define an exchange for your model
+        }
     }
 
     public void subscribe(String exchangeName) throws Exception {

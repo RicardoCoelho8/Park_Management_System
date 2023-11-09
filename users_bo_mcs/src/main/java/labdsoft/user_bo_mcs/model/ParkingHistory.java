@@ -22,7 +22,7 @@ public class ParkingHistory {
     @Column(nullable = false, unique = true)
     private Long parkingHistoryId;
 
-    @Column
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar startTime;
 
@@ -30,7 +30,7 @@ public class ParkingHistory {
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar endTime;
 
-    @Column
+    @Column(nullable = false)
     private Long parkId;
 
     

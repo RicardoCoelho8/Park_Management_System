@@ -35,6 +35,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private Publish publisher;
+    
+
     @Override
     public UserDTO create(final UserOnCreation userOnCreation) throws Exception {
         //verify if the product already exists
@@ -48,7 +52,7 @@ public class UserServiceImpl implements UserService {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String json_user = ow.writeValueAsString(user);
 
-        Publish.publish("exchange_user", "A User was Created | " + json_user, host);
+        publisher.publish("exchange_user", "A User was Created | " + json_user, host);
 
 
 
@@ -75,7 +79,7 @@ public class UserServiceImpl implements UserService {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String json_user = ow.writeValueAsString(user);
         
-        Publish.publish("exchange_user", "A User was Updated | " + json_user, host);
+        publisher.publish("exchange_user", "A User was Updated | " + json_user, host);
 
         return user.toDto();
 

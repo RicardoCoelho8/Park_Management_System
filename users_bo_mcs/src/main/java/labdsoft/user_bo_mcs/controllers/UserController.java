@@ -65,13 +65,13 @@ class UserController {
 
     @Operation(summary = "Add Vehicle for user")
     @PutMapping("/{userId}/vehicle")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<UserDTO> addUserVehicle(@PathVariable Long userId, @RequestBody VehicleOnCreation vehicle) {
         logger.info("Received add vehicle " + vehicle + " to user " + userId + " request");
         try {
             final UserDTO user = service.addVehicle(userId, vehicle);
             logger.info("Successfully added vehicle!");
-            return new ResponseEntity<UserDTO>(user, HttpStatus.CREATED);
+            return new ResponseEntity<UserDTO>(user, HttpStatus.ACCEPTED);
         }
         catch( Exception e ) {
             logger.info(e.getMessage());
