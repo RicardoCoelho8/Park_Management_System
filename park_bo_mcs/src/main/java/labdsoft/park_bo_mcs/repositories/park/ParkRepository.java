@@ -1,10 +1,7 @@
-package labdsoft.park_bo_mcs.repositories;
+package labdsoft.park_bo_mcs.repositories.park;
 
-import labdsoft.park_bo_mcs.model.Park;
-import org.springframework.data.jpa.repository.Query;
+import labdsoft.park_bo_mcs.model.park.Park;
 import org.springframework.data.repository.CrudRepository;
-
-import java.util.Optional;
 
 public interface ParkRepository extends CrudRepository<Park, Long> {
     Park findByParkNumber(Long parkNumber);

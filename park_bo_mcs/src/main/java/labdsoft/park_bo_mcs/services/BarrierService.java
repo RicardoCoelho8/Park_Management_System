@@ -1,4 +1,4 @@
-package labdsoft.park_bo_mcs.service;
+package labdsoft.park_bo_mcs.services;
 
 import labdsoft.park_bo_mcs.dto.BarrierLicenseReaderDTO;
 import labdsoft.park_bo_mcs.dto.EntranceBarrierDTO;

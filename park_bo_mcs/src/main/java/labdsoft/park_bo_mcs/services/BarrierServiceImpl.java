@@ -1,14 +1,14 @@
-package labdsoft.park_bo_mcs.service;
+package labdsoft.park_bo_mcs.services;
 
 import labdsoft.park_bo_mcs.dto.BarrierLicenseReaderDTO;
 import labdsoft.park_bo_mcs.dto.EntranceBarrierDTO;
 import labdsoft.park_bo_mcs.dto.ExitBarrierDTO;
-import labdsoft.park_bo_mcs.model.Park;
-import labdsoft.park_bo_mcs.model.Spot;
-import labdsoft.park_bo_mcs.model.State;
-import labdsoft.park_bo_mcs.repositories.BarrierRepository;
-import labdsoft.park_bo_mcs.repositories.ParkRepository;
-import labdsoft.park_bo_mcs.repositories.SpotRepository;
+import labdsoft.park_bo_mcs.model.park.Park;
+import labdsoft.park_bo_mcs.model.park.Spot;
+import labdsoft.park_bo_mcs.model.park.State;
+import labdsoft.park_bo_mcs.repositories.park.BarrierRepository;
+import labdsoft.park_bo_mcs.repositories.park.ParkRepository;
+import labdsoft.park_bo_mcs.repositories.park.SpotRepository;
 import labdsoft.park_bo_mcs.repositories.user.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import labdsoft.park_bo_mcs.dto.BarrierLicenseReaderDTO;
 import labdsoft.park_bo_mcs.dto.EntranceBarrierDTO;
 import labdsoft.park_bo_mcs.dto.ExitBarrierDTO;
-import labdsoft.park_bo_mcs.service.BarrierService;
+import labdsoft.park_bo_mcs.services.BarrierService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

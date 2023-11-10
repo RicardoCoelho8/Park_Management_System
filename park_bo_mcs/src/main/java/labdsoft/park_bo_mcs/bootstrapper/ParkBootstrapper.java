@@ -1,7 +1,7 @@
 package labdsoft.park_bo_mcs.bootstrapper;
 
-import labdsoft.park_bo_mcs.model.*;
-import labdsoft.park_bo_mcs.repositories.*;
+import labdsoft.park_bo_mcs.model.park.*;
+import labdsoft.park_bo_mcs.repositories.park.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -105,7 +105,7 @@ public class ParkBootstrapper implements CommandLineRunner {
     }
 
     private void values(Long parkNumber, int maxOcuppancy, ParkyConfig parkyConfig, Location location){
-        if (pRepo.findByParkNumber(parkNumber).isEmpty()) {
+        if (pRepo.findByParkNumber(parkNumber) == null) {
             Park p1 = Park.builder().parkNumber(parkNumber).maxOcuppancy(maxOcuppancy).parkyConfig(parkyConfig).location(location).build();
             pRepo.save(p1);
             createSampleSpots(p1.getParkID());
