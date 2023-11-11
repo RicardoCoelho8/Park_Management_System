@@ -1,4 +1,4 @@
-package labdsoft.park_bo_mcs.model.park;
+package labdsoft.park_bo_mcs.models.park;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,23 +11,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Park {
+public class Barrier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
+    private Long barrierID;
+
+    @Column(nullable = false)
+    private String barrierNumber;
+
+    @Column(nullable = false)
+    private State state;
+
+    @Column(nullable = false)
     private Long parkID;
-
-    @Column(nullable = false)
-    private Long parkNumber;
-
-    @Column(nullable = false)
-    private int maxOcuppancy;
-
-    @Embedded
-    @Column(nullable = false)
-    private ParkyConfig parkyConfig;
-
-    @Embedded
-    @Column(nullable = false)
-    private Location location;
 }

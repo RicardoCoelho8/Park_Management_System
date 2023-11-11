@@ -1,11 +1,11 @@
 package labdsoft.park_bo_mcs.services;
 
-import labdsoft.park_bo_mcs.dto.BarrierLicenseReaderDTO;
-import labdsoft.park_bo_mcs.dto.EntranceBarrierDTO;
-import labdsoft.park_bo_mcs.dto.ExitBarrierDTO;
-import labdsoft.park_bo_mcs.model.park.Park;
-import labdsoft.park_bo_mcs.model.park.Spot;
-import labdsoft.park_bo_mcs.model.park.State;
+import labdsoft.park_bo_mcs.dtos.BarrierLicenseReaderDTO;
+import labdsoft.park_bo_mcs.dtos.EntranceBarrierDTO;
+import labdsoft.park_bo_mcs.dtos.ExitBarrierDTO;
+import labdsoft.park_bo_mcs.models.park.Park;
+import labdsoft.park_bo_mcs.models.park.Spot;
+import labdsoft.park_bo_mcs.models.park.State;
 import labdsoft.park_bo_mcs.repositories.park.BarrierRepository;
 import labdsoft.park_bo_mcs.repositories.park.ParkRepository;
 import labdsoft.park_bo_mcs.repositories.park.SpotRepository;
@@ -40,12 +40,12 @@ public class BarrierServiceImpl implements BarrierService {
 
             Park park = parkRepository.findByParkNumber(barrierLicenseReaderDTO.getParkNumber());
 
-            List<Spot> listSpotsOccupied = spotRepository.getSpotsByParkidAndOccupied(park.getParkID(), true);
+            List<Spot> listSpotsOccupied = spotRepository.getSpotsByParkIDAndOccupiedAndOperational(park.getParkID(), true, true);
 
             if (park.getMaxOcuppancy() > listSpotsOccupied.size()
                     && barrierRepository.getBarrierByBarrierID(barrierLicenseReaderDTO.getBarrierID()).getState() == State.ACTIVE) {
 
-                List<Spot> listSpotsOpen = spotRepository.getSpotsByParkidAndOccupied(park.getParkID(), false);
+                List<Spot> listSpotsOpen = spotRepository.getSpotsByParkIDAndOccupiedAndOperational(park.getParkID(), false, true);
 
                 Random rand = new Random();
 
@@ -68,7 +68,7 @@ public class BarrierServiceImpl implements BarrierService {
 
             if (barrierRepository.getBarrierByBarrierID(barrierLicenseReaderDTO.getBarrierID()).getState() == State.ACTIVE) {
 
-                List<Spot> listSpotsOccupied = spotRepository.getSpotsByParkidAndOccupied(park.getParkID(), true);
+                List<Spot> listSpotsOccupied = spotRepository.getSpotsByParkIDAndOccupiedAndOperational(park.getParkID(), true, true);
 
                 Random rand = new Random();
                 Spot spot = listSpotsOccupied.get(rand.nextInt(listSpotsOccupied.size()));

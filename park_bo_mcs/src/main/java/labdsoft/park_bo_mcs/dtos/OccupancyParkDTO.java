@@ -1,4 +1,4 @@
-package labdsoft.park_bo_mcs.dto;
+package labdsoft.park_bo_mcs.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EntranceBarrierDTO {
-    private Long barrierID;
-    private String barrierNumber;
+public class OccupancyParkDTO {
     private Long parkid;
-    private Boolean success;
+    private Long parkNumber;
+    private int occupancy;
+    private int currentCapacity;
 }

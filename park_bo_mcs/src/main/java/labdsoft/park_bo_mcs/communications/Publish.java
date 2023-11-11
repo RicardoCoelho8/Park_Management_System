@@ -1,4 +1,4 @@
-package labdsoft.park_bo_mcs.communication;
+package labdsoft.park_bo_mcs.communications;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;

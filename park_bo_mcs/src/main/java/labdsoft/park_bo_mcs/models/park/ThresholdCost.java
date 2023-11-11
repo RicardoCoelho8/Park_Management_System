@@ -1,4 +1,4 @@
-package labdsoft.park_bo_mcs.model.park;
+package labdsoft.park_bo_mcs.models.park;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

@@ -1,4 +1,4 @@
-package labdsoft.park_bo_mcs.model.user;
+package labdsoft.park_bo_mcs.models.park;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,9 +11,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class Display {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
-    private Long userID;
+    private Long displayID;
+
+    @Column(nullable = false)
+    private String displayNumber;
+
+    @Column(nullable = false)
+    private State state;
+
+    @Column(nullable = false)
+    private Long parkID;
 }

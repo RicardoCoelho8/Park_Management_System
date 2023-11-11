@@ -1,19 +1,17 @@
-package labdsoft.park_bo_mcs.dto;
+package labdsoft.park_bo_mcs.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BarrierLicenseReaderDTO {
+public class EntranceBarrierDTO {
     private Long barrierID;
-    private String plateNumber;
-    private Long parkNumber;
-    private Date date;
+    private String barrierNumber;
+    private Long parkid;
+    private Boolean success;
 }

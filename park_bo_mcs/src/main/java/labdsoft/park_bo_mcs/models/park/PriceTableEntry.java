@@ -1,4 +1,4 @@
-package labdsoft.park_bo_mcs.model.park;
+package labdsoft.park_bo_mcs.models.park;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,23 +6,25 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Display {
+public class PriceTableEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, unique = true)
-    private Long displayID;
+    private Long entryId;
 
     @Column(nullable = false)
-    private String displayNumber;
+    private String period;
+
+    @ElementCollection
+    @CollectionTable(name = "price_table_thresholds")
+    private List<ThresholdCost> thresholds;
 
     @Column(nullable = false)
-    private State state;
-
-    @Column(nullable = false)
-    private Long parkID;
+    private Long parkId;
 }

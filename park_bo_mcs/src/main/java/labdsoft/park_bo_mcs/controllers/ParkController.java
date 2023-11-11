@@ -1,0 +1,33 @@
+package labdsoft.park_bo_mcs.controllers;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import labdsoft.park_bo_mcs.dtos.OccupancyParkDTO;
+import labdsoft.park_bo_mcs.services.ParkService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@Tag(name = "Barrier", description = "Endpoints for managing barriers")
+@RestController
+@RequestMapping("/parks")
+class ParkController {
+    private static final Logger logger = LoggerFactory.getLogger(ParkController.class);
+
+    @Autowired
+    private ParkService service;
+
+    @Operation(summary = "Get all occupancies level from all parks")
+    @GetMapping("/getAllOccupancies")
+    public ResponseEntity<List<OccupancyParkDTO>> getCurrentNumberOfAvailableSpotsInsideAllParks() {
+
+        return new ResponseEntity<>(service.getCurrentNumberOfAvailableSpotsInsideAllParks(), HttpStatus.OK);
+    }
+}

@@ -1,4 +1,4 @@
-package labdsoft.park_bo_mcs.model.user;
+package labdsoft.park_bo_mcs.models.park;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,18 +11,27 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Vehicle {
+public class Spot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
-    private Long vehicleID;
+    private Long spotID;
 
     @Column(nullable = false)
-    private Long userID;
+    private String spotNumber;
 
     @Column(nullable = false)
-    private String plateNumber;
+    private int spotType;
 
     @Column(nullable = false)
-    private String vehicleType;
+    private String floorLevel;
+
+    @Column(nullable = false)
+    private boolean occupied;
+
+    @Column(nullable = false)
+    private boolean operational;
+
+    @Column(nullable = false)
+    private Long parkID;
 }

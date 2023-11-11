@@ -1,8 +1,8 @@
 package labdsoft.park_bo_mcs.services;
 
-import labdsoft.park_bo_mcs.dto.BarrierLicenseReaderDTO;
-import labdsoft.park_bo_mcs.dto.EntranceBarrierDTO;
-import labdsoft.park_bo_mcs.dto.ExitBarrierDTO;
+import labdsoft.park_bo_mcs.dtos.BarrierLicenseReaderDTO;
+import labdsoft.park_bo_mcs.dtos.EntranceBarrierDTO;
+import labdsoft.park_bo_mcs.dtos.ExitBarrierDTO;
 
 public interface BarrierService {
     EntranceBarrierDTO entranceOpticalReader(final BarrierLicenseReaderDTO barrierLicenseReaderDTO);
