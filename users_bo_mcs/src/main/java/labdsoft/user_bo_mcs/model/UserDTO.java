@@ -30,4 +30,6 @@ public class UserDTO {
 
     private Set<Vehicle> vehicles;
 
+    private Role role;
+
 }

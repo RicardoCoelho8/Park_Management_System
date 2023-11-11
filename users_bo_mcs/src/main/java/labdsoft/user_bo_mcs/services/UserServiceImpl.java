@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
         Password.isValidPreEncodedPassword(userOnCreation.getPassword());
 
         final Name name = new Name(userOnCreation.getFirstName(), userOnCreation.getLastName());
-        final User user = new User(name, new Email(userOnCreation.getEmail()), new Password(this.passwordEncoder.encode(userOnCreation.getPassword())), userOnCreation.getAccountNumber(), new TaxIdNumber(userOnCreation.getNif()));
+        final User user = new User(name, new Email(userOnCreation.getEmail()), new Password(this.passwordEncoder.encode(userOnCreation.getPassword())), userOnCreation.getAccountNumber(), new TaxIdNumber(userOnCreation.getNif()), userOnCreation.getRole());
 
         repository.save(user);
 

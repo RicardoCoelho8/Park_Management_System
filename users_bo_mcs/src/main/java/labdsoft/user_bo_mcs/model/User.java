@@ -44,8 +44,10 @@ public class User {
     @Embedded
     private ParkyWallet parkies;
 
+    @Enumerated
+    private Role role;
 
-    public User(Name name, Email email, Password password, String accountNumber, TaxIdNumber nif) {
+    public User(Name name, Email email, Password password, String accountNumber, TaxIdNumber nif, Role role) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -54,6 +56,7 @@ public class User {
         this.parkingHistory = new HashSet<>();
         this.vehicles = new HashSet<>();
         this.parkies = new ParkyWallet(0);
+        this.role = role;
     }
 
     public boolean addVehicle(Vehicle vehicle) {
@@ -65,7 +68,7 @@ public class User {
 
     // missing  Subscription (probably won't be necessary)
     public UserDTO toDto() {
-        return new UserDTO(this.userId, this.name.getFirstName(), this.name.getLastName(), this.email.email(), this.accountNumber, this.getNif().number(), this.parkingHistory, this.parkies.parkies(), this.vehicles);
+        return new UserDTO(this.userId, this.name.getFirstName(), this.name.getLastName(), this.email.email(), this.accountNumber, this.getNif().number(), this.parkingHistory, this.parkies.parkies(), this.vehicles, this.role);
     }
 
 }

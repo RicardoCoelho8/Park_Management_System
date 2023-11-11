@@ -27,8 +27,6 @@ public class Subscribe {
     public void postConstruct() throws Exception {
         // temp solution
         if (!Arrays.asList(this.env.getActiveProfiles()).contains("test")) {    
-            System.out.println("I STILL RAN LOL!");
-            System.out.println(this.env.getActiveProfiles());
             this.subscribe("exchange_user"); //define an exchange for your model
         }
     }

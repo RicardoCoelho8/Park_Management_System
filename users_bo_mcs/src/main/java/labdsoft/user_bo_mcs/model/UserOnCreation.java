@@ -23,4 +23,6 @@ public class UserOnCreation {
 
     private int nif;
 
+    private Role role;
+
 }
