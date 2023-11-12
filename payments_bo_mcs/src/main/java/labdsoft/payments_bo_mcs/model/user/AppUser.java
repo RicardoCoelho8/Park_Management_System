@@ -1,4 +1,4 @@
-package labdsoft.payments_bo_mcs.model;
+package labdsoft.payments_bo_mcs.model.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,20 +6,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.stream.Collectors;
-
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User {
+public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, unique = true)
     private Long userID;
 
-    @Column(nullable = false, unique = false)
-    private Integer nif;
+    @Column(nullable = false, unique = true)
+    private Long nif;
 
 }

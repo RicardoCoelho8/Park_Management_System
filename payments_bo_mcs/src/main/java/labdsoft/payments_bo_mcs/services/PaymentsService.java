@@ -1,15 +1,12 @@
 package labdsoft.payments_bo_mcs.services;
 
 
-import labdsoft.payments_bo_mcs.model.Payments;
-import labdsoft.payments_bo_mcs.model.PaymentsDTO;
-
-import java.util.List;
-import java.util.Optional;
+import labdsoft.payments_bo_mcs.model.payment.PaymentsDTO;
 
 public interface PaymentsService {
-    PaymentsDTO create(final PaymentsDTO paymentsDTO) throws Exception;
+    PaymentsDTO create(final Long parkID, final Long nif) throws Exception;
 
     Iterable<PaymentsDTO> findByUserNIF(final String nif);
 
+    Iterable<PaymentsDTO> getCatalog();
 }

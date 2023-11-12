@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -19,7 +20,9 @@ public class PriceTableEntry {
     private Long entryId;
 
     @Column(nullable = false)
-    private String period;
+    private String periodStart;
+    @Column(nullable = false)
+    private String periodEnd;
 
     @ElementCollection
     @CollectionTable(name = "price_table_thresholds")

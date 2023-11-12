@@ -21,7 +21,7 @@ public class Subscribe {
 
     @PostConstruct
     public void postConstruct() throws Exception {
-        this.subscribe("exchange_product"); //define an exchange for your model
+      //  this.subscribe("exchange_product"); //define an exchange for your model
     }
 
     public void subscribe(String exchangeName) throws Exception {

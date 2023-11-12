@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -33,7 +34,7 @@ public class ParkBootstrapper implements CommandLineRunner {
         values(5L, 10, createSampleParkyConfig(), Location.builder().latitude(41.17643631180696).longitude(-8.55806931330527).build());
     }
 
-    private void createSampleSpots(Long id){
+    private void createSampleSpots(Long id) {
         List<Spot> list_spots = new ArrayList<>();
 
         list_spots.add(Spot.builder().spotNumber("A1").spotType(1).floorLevel("A").occupied(false).operational(false).parkID(id).build());
@@ -50,11 +51,11 @@ public class ParkBootstrapper implements CommandLineRunner {
         sRepo.saveAll(list_spots);
     }
 
-    private ParkyConfig createSampleParkyConfig(){
+    private ParkyConfig createSampleParkyConfig() {
         return ParkyConfig.builder().parkiesPerHour(15).parkiesPerMinute(1).build();
     }
 
-    private void createSampleBarriers(Long id){
+    private void createSampleBarriers(Long id) {
         List<Barrier> list_barriers = new ArrayList<>();
 
         list_barriers.add(Barrier.builder().barrierNumber("B1.1").state(State.ACTIVE).parkID(id).build());
@@ -67,7 +68,7 @@ public class ParkBootstrapper implements CommandLineRunner {
         bRepo.saveAll(list_barriers);
     }
 
-    private void createSampleDisplays(Long id){
+    private void createSampleDisplays(Long id) {
         List<Display> list_displays = new ArrayList<>();
 
         list_displays.add(Display.builder().displayNumber("D1.1").state(State.ACTIVE).parkID(id).build());
@@ -83,7 +84,7 @@ public class ParkBootstrapper implements CommandLineRunner {
         dRepo.saveAll(list_displays);
     }
 
-    private List<ThresholdCost> createSampleThresholdCosts(){
+    private List<ThresholdCost> createSampleThresholdCosts() {
         List<ThresholdCost> list_thresholdCosts = new ArrayList<>();
 
         list_thresholdCosts.add(ThresholdCost.builder().thresholdMinutes(15).costPerMinuteAutomobiles(0.15).costPerMinuteMotorcycles(0.15).build());
@@ -95,16 +96,16 @@ public class ParkBootstrapper implements CommandLineRunner {
         return list_thresholdCosts;
     }
 
-    private void createSamplePriceTableEntry(Long id){
+    private void createSamplePriceTableEntry(Long id) {
         List<PriceTableEntry> list_priceTableEntry = new ArrayList<>();
 
-        list_priceTableEntry.add(PriceTableEntry.builder().period("9:00-21:00").thresholds(createSampleThresholdCosts()).parkId(id).build());
-        list_priceTableEntry.add(PriceTableEntry.builder().period("21:00-9:00").thresholds(createSampleThresholdCosts()).parkId(id).build());
+        list_priceTableEntry.add(PriceTableEntry.builder().periodStart("9:00").periodEnd("21:00").thresholds(createSampleThresholdCosts()).parkId(id).build());
+        list_priceTableEntry.add(PriceTableEntry.builder().periodStart("21:00").periodEnd("9:00").thresholds(createSampleThresholdCosts()).parkId(id).build());
 
         ptRepo.saveAll(list_priceTableEntry);
     }
 
-    private void values(Long parkNumber, int maxOcuppancy, ParkyConfig parkyConfig, Location location){
+    private void values(Long parkNumber, int maxOcuppancy, ParkyConfig parkyConfig, Location location) {
         if (pRepo.findByParkNumber(parkNumber) == null) {
             Park p1 = Park.builder().parkNumber(parkNumber).maxOcuppancy(maxOcuppancy).parkyConfig(parkyConfig).location(location).build();
             pRepo.save(p1);

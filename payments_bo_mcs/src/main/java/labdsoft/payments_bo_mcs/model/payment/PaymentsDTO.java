@@ -1,4 +1,4 @@
-package labdsoft.payments_bo_mcs.model;
+package labdsoft.payments_bo_mcs.model.payment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Builder
 public class PaymentsDTO {
+    private Long paymentID;
     private Double invoice;
     private Double discount;
     private Double finalPrice;
@@ -21,6 +22,6 @@ public class PaymentsDTO {
 
     public Payments toObject() {
         ArrayList<PaymentsTableRow> paymentsTableRows = paymentsTableRowsDTO.parallelStream().map(PaymentsTableRowDTO::toObject).collect(Collectors.toCollection(ArrayList::new));
-        return new Payments(1, invoice, discount, paymentsTableRows, nif);
+        return new Payments(paymentID, invoice, discount, paymentsTableRows, nif);
     }
 }

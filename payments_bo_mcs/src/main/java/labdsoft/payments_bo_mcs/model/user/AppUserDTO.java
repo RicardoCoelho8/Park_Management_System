@@ -1,6 +1,5 @@
-package labdsoft.payments_bo_mcs.model;
+package labdsoft.payments_bo_mcs.model.user;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDTO {
+public class AppUserDTO {
     private int nif;
 }

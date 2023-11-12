@@ -1,4 +1,4 @@
-package labdsoft.payments_bo_mcs.model;
+package labdsoft.payments_bo_mcs.model.payment;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,9 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Objects;
 
 @Entity
 @Data
@@ -21,16 +19,16 @@ public class PaymentsTableRow {
     private Long paymentTableRowID;
 
     @Column(nullable = false, unique = false)
-    private Date periodStart;
+    private String periodStart;
 
     @Column(nullable = false, unique = false)
-    private Date periodEnd;
+    private String periodEnd;
 
     @Column(nullable = false, unique = false)
-    private Date fractionStart;
+    private String fractionStart;
 
     @Column(nullable = false, unique = false)
-    private Date fractionEnd;
+    private String fractionEnd;
 
     @Column(nullable = false, unique = false)
     private String vehicleType;
@@ -39,6 +37,6 @@ public class PaymentsTableRow {
     private Double price;
 
     public PaymentsTableRowDTO toDTO() {
-        return new PaymentsTableRowDTO(periodStart, periodEnd, fractionStart, fractionEnd, vehicleType, price);
+        return new PaymentsTableRowDTO(paymentTableRowID, periodStart, periodEnd, fractionStart, fractionEnd, vehicleType, price);
     }
 }

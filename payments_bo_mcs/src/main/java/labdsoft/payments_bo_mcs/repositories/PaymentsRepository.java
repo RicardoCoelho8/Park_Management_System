@@ -1,6 +1,6 @@
 package labdsoft.payments_bo_mcs.repositories;
 
-import labdsoft.payments_bo_mcs.model.Payments;
+import labdsoft.payments_bo_mcs.model.payment.Payments;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -17,16 +17,18 @@ public interface PaymentsRepository extends CrudRepository<Payments, Long> {
 
     @Transactional
     @Modifying
-    @Query("DELETE FROM Payments p WHERE p.userID=:userID")
-    void deleteBySku(@Param("userID") Long userID);
+    @Query("DELETE FROM Payments p WHERE p.paymentID=:paymentID")
+    void deleteByID(@Param("paymentID") Long paymentID);
 
     @Transactional
     @Modifying
-    @Query("UPDATE Payments p SET p.userID = :sku WHERE p.userID=:userID")
-    Payments updateBySku(@Param("userID") String userID);
+    @Query("UPDATE Payments p SET p.paymentID = :sku WHERE p.paymentID=:paymentID")
+    Payments updateByID(@Param("paymentID") Long paymentID);
 
     @Query("SELECT p FROM Payments p WHERE p.paymentID=:paymentID")
     Optional<Payments> findById(Long paymentID);
 
+    @Query("SELECT p FROM Payments p")
+    Optional<List<Payments>> getAllPayments();
 }
 
