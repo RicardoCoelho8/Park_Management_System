@@ -1,5 +1,6 @@
 package labdsoft.park_bo_mcs.services;
 
+import labdsoft.park_bo_mcs.dtos.NearbyParkOccupancyDTO;
 import labdsoft.park_bo_mcs.dtos.OccupancyParkDTO;
 import labdsoft.park_bo_mcs.dtos.PriceTableEntryDTO;
 import labdsoft.park_bo_mcs.models.park.Park;
@@ -31,9 +32,12 @@ public class ParkServiceImpl implements ParkService {
         List<OccupancyParkDTO> listOccupancyParkDTO = new ArrayList<>();
 
         Iterable<Park> listPark = parkRepository.findAll();
-        for(Park park : listPark){
-            List<Spot> listSpotsOccupied = spotRepository.getSpotsByParkIDAndOccupiedAndOperational(park.getParkID(), false, true);
-            OccupancyParkDTO occupancyParkDTO = OccupancyParkDTO.builder().parkid(park.getParkID()).parkNumber(park.getParkNumber()).occupancy(park.getMaxOcuppancy()).currentCapacity(listSpotsOccupied.size()).build();
+        for (Park park : listPark) {
+            List<Spot> listSpotsOccupied = spotRepository.getSpotsByParkIDAndOccupiedAndOperational(park.getParkID(),
+                    false, true);
+            OccupancyParkDTO occupancyParkDTO = OccupancyParkDTO.builder().parkid(park.getParkID())
+                    .parkNumber(park.getParkNumber()).occupancy(park.getMaxOcuppancy())
+                    .currentCapacity(listSpotsOccupied.size()).build();
             listOccupancyParkDTO.add(occupancyParkDTO);
         }
 
@@ -47,10 +51,55 @@ public class ParkServiceImpl implements ParkService {
         List<PriceTableEntry> list = priceTableEntryRepository.findAllByParkId(parkId);
 
         for (PriceTableEntry priceTableEntry : list) {
-            PriceTableEntryDTO priceTableEntryDTO = PriceTableEntryDTO.builder().parkId(priceTableEntry.getParkId()).periodStart(priceTableEntry.getPeriodStart()).periodEnd(priceTableEntry.getPeriodEnd()).thresholds(priceTableEntry.getThresholds()).build();
+            PriceTableEntryDTO priceTableEntryDTO = PriceTableEntryDTO.builder().parkId(priceTableEntry.getParkId())
+                    .periodStart(priceTableEntry.getPeriodStart()).periodEnd(priceTableEntry.getPeriodEnd())
+                    .thresholds(priceTableEntry.getThresholds()).build();
             listPriceTableEntryDTO.add(priceTableEntryDTO);
         }
 
         return listPriceTableEntryDTO;
     }
+
+    @Override
+    public List<NearbyParkOccupancyDTO> getRealTimeNearbyParksOccupancy(double latitude, double longitude, double maxDistanceKm) {
+        // assume nearby is at most 10 kms away
+
+        List<NearbyParkOccupancyDTO> listNearbyParkOccupancy = new ArrayList<>();
+
+        Iterable<Park> listPark = parkRepository.findAll();
+        for (Park park : listPark) {
+            double distance = this.calculateDistance(latitude, longitude, park.getLocation().getLatitude(),
+                    park.getLocation().getLongitude());
+            System.out.println(distance);
+            if (distance > maxDistanceKm) {
+                continue;
+            }
+            List<Spot> listSpotsOccupied = spotRepository.getSpotsByParkIDAndOccupiedAndOperational(park.getParkID(),
+                    false, true);
+            listNearbyParkOccupancy.add(NearbyParkOccupancyDTO.builder().parkId(park.getParkID())
+                    .parkNumber(park.getParkNumber()).occupancy(park.getMaxOcuppancy())
+                    .currentCapacity(listSpotsOccupied.size()).distanceKm(distance).build());
+        }
+
+       return listNearbyParkOccupancy;
+    }
+
+    // https://www.geodatasource.com/developers/java
+    // doesn't take into consideration height, and is a straight line distance
+    // doesn't take into account street routes etc
+    // verified with other sites
+    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        if ((lat1 == lat2) && (lon1 == lon2)) {
+            return 0;
+        }
+        double theta = lon1 - lon2;
+        double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2))
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+        dist = Math.acos(dist);
+        dist = Math.toDegrees(dist);
+        dist = dist * 60 * 1.1515 * 1.609344; // KM
+        return dist;
+
+    }
+
 }

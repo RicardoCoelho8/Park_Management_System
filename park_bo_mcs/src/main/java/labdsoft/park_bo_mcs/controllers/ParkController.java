@@ -2,6 +2,7 @@ package labdsoft.park_bo_mcs.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import labdsoft.park_bo_mcs.dtos.NearbyParkOccupancyDTO;
 import labdsoft.park_bo_mcs.dtos.OccupancyParkDTO;
 import labdsoft.park_bo_mcs.dtos.PriceTableEntryDTO;
 import labdsoft.park_bo_mcs.services.ParkService;
@@ -39,4 +40,12 @@ class ParkController {
 
         return new ResponseEntity<>(service.getAllPriceTableEntriesById(parkId), HttpStatus.OK);
     }
+
+    @Operation(summary = "Get all nearby parks occupancy and distance")
+    @GetMapping("/real-time/occupancy/{userLatitude}/{userLongitude}/{maxDistanceKm}")
+    public ResponseEntity<List<NearbyParkOccupancyDTO>> getRealTimeNearbyParksOccupancy(@PathVariable double userLatitude, @PathVariable double userLongitude, @PathVariable double maxDistanceKm) {
+        logger.info("Received get all nearby parks occupancy and distance request");
+        return new ResponseEntity<>(service.getRealTimeNearbyParksOccupancy(userLatitude, userLongitude, maxDistanceKm), HttpStatus.OK);
+    }
+
 }
