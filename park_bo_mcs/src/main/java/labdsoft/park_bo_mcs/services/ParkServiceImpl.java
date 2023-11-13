@@ -70,7 +70,6 @@ public class ParkServiceImpl implements ParkService {
         for (Park park : listPark) {
             double distance = this.calculateDistance(latitude, longitude, park.getLocation().getLatitude(),
                     park.getLocation().getLongitude());
-            System.out.println(distance);
             if (distance > maxDistanceKm) {
                 continue;
             }
