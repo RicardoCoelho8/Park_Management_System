@@ -34,7 +34,7 @@ public class PaymentsBootstrapper implements CommandLineRunner {
         uRepo.deleteAll();
 
         for (int i = 0; i < 2; i++) {
-            Double invoice = 1000.0 + i * 100.0;
+            Long invoice = (long) (1000.0 + i * 100.0);
             Double discount = i % 2 == 0 ? 50.0 : 0.0;
             ArrayList<PaymentsTableRow> rows = generatePaymentTableRows(i * i);
             Long nif = 123456789L + i;
@@ -43,7 +43,7 @@ public class PaymentsBootstrapper implements CommandLineRunner {
         }
     }
 
-    private void paymentsValues(Double invoice, Double discount, ArrayList<PaymentsTableRow> rows, Long nif) {
+    private void paymentsValues(Long invoice, Double discount, ArrayList<PaymentsTableRow> rows, Long nif) {
         Payments p1 = new Payments();
         p1.setInvoice(invoice);
         p1.setDiscount(discount);

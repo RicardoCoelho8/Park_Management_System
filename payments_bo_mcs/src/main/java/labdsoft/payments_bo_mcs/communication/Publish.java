@@ -7,6 +7,7 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import labdsoft.payments_bo_mcs.model.priceTable.PriceTableEntry;
 import labdsoft.payments_bo_mcs.model.priceTable.ThresholdCost;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 
@@ -42,9 +43,12 @@ public class Publish {
     }
 
 
+    @Value("${park_bo}")
+    private static String parkBo;
+
     public static List<PriceTableEntry> getPriceTablePark(String exchangeName, String message, String host) throws Exception {
         try {
-            String apiUrl = "localhost/parks/getAllPriceTableEntries/" + message;
+            String apiUrl = parkBo + "/parks/getAllPriceTableEntries/" + message;
             URL url = URI.create(apiUrl).toURL();
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();

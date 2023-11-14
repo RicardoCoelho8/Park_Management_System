@@ -15,18 +15,8 @@ public interface PaymentsRepository extends CrudRepository<Payments, Long> {
     @Query("SELECT p FROM Payments p WHERE p.nif=:nif")
     Optional<List<Payments>> getPaymentsOfUser(@Param("nif") String nif);
 
-    @Transactional
-    @Modifying
-    @Query("DELETE FROM Payments p WHERE p.paymentID=:paymentID")
-    void deleteByID(@Param("paymentID") Long paymentID);
-
-    @Transactional
-    @Modifying
-    @Query("UPDATE Payments p SET p.paymentID = :sku WHERE p.paymentID=:paymentID")
-    Payments updateByID(@Param("paymentID") Long paymentID);
-
-    @Query("SELECT p FROM Payments p WHERE p.paymentID=:paymentID")
-    Optional<Payments> findById(Long paymentID);
+    @Query("SELECT p FROM Payments p WHERE p.invoice=:invoice")
+    Optional<Payments> findById(Long invoice);
 
     @Query("SELECT p FROM Payments p")
     Optional<List<Payments>> getAllPayments();

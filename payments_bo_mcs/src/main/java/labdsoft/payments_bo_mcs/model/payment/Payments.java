@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Builder
 public class Payments {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
