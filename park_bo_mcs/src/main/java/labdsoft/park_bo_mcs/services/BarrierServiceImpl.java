@@ -5,9 +5,11 @@ import labdsoft.park_bo_mcs.dtos.BarrierDisplayDTO;
 import labdsoft.park_bo_mcs.models.park.Park;
 import labdsoft.park_bo_mcs.models.park.Spot;
 import labdsoft.park_bo_mcs.models.park.State;
+import labdsoft.park_bo_mcs.models.user.User;
 import labdsoft.park_bo_mcs.repositories.park.BarrierRepository;
 import labdsoft.park_bo_mcs.repositories.park.ParkRepository;
 import labdsoft.park_bo_mcs.repositories.park.SpotRepository;
+import labdsoft.park_bo_mcs.repositories.user.UserRepository;
 import labdsoft.park_bo_mcs.repositories.user.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,9 @@ public class BarrierServiceImpl implements BarrierService {
 
     @Autowired
     private BarrierRepository barrierRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private VehicleRepository vehicleRepository;
@@ -59,7 +64,9 @@ public class BarrierServiceImpl implements BarrierService {
         }
 
         if (barrierDisplayDTO.getSuccess()) {
-            barrierDisplayDTO.setMessage("Entrance successful");
+            User user = userRepository.getUserByUserID(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getUserID());
+
+            barrierDisplayDTO.setMessage("Have a nice day " + user.getName() + "!");
         } else {
             barrierDisplayDTO.setMessage("Please use the Park20 app to register and use the parking. Or use the QR code to download the app.");
         }
