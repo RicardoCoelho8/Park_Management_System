@@ -18,7 +18,7 @@ public class Vehicle {
     private Long vehicleID;
 
     @Column(nullable = false)
-    private Long userID;
+    private Long customerID;
 
     @Column(nullable = false)
     private String plateNumber;

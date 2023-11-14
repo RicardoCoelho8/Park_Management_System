@@ -31,5 +31,5 @@ public class ParkingHistory {
     private Long parkId;
 
     @Column(nullable = false)
-    private Long userID;
+    private Long customerID;
 }
