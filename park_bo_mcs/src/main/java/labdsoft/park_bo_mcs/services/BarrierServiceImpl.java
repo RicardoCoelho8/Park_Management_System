@@ -76,6 +76,8 @@ public class BarrierServiceImpl implements BarrierService {
 
     @Override
     public BarrierDisplayDTO exitOpticalReader(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
+        BarrierDisplayDTO barrierDisplayDTO = barrierLicenseReaderDTO.toBarrierDisplayDTO(barrierLicenseReaderDTO);
+
         if (vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()) != null
                 && barrierRepository.getBarrierByBarrierID(barrierLicenseReaderDTO.getBarrierID()) != null
                 && parkRepository.findByParkNumber(barrierLicenseReaderDTO.getParkNumber()) != null) {
@@ -91,9 +93,17 @@ public class BarrierServiceImpl implements BarrierService {
                 spot.setOccupied(false);
 
                 spotRepository.save(spot);
+
+                barrierDisplayDTO.setSuccess(true);
             }
         }
 
-        return null;
+        if (barrierDisplayDTO.getSuccess()) {
+            
+        } else {
+            barrierDisplayDTO.setMessage("There is a problem with the exit, please contact the park administrator.");
+        }
+
+        return barrierDisplayDTO;
     }
 }
