@@ -1,14 +1,16 @@
 package labdsoft.park_bo_mcs.services;
 
-import labdsoft.park_bo_mcs.dtos.BarrierLicenseReaderDTO;
 import labdsoft.park_bo_mcs.dtos.BarrierDisplayDTO;
+import labdsoft.park_bo_mcs.dtos.BarrierLicenseReaderDTO;
 import labdsoft.park_bo_mcs.models.park.Park;
 import labdsoft.park_bo_mcs.models.park.Spot;
 import labdsoft.park_bo_mcs.models.park.State;
+import labdsoft.park_bo_mcs.models.user.ParkingHistory;
 import labdsoft.park_bo_mcs.models.user.User;
 import labdsoft.park_bo_mcs.repositories.park.BarrierRepository;
 import labdsoft.park_bo_mcs.repositories.park.ParkRepository;
 import labdsoft.park_bo_mcs.repositories.park.SpotRepository;
+import labdsoft.park_bo_mcs.repositories.user.ParkingHistoryRepository;
 import labdsoft.park_bo_mcs.repositories.user.UserRepository;
 import labdsoft.park_bo_mcs.repositories.user.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class BarrierServiceImpl implements BarrierService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ParkingHistoryRepository parkingHistoryRepository;
 
     @Autowired
     private VehicleRepository vehicleRepository;
@@ -59,6 +64,14 @@ public class BarrierServiceImpl implements BarrierService {
                 spot.setOccupied(true);
                 spotRepository.save(spot);
 
+                ParkingHistory parkingHistory = ParkingHistory.builder()
+                        .userID(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getUserID())
+                        .startTime(barrierLicenseReaderDTO.getDate())
+                        .parkId(park.getParkID())
+                        .build();
+
+                parkingHistoryRepository.save(parkingHistory);
+
                 barrierDisplayDTO.setSuccess(true);
             }
         }
@@ -66,7 +79,7 @@ public class BarrierServiceImpl implements BarrierService {
         if (barrierDisplayDTO.getSuccess()) {
             User user = userRepository.getUserByUserID(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getUserID());
 
-            barrierDisplayDTO.setMessage("Have a nice day " + user.getName() + "!");
+            barrierDisplayDTO.setMessage("Welcome to the park " + user.getName() + "!");
         } else {
             barrierDisplayDTO.setMessage("Please use the Park20 app to register and use the parking. Or use the QR code to download the app.");
         }
@@ -77,6 +90,8 @@ public class BarrierServiceImpl implements BarrierService {
     @Override
     public BarrierDisplayDTO exitOpticalReader(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
         BarrierDisplayDTO barrierDisplayDTO = barrierLicenseReaderDTO.toBarrierDisplayDTO(barrierLicenseReaderDTO);
+
+        ParkingHistory parkingHistory = parkingHistoryRepository.findByEndTimeEmpty();
 
         if (vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()) != null
                 && barrierRepository.getBarrierByBarrierID(barrierLicenseReaderDTO.getBarrierID()) != null
@@ -94,12 +109,17 @@ public class BarrierServiceImpl implements BarrierService {
 
                 spotRepository.save(spot);
 
+                parkingHistory.setEndTime(barrierLicenseReaderDTO.getDate());
+                parkingHistoryRepository.save(parkingHistory);
+
                 barrierDisplayDTO.setSuccess(true);
             }
         }
 
         if (barrierDisplayDTO.getSuccess()) {
-            
+            User user = userRepository.getUserByUserID(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getUserID());
+
+            barrierDisplayDTO.setMessage("Have a nice day " + user.getName() + "! Your total will be " + "€!");
         } else {
             barrierDisplayDTO.setMessage("There is a problem with the exit, please contact the park administrator.");
         }

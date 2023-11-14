@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Calendar;
 import java.util.Date;
 
 @Data
@@ -16,7 +17,7 @@ public class BarrierLicenseReaderDTO {
     private Long parkid;
     private Long parkNumber;
     private String plateNumber;
-    private Date date;
+    private Calendar date;
 
     public BarrierDisplayDTO toBarrierDisplayDTO(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
         return BarrierDisplayDTO.builder()
