@@ -1,8 +1,7 @@
 package labdsoft.park_bo_mcs.services;
 
 import labdsoft.park_bo_mcs.dtos.BarrierLicenseReaderDTO;
-import labdsoft.park_bo_mcs.dtos.EntranceBarrierDTO;
-import labdsoft.park_bo_mcs.dtos.ExitBarrierDTO;
+import labdsoft.park_bo_mcs.dtos.BarrierDisplayDTO;
 import labdsoft.park_bo_mcs.models.park.Park;
 import labdsoft.park_bo_mcs.models.park.Spot;
 import labdsoft.park_bo_mcs.models.park.State;
@@ -33,7 +32,9 @@ public class BarrierServiceImpl implements BarrierService {
     private SpotRepository spotRepository;
 
     @Override
-    public EntranceBarrierDTO entranceOpticalReader(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
+    public BarrierDisplayDTO entranceOpticalReader(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
+        BarrierDisplayDTO barrierDisplayDTO = barrierLicenseReaderDTO.toBarrierDisplayDTO(barrierLicenseReaderDTO);
+
         if (vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()) != null
                 && barrierRepository.getBarrierByBarrierID(barrierLicenseReaderDTO.getBarrierID()) != null
                 && parkRepository.findByParkNumber(barrierLicenseReaderDTO.getParkNumber()) != null) {
@@ -52,14 +53,22 @@ public class BarrierServiceImpl implements BarrierService {
                 Spot spot = listSpotsOpen.get(rand.nextInt(listSpotsOpen.size()));
                 spot.setOccupied(true);
                 spotRepository.save(spot);
+
+                barrierDisplayDTO.setSuccess(true);
             }
         }
 
-        return null;
+        if (barrierDisplayDTO.getSuccess()) {
+            barrierDisplayDTO.setMessage("Entrance successful");
+        } else {
+            barrierDisplayDTO.setMessage("Please use the Park20 app to register and use the parking. Or use the QR code to download the app.");
+        }
+
+        return barrierDisplayDTO;
     }
 
     @Override
-    public ExitBarrierDTO exitOpticalReader(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
+    public BarrierDisplayDTO exitOpticalReader(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
         if (vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()) != null
                 && barrierRepository.getBarrierByBarrierID(barrierLicenseReaderDTO.getBarrierID()) != null
                 && parkRepository.findByParkNumber(barrierLicenseReaderDTO.getParkNumber()) != null) {

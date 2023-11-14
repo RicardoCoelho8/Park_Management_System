@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EntranceBarrierDTO {
+public class BarrierDisplayDTO {
     private Long barrierID;
-    private String barrierNumber;
     private Long parkid;
     private Boolean success;
+    private String message;
 }

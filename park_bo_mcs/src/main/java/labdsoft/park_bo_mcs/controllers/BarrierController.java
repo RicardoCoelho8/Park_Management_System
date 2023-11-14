@@ -3,8 +3,7 @@ package labdsoft.park_bo_mcs.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import labdsoft.park_bo_mcs.dtos.BarrierLicenseReaderDTO;
-import labdsoft.park_bo_mcs.dtos.EntranceBarrierDTO;
-import labdsoft.park_bo_mcs.dtos.ExitBarrierDTO;
+import labdsoft.park_bo_mcs.dtos.BarrierDisplayDTO;
 import labdsoft.park_bo_mcs.services.BarrierService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,17 +26,17 @@ class BarrierController {
 
     @Operation(summary = "Entrance Optical Reader")
     @PostMapping("/entrance")
-    public ResponseEntity<EntranceBarrierDTO> entranceOpticalReader(@RequestBody BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
+    public ResponseEntity<BarrierDisplayDTO> entranceOpticalReader(@RequestBody BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
 
-        final EntranceBarrierDTO entranceBarrierDTO = service.entranceOpticalReader(barrierLicenseReaderDTO);
-        return new ResponseEntity<>(entranceBarrierDTO, HttpStatus.OK);
+        final BarrierDisplayDTO barrierDisplayDTO = service.entranceOpticalReader(barrierLicenseReaderDTO);
+        return new ResponseEntity<>(barrierDisplayDTO, HttpStatus.OK);
     }
 
     @Operation(summary = "Exit Optical Reader")
     @PostMapping("/exit")
-    public ResponseEntity<ExitBarrierDTO> exitOpticalReader(@RequestBody BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
+    public ResponseEntity<BarrierDisplayDTO> exitOpticalReader(@RequestBody BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
 
-        final ExitBarrierDTO exitBarrierDTO = service.exitOpticalReader(barrierLicenseReaderDTO);
-        return new ResponseEntity<>(exitBarrierDTO, HttpStatus.OK);
+        final BarrierDisplayDTO barrierDisplayDTO = service.exitOpticalReader(barrierLicenseReaderDTO);
+        return new ResponseEntity<>(barrierDisplayDTO, HttpStatus.OK);
     }
 }
