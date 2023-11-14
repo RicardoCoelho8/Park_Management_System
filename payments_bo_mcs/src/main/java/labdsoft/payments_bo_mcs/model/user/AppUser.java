@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -24,6 +25,6 @@ public class AppUser {
     private Long nif;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private Set<Vehicle> vehicles;
+    private List<Vehicle> vehicles;
 
 }

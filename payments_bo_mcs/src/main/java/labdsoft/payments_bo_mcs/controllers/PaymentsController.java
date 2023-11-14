@@ -20,11 +20,14 @@ class PaymentsController {
     @Autowired
     private PaymentsService service;
 
+    /*
     @Operation(summary = "createPayment")
     @PostMapping
     public ResponseEntity<Iterable<PaymentsDTO>> createPayment(final String nif) {
         return ResponseEntity.ok().body(service.create());
     }
+    */
+
 
     @Operation(summary = "gets catalog, i.e. all payments")
     @GetMapping

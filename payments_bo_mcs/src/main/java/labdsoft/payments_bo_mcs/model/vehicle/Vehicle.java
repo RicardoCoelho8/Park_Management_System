@@ -3,6 +3,7 @@ package labdsoft.payments_bo_mcs.model.vehicle;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.util.regex.Pattern;
 @Entity
 @Data
 @NoArgsConstructor
+@Builder
 public class Vehicle {
 
     @Id
