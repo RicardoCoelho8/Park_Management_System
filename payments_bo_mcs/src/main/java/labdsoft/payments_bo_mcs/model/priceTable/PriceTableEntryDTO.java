@@ -1,6 +1,5 @@
 package labdsoft.payments_bo_mcs.model.priceTable;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PriceTableEntry {
+public class PriceTableEntryDTO {
     private Long parkId;
     private String periodStart;
     private String periodEnd;

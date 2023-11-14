@@ -20,6 +20,12 @@ class PaymentsController {
     @Autowired
     private PaymentsService service;
 
+    @Operation(summary = "createPayment")
+    @PostMapping
+    public ResponseEntity<Iterable<PaymentsDTO>> createPayment(final String nif) {
+        return ResponseEntity.ok().body(service.create());
+    }
+
     @Operation(summary = "gets catalog, i.e. all payments")
     @GetMapping
     public ResponseEntity<Iterable<PaymentsDTO>> getCatalog() {
@@ -27,8 +33,8 @@ class PaymentsController {
     }
 
     @Operation(summary = "finds payments by nif")
-    @GetMapping(value = "/designation/{designation}")
-    public ResponseEntity<Iterable<PaymentsDTO>> findAllByDesignation(@PathVariable("designation") final String nif) {
+    @GetMapping(value = "/designation/{nif}")
+    public ResponseEntity<Iterable<PaymentsDTO>> findAllByDesignation(@PathVariable("nif") final String nif) {
         return ResponseEntity.ok().body(service.findByUserNIF(nif));
     }
 }

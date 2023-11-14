@@ -1,10 +1,13 @@
 package labdsoft.payments_bo_mcs.model.user;
 
 import jakarta.persistence.*;
+import labdsoft.payments_bo_mcs.model.vehicle.Vehicle;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Entity
 @Data
@@ -19,5 +22,8 @@ public class AppUser {
 
     @Column(nullable = false, unique = true)
     private Long nif;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Vehicle> vehicles;
 
 }

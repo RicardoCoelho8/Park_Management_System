@@ -25,5 +25,9 @@ public interface UserRepository extends CrudRepository<AppUser, Long> {
     @Query("SELECT p FROM AppUser p WHERE p.nif=:nif")
     Optional<AppUser> findByNif(Long nif);
 
+    @Query("SELECT DISTINCT p FROM AppUser p JOIN FETCH p.vehicles v WHERE v.licensePlateNumber = :licensePlateNumber")
+    Optional<AppUser> findByVehicle(String licensePlateNumber);
+
+
 }
 

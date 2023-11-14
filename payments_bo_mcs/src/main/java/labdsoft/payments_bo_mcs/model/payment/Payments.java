@@ -20,13 +20,11 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Builder
 public class Payments {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
-    private Long paymentID;
-
-    @Column(nullable = false, unique = false)
-    private Double invoice;
+    private Long invoice;
 
     @Column(nullable = true, unique = false)
     private Double discount;
@@ -40,6 +38,6 @@ public class Payments {
 
     public PaymentsDTO toDTO() {
         ArrayList<PaymentsTableRowDTO> paymentsTableRowsDTO = paymentsTableRows.parallelStream().map(PaymentsTableRow::toDTO).collect(Collectors.toCollection(ArrayList::new));
-        return new PaymentsDTO(paymentID, invoice, discount, paymentsTableRows.parallelStream().mapToDouble(PaymentsTableRow::getPrice).sum(), paymentsTableRowsDTO, nif);
+        return new PaymentsDTO(invoice, discount, paymentsTableRows.parallelStream().mapToDouble(PaymentsTableRow::getPrice).sum(), paymentsTableRowsDTO, nif);
     }
 }

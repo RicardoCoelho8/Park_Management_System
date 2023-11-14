@@ -26,8 +26,8 @@ class PaymentsServiceImplTest {
         listThresholdCosts.add(ThresholdCost.builder().thresholdMinutes(15).costPerMinuteAutomobiles(0.15).costPerMinuteMotorcycles(0.15).build());
         listThresholdCosts.add(ThresholdCost.builder().thresholdMinutes(15).costPerMinuteAutomobiles(0.30).costPerMinuteMotorcycles(0.30).build());
 
-        listPriceTableEntry.add(PriceTableEntry.builder().entryId(2L).periodStart("21:00").periodEnd("9:00").thresholds(listThresholdCosts).parkId(1L).build());
-        listPriceTableEntry.add(PriceTableEntry.builder().entryId(1L).periodStart("9:00").periodEnd("21:00").thresholds(listThresholdCosts).parkId(1L).build());
+        listPriceTableEntry.add(PriceTableEntry.builder().periodStart("21:00").periodEnd("9:00").thresholds(listThresholdCosts).parkId(1L).build());
+        listPriceTableEntry.add(PriceTableEntry.builder().periodStart("9:00").periodEnd("21:00").thresholds(listThresholdCosts).parkId(1L).build());
 
         enterPark.set(2023, Calendar.NOVEMBER, 7, 8, 30, 0);
         leftPark.set(2023, Calendar.NOVEMBER, 7, 10, 14, 0);

@@ -6,16 +6,15 @@ import labdsoft.payments_bo_mcs.model.payment.PaymentsDTO;
 import labdsoft.payments_bo_mcs.model.payment.PaymentsTableRow;
 import labdsoft.payments_bo_mcs.model.priceTable.PriceTableEntry;
 import labdsoft.payments_bo_mcs.model.user.AppUser;
+import labdsoft.payments_bo_mcs.model.vehicle.Vehicle;
 import labdsoft.payments_bo_mcs.repositories.PaymentsRepository;
 import labdsoft.payments_bo_mcs.repositories.UserRepository;
+import labdsoft.payments_bo_mcs.repositories.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,11 +27,19 @@ public class PaymentsServiceImpl implements PaymentsService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private VehicleRepository vehicleRepository;
 
     @Override
-    public PaymentsDTO create(final Long parkID, final Long nif) throws Exception {
+    public PaymentsDTO create(final Date enterParkDate, final Date leftParkDate, final Long parkID, final String licensePlateNumber) throws Exception {
 
-        final Optional<AppUser> verification = userRepository.findByNif(nif);
+        final Optional<Vehicle> vehicle = vehicleRepository.findByLicensePlate(licensePlateNumber);
+
+        if (vehicle.isPresent()) {
+            throw new IllegalArgumentException("Vehicle does not exist.");
+        }
+
+        final Optional<AppUser> verification = userRepository.findByVehicle(vehicle.get().getLicensePlateNumber());
 
         if (verification.isPresent()) {
             throw new IllegalArgumentException("User does not exist.");
@@ -40,9 +47,15 @@ public class PaymentsServiceImpl implements PaymentsService {
 
         List<PriceTableEntry> listPriceTableEntry = Publish.getPriceTablePark("park", parkID.toString(), host);
 
-        List<PaymentsTableRow> rows = calculateCost(vehicleType, enterPark, leftPark, listPriceTableEntry);
+        Calendar enterPark = Calendar.getInstance();
+        enterPark.setTime(enterParkDate);
 
-        final Payments p = Payments.builder().invoice().discount().paymentsTableRows(rows).nif(nif).build();
+        Calendar leftPark = Calendar.getInstance();
+        leftPark.setTime(leftParkDate);
+
+        List<PaymentsTableRow> rows = calculateCost(vehicle.get().getVehicleType().name(), enterPark, leftPark, listPriceTableEntry);
+
+        final Payments p = Payments.builder().discount(0D).paymentsTableRows(rows).nif(verification.get().getNif()).build();
 
         repository.save(p);
 
@@ -67,7 +80,7 @@ public class PaymentsServiceImpl implements PaymentsService {
 
             PriceTableEntry entry = listPriceTableEntry.stream().filter(p -> isTimeBetween(actualPeriod, p.getPeriodStart(), p.getPeriodEnd())).findFirst().get();
 
-            if (lastEntry == null || lastEntry.getEntryId() != entry.getEntryId()) {
+            if (lastEntry == null || !lastEntry.getPeriodStart().equals(entry.getPeriodStart())) {
                 counter = 0;
                 lastEntry = entry;
             }

@@ -13,8 +13,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Builder
 public class PaymentsDTO {
-    private Long paymentID;
-    private Double invoice;
+    private Long invoice;
     private Double discount;
     private Double finalPrice;
     private ArrayList<PaymentsTableRowDTO> paymentsTableRowsDTO;
@@ -22,6 +21,6 @@ public class PaymentsDTO {
 
     public Payments toObject() {
         ArrayList<PaymentsTableRow> paymentsTableRows = paymentsTableRowsDTO.parallelStream().map(PaymentsTableRowDTO::toObject).collect(Collectors.toCollection(ArrayList::new));
-        return new Payments(paymentID, invoice, discount, paymentsTableRows, nif);
+        return new Payments(invoice, discount, paymentsTableRows, nif);
     }
 }
