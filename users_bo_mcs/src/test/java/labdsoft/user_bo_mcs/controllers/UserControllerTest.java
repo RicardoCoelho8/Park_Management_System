@@ -54,7 +54,7 @@ class UserControllerTest {
 
     @Test
     void createUser_Success() throws Exception {
-        UserOnCreation userOnCreation = new UserOnCreation("John", "Doe", "johndoe@gmail.com", "password12cA&", "1234567890", 123456789, Role.CUSTOMER);
+        UserOnCreation userOnCreation = new UserOnCreation("John", "Doe", "johndoe@gmail.com", "password12cA&", "1234567890", 123456789);
         mockMvc.perform(MockMvcRequestBuilders.post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userOnCreation)))
@@ -64,14 +64,14 @@ class UserControllerTest {
 
     @Test
     void getAllUsers_Success() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/users"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/users").header("X-UserRole", "SUPERVISOR"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     void addUserVehicle_Success() throws Exception {
 
-        UserOnCreation userOnCreation = new UserOnCreation("John", "Doe", "johndoe@gmail.com", "password12cA&", "1234567890", 123456789, Role.CUSTOMER);
+        UserOnCreation userOnCreation = new UserOnCreation("John", "Doe", "johndoe@gmail.com", "password12cA&", "1234567890", 123456789);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/users").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userOnCreation)))
                 .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
@@ -81,6 +81,8 @@ class UserControllerTest {
         VehicleOnCreation vehicleOnCreation = new VehicleOnCreation("AA-22-AA", VehicleType.ELECTRIC);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/users/{userId}/vehicle", userId)
+                .header("X-UserRole", "CUSTOMER")
+                .header("X-UserId", userId.toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(vehicleOnCreation)))
                 .andExpect(MockMvcResultMatchers.status().isAccepted());

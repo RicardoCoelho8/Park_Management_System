@@ -20,7 +20,7 @@ public class Publish {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(host);
         try (Connection connection = factory.newConnection();
-             Channel channel = connection.createChannel()) {
+            Channel channel = connection.createChannel()) {
             channel.exchangeDeclare(exchangeName, "fanout");
 
             channel.basicPublish(exchangeName, "", null, message.getBytes("UTF-8"));

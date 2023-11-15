@@ -1,11 +1,25 @@
 package labdsoft.user_bo_mcs;
 
+import java.util.Arrays;
+
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import labdsoft.user_bo_mcs.model.Email;
+import labdsoft.user_bo_mcs.model.Name;
+import labdsoft.user_bo_mcs.model.Password;
+import labdsoft.user_bo_mcs.model.Role;
+import labdsoft.user_bo_mcs.model.TaxIdNumber;
+import labdsoft.user_bo_mcs.model.User;
+import labdsoft.user_bo_mcs.repositories.UserRepository;
+
 @SpringBootApplication
+@EnableDiscoveryClient
 public class UserMcsApplication {
 
     public static void main(String[] args) {
@@ -15,6 +29,39 @@ public class UserMcsApplication {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+	@Bean
+	@Profile("!test")
+	public CommandLineRunner run(UserRepository repo) {
+		return args -> {
+            if (repo.count() == 0) {
+                String password = "123PasswordX#";
+				String encodedPassword = this.passwordEncoder().encode(password);
+                final User supervisor = new User(new Name("Paulo", "Gandra"), new Email("supervisor@isep.ipp.pt"),
+                new Password(encodedPassword),
+                "123123123", new TaxIdNumber(123123123), Role.SUPERVISOR);
+
+                final User parkManager = new User(new Name("Park", "Manager"), new Email("parkmanager@isep.ipp.pt"),
+                new Password(encodedPassword),
+                "123123124", new TaxIdNumber(123123124), Role.PARK_MANAGER);
+
+                final User customerManager = new User(new Name("Customer", "Manager"), new Email("customermanager@isep.ipp.pt"),
+                new Password(encodedPassword),
+                "123123125", new TaxIdNumber(123123125), Role.CUSTOMER_MANAGER);
+
+                final User customer = new User(new Name("Customer", "Customer"), new Email("customer@isep.ipp.pt"),
+                new Password(encodedPassword),
+                "123123126", new TaxIdNumber(123123126), Role.CUSTOMER);
+
+				repo.saveAll(Arrays.asList(supervisor,parkManager,customerManager, customer));
+
+            }
+            else {
+                System.out.println("Database information already exists... skipping bootstrap");
+            }
+
+		};
+	}
 
     
 }

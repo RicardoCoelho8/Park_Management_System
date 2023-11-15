@@ -9,19 +9,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserOnCreation {
+public class UserCredentials {
 
-    private String firstName;
-
-    private String lastName;
 
     private String email;
 
     private String password;
-
-    private String accountNumber;
-
-    private int nif;
 
 
 }
