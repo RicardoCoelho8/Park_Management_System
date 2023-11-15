@@ -1,0 +1,49 @@
+version: "3.9"
+networks:
+  park20:
+    name: park20
+    driver: bridge
+
+services:
+
+  #Park BackOffice 1
+  park_bo_mcs_1:
+    container_name: park_bo_mcs_1
+    build: ./park_bo_mcs
+    restart: on-failure
+    ports:
+      - "8082:8082"
+    networks:
+      - park20
+    environment:
+      - SERVER_PORT=8082
+      - SPRING_RABBITMQ_HOST=rabbitmq4
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db_park_bo_mcs_1:5502/
+
+  #Payment BackOffice 1
+  payments_bo_mcs_1:
+    container_name: payments_bo_mcs_1
+    build: ./payments_bo_mcs
+    restart: on-failure
+    ports:
+      - "8086:8086"
+    networks:
+      - park20
+    environment:
+      - SERVER_PORT=8086
+      - SPRING_RABBITMQ_HOST=rabbitmq4
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db_payments_bo_mcs_1:5506/
+
+  #User BackOffice 1
+  users_bo_mcs_1:
+    container_name: users_bo_mcs_1
+    build: ./users_bo_mcs
+    restart: on-failure
+    ports:
+      - "8090:8090"
+    networks:
+      - park20
+    environment:
+      - SERVER_PORT=8090
+      - SPRING_RABBITMQ_HOST=rabbitmq4
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db_users_bo_mcs_1:5510/

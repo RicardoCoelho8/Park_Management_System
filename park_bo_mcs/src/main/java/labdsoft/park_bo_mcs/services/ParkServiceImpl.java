@@ -1,5 +1,6 @@
 package labdsoft.park_bo_mcs.services;
 
+import labdsoft.park_bo_mcs.communications.Publish;
 import labdsoft.park_bo_mcs.dtos.NearbyParkOccupancyDTO;
 import labdsoft.park_bo_mcs.dtos.OccupancyParkDTO;
 import labdsoft.park_bo_mcs.dtos.PriceTableEntryDTO;
@@ -10,6 +11,7 @@ import labdsoft.park_bo_mcs.repositories.park.ParkRepository;
 import labdsoft.park_bo_mcs.repositories.park.PriceTableEntryRepository;
 import labdsoft.park_bo_mcs.repositories.park.SpotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,6 +19,9 @@ import java.util.List;
 
 @Service
 public class ParkServiceImpl implements ParkService {
+
+    @Value("${spring.rabbitmq.host}")
+    private String host;
 
     @Autowired
     private ParkRepository parkRepository;
@@ -26,6 +31,8 @@ public class ParkServiceImpl implements ParkService {
 
     @Autowired
     private PriceTableEntryRepository priceTableEntryRepository;
+
+
 
     @Override
     public List<OccupancyParkDTO> getCurrentNumberOfAvailableSpotsInsideAllParks() {
@@ -83,9 +90,15 @@ public class ParkServiceImpl implements ParkService {
        return listNearbyParkOccupancy;
     }
 
+    @Override
+    public void createPark(String string) {
+        Park park = Park.builder().build();
+        parkRepository.save(park);
+    }
+
     // https://www.geodatasource.com/developers/java
-    // doesn't take into consideration height, and is a straight line distance
-    // doesn't take into account street routes etc
+    // doesn't take into consideration height, and a straight line distance
+    // isn't taking into account street routes etc
     // verified with other sites
     private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         if ((lat1 == lat2) && (lon1 == lon2)) {
@@ -98,7 +111,6 @@ public class ParkServiceImpl implements ParkService {
         dist = Math.toDegrees(dist);
         dist = dist * 60 * 1.1515 * 1.609344; // KM
         return dist;
-
     }
 
 }

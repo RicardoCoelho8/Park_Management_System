@@ -14,7 +14,7 @@
     <name>payments_bo_mcs</name>
     <description>This is the payments backoffice microservice for park20 project</description>
     <properties>
-        <java.version>19</java.version>
+        <java.version>17</java.version>
     </properties>
     <dependencies>
         <dependency>

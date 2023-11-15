@@ -3,16 +3,10 @@ package labdsoft.park_bo_mcs.communications;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import org.springframework.stereotype.Service;
 
 public class Publish {
 
-    /**
-     * Message must in format '(Created, Updated, Removed) NameOfTheObject | ObjectInJSONFormat
-     *
-     * @param exchangeName
-     * @param message
-     * @throws Exception
-     */
     public static void publish(String exchangeName, String message, String host) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(host);

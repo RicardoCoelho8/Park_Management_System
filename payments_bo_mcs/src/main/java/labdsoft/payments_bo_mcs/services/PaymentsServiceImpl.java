@@ -23,10 +23,14 @@ public class PaymentsServiceImpl implements PaymentsService {
     private String host;
 
     @Autowired
+    private Publish publisher;
+
+    @Autowired
     private PaymentsRepository repository;
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private VehicleRepository vehicleRepository;
 

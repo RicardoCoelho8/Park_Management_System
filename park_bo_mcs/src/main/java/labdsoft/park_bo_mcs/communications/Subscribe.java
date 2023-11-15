@@ -5,17 +5,22 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
 import jakarta.annotation.PostConstruct;
+import labdsoft.park_bo_mcs.services.ParkService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Subscribe {
+    @Autowired
+    private ParkService parkService;
+
     @Value("${spring.rabbitmq.host}")
     private String host;
 
     @PostConstruct
     public void postConstruct() throws Exception {
-        this.subscribe("exchange_product"); //define an exchange for your model
+        this.subscribe("exchange_park"); //define an exchange for your model
     }
 
     public void subscribe(String exchangeName) throws Exception {
@@ -35,6 +40,8 @@ public class Subscribe {
 
             switch (exchangeName) {
                 case "exchange_product":
+                    String reviewId = components[1].trim();
+                    parkService.createPark(reviewId);
                     break;
             }
         };
