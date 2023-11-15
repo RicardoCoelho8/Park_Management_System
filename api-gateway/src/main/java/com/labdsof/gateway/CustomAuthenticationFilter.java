@@ -26,6 +26,7 @@ public class CustomAuthenticationFilter implements GlobalFilter {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         // lets assume only register user is allowed without authentication
         String apiPath = exchange.getRequest().getPath().pathWithinApplication().toString();
+        exchange.getResponse().getHeaders().add("Access-Control-Allow-Origin", "*");
         logger.info("Received request for " + apiPath);
         if (AuthenticationRequestConfig.unauthenticatedRequests.containsKey(apiPath)
                 && AuthenticationRequestConfig.unauthenticatedRequests.get(apiPath)
