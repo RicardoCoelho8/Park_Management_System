@@ -1,5 +1,6 @@
 package labdsoft.payments_bo_mcs.services;
 
+import labdsoft.payments_bo_mcs.communication.Publish;
 import labdsoft.payments_bo_mcs.model.user.AppUser;
 import labdsoft.payments_bo_mcs.repositories.UserRepository;
 import labdsoft.payments_bo_mcs.repositories.VehicleRepository;
@@ -13,7 +14,11 @@ public class UserServiceImpl implements UserService {
     private String host;
 
     @Autowired
+    private Publish publisher;
+
+    @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private VehicleRepository vehicleRepository;
 

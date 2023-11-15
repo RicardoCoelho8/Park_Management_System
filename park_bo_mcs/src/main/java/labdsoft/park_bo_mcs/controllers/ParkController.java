@@ -2,6 +2,7 @@ package labdsoft.park_bo_mcs.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import labdsoft.park_bo_mcs.communications.Subscribe;
 import labdsoft.park_bo_mcs.dtos.NearbyParkOccupancyDTO;
 import labdsoft.park_bo_mcs.dtos.OccupancyParkDTO;
 import labdsoft.park_bo_mcs.dtos.PriceTableEntryDTO;
@@ -25,11 +26,14 @@ class ParkController {
     private static final Logger logger = LoggerFactory.getLogger(ParkController.class);
 
     @Autowired
+    private Subscribe subscribe;
+
+    @Autowired
     private ParkService service;
 
     @Operation(summary = "Get all occupancies level from all parks")
     @GetMapping("/getAllOccupancies")
-    public ResponseEntity<List<OccupancyParkDTO>> getCurrentNumberOfAvailableSpotsInsideAllParks() {
+    public ResponseEntity<List<OccupancyParkDTO>> getCurrentNumberOfAvailableSpotsInsideAllParks() throws Exception {
 
         return new ResponseEntity<>(service.getCurrentNumberOfAvailableSpotsInsideAllParks(), HttpStatus.OK);
     }

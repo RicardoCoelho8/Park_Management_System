@@ -1,0 +1,61 @@
+version: "3.9"
+networks:
+  park20:
+    name: park20
+    driver: bridge
+
+services:
+
+  #RabbitMQ
+  rabbitmq:
+    image: rabbitmq:management
+    restart: always
+    container_name: rabbitmq4
+    hostname: rabbitmq4
+    networks:
+      - park20
+
+  #Park BackOffice 1
+  db_park_bo_mcs_1:
+    container_name: db_park_bo_mcs_1
+    hostname: db_park_bo_mcs_1
+    build: ./db_park_bo_mcs
+    expose:
+      - "5502"
+    ports:
+      - "5502:5502"
+    command: -p 5502
+    networks:
+      park20:
+        aliases:
+          - db_park_bo_mcs_1
+
+  #Payment BackOffice 1
+  db_payments_bo_mcs_1:
+    container_name: db_payments_bo_mcs_1
+    hostname: db_payments_bo_mcs_1
+    build: ./db_payments_bo_mcs
+    expose:
+      - "5506"
+    ports:
+      - "5506:5506"
+    command: -p 5506
+    networks:
+      park20:
+        aliases:
+          - db_payments_bo_mcs_1
+
+  #User BackOffice 1
+  db_users_bo_mcs_1:
+    container_name: db_users_bo_mcs_1
+    hostname: db_users_bo_mcs_1
+    build: ./db_users_bo_mcs
+    expose:
+      - "5510"
+    ports:
+      - "5510:5510"
+    command: -p 5510
+    networks:
+      park20:
+        aliases:
+          - db_users_bo_mcs_1
