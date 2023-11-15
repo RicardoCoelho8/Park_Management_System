@@ -6,12 +6,12 @@ spring:
       globalcors:
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "https://localhost:4200"
+            allowedOrigins: "*"
             allowedMethods: "*"
             allowedHeaders: "*"
 
 server:
-  port: 8100
+  port: 8080
 eureka:
   client:
     registerWithEureka: true
