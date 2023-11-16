@@ -1,4 +1,4 @@
-package labdsoft.park_bo_mcs.models.user;
+package labdsoft.park_bo_mcs.models.payment;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,15 +11,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Customer {
+public class PaymentHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
+    private Long paymentHistoryId;
+
+    @Column(nullable = false)
+    private Float price;
+
+    @Column
+    private Boolean paid;
+
+    @Column
     private Long customerID;
-
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
-    private Status status;
 }

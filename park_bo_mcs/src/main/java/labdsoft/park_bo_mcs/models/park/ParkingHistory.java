@@ -1,4 +1,4 @@
-package labdsoft.park_bo_mcs.models.user;
+package labdsoft.park_bo_mcs.models.park;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

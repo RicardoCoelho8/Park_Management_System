@@ -1,6 +1,6 @@
-package labdsoft.park_bo_mcs.repositories.user;
+package labdsoft.park_bo_mcs.repositories.park;
 
-import labdsoft.park_bo_mcs.models.user.ParkingHistory;
+import labdsoft.park_bo_mcs.models.park.ParkingHistory;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

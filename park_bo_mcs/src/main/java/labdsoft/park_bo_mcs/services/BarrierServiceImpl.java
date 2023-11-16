@@ -1,23 +1,22 @@
 package labdsoft.park_bo_mcs.services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import labdsoft.park_bo_mcs.communications.Publish;
 import labdsoft.park_bo_mcs.dtos.BarrierDisplayDTO;
 import labdsoft.park_bo_mcs.dtos.BarrierLicenseReaderDTO;
 import labdsoft.park_bo_mcs.models.park.Park;
+import labdsoft.park_bo_mcs.models.park.ParkingHistory;
 import labdsoft.park_bo_mcs.models.park.Spot;
 import labdsoft.park_bo_mcs.models.park.State;
+import labdsoft.park_bo_mcs.models.payment.PaymentHistory;
 import labdsoft.park_bo_mcs.models.user.Customer;
-import labdsoft.park_bo_mcs.models.user.ParkingHistory;
+import labdsoft.park_bo_mcs.models.user.Status;
 import labdsoft.park_bo_mcs.repositories.park.BarrierRepository;
 import labdsoft.park_bo_mcs.repositories.park.ParkRepository;
+import labdsoft.park_bo_mcs.repositories.park.ParkingHistoryRepository;
 import labdsoft.park_bo_mcs.repositories.park.SpotRepository;
+import labdsoft.park_bo_mcs.repositories.payment.PaymentHistoryRepository;
 import labdsoft.park_bo_mcs.repositories.user.CustomerRepository;
-import labdsoft.park_bo_mcs.repositories.user.ParkingHistoryRepository;
 import labdsoft.park_bo_mcs.repositories.user.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,9 +24,6 @@ import java.util.Random;
 
 @Service
 public class BarrierServiceImpl implements BarrierService {
-
-    @Value("${spring.rabbitmq.host}")
-    private String host;
 
     @Autowired
     private BarrierRepository barrierRepository;
@@ -37,6 +33,9 @@ public class BarrierServiceImpl implements BarrierService {
 
     @Autowired
     private ParkingHistoryRepository parkingHistoryRepository;
+
+    @Autowired
+    private PaymentHistoryRepository paymentHistoryRepository;
 
     @Autowired
     private VehicleRepository vehicleRepository;
@@ -60,8 +59,14 @@ public class BarrierServiceImpl implements BarrierService {
             List<Spot> listSpotsOccupied = spotRepository.getSpotsByParkIDAndOccupiedAndOperational(park.getParkID(), true, true);
             List<Spot> listSpotsOperacional = spotRepository.getSpotsByParkIDAndOperational(park.getParkID(), true);
 
+            Customer customer = customerRepository.getCustomerByCustomerID(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getCustomerID());
+
+            List<PaymentHistory> paymentHistoryList = paymentHistoryRepository.findAllByCustomerIDAndPaid(customer.getCustomerID(), false);
+
             if (listSpotsOperacional.size() > listSpotsOccupied.size()
-                    && barrierRepository.getBarrierByBarrierID(barrierLicenseReaderDTO.getBarrierID()).getState() == State.ACTIVE) {
+                    && barrierRepository.getBarrierByBarrierID(barrierLicenseReaderDTO.getBarrierID()).getState() == State.ACTIVE
+                    && paymentHistoryList.size() < 4
+                    && customer.getStatus() != Status.BLOCKED) {
 
                 List<Spot> listSpotsOpen = spotRepository.getSpotsByParkIDAndOccupiedAndOperational(park.getParkID(), false, true);
 
@@ -70,11 +75,6 @@ public class BarrierServiceImpl implements BarrierService {
                 Spot spot = listSpotsOpen.get(rand.nextInt(listSpotsOpen.size()));
                 spot.setOccupied(true);
                 spotRepository.save(spot);
-
-                ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-                String json_spot = ow.writeValueAsString(spot);
-
-                Publish.publish("exchange_park", "A Spot was Updated | " + json_spot, host);
 
                 ParkingHistory parkingHistory = ParkingHistory.builder()
                         .customerID(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getCustomerID())
@@ -127,11 +127,6 @@ public class BarrierServiceImpl implements BarrierService {
                 spot.setOccupied(false);
 
                 spotRepository.save(spot);
-
-                ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-                String json_spot = ow.writeValueAsString(spot);
-
-                Publish.publish("exchange_park", "A Spot was Updated | " + json_spot, host);
 
                 parkingHistory.setEndTime(barrierLicenseReaderDTO.getDate());
                 parkingHistoryRepository.save(parkingHistory);
