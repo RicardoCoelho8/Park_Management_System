@@ -1,5 +1,7 @@
 package labdsoft.park_bo_mcs.dtos;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,5 +16,6 @@ public class NearbyParkOccupancyDTO {
     private Long parkNumber;
     private int occupancy;
     private int currentCapacity;
+    private List<SpotTypeOccupancyDTO> spotTypeOccupancies;
     private double distanceKm;
 }

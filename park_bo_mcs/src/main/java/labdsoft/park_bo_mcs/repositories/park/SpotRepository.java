@@ -1,7 +1,6 @@
 package labdsoft.park_bo_mcs.repositories.park;
 
 import labdsoft.park_bo_mcs.models.park.Spot;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

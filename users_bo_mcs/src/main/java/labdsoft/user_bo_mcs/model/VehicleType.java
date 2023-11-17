@@ -7,10 +7,16 @@ public enum VehicleType {
             return "ELECTRIC";
         }
     },
-    FUEL {
+    GPL {
         @Override
         public String toString() {
-            return "FUEL";
+            return "GPL";
         }
-    }
+    },
+    OTHERS {
+        @Override
+        public String toString() {
+            return "OTHERS";
+        }
+    },
 }

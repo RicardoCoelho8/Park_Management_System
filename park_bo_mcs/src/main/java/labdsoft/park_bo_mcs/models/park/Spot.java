@@ -20,8 +20,8 @@ public class Spot {
     @Column(nullable = false)
     private String spotNumber;
 
-    @Column(nullable = false)
-    private int spotType;
+    @Enumerated
+    private SpotType spotType;
 
     @Column(nullable = false)
     private String floorLevel;

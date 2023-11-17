@@ -4,9 +4,11 @@ import labdsoft.park_bo_mcs.communications.Publish;
 import labdsoft.park_bo_mcs.dtos.NearbyParkOccupancyDTO;
 import labdsoft.park_bo_mcs.dtos.OccupancyParkDTO;
 import labdsoft.park_bo_mcs.dtos.PriceTableEntryDTO;
+import labdsoft.park_bo_mcs.dtos.SpotTypeOccupancyDTO;
 import labdsoft.park_bo_mcs.models.park.Park;
 import labdsoft.park_bo_mcs.models.park.PriceTableEntry;
 import labdsoft.park_bo_mcs.models.park.Spot;
+import labdsoft.park_bo_mcs.models.park.SpotType;
 import labdsoft.park_bo_mcs.repositories.park.ParkRepository;
 import labdsoft.park_bo_mcs.repositories.park.PriceTableEntryRepository;
 import labdsoft.park_bo_mcs.repositories.park.SpotRepository;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -31,8 +34,6 @@ public class ParkServiceImpl implements ParkService {
 
     @Autowired
     private PriceTableEntryRepository priceTableEntryRepository;
-
-
 
     @Override
     public List<OccupancyParkDTO> getCurrentNumberOfAvailableSpotsInsideAllParks() {
@@ -68,7 +69,8 @@ public class ParkServiceImpl implements ParkService {
     }
 
     @Override
-    public List<NearbyParkOccupancyDTO> getRealTimeNearbyParksOccupancy(double latitude, double longitude, double maxDistanceKm) {
+    public List<NearbyParkOccupancyDTO> getRealTimeNearbyParksOccupancy(double latitude, double longitude,
+            double maxDistanceKm) {
         // assume nearby is at most 10 kms away
 
         List<NearbyParkOccupancyDTO> listNearbyParkOccupancy = new ArrayList<>();
@@ -80,14 +82,27 @@ public class ParkServiceImpl implements ParkService {
             if (distance > maxDistanceKm) {
                 continue;
             }
-            List<Spot> listSpotsOccupied = spotRepository.getSpotsByParkIDAndOccupiedAndOperational(park.getParkID(),
-                    false, true);
+            List<Spot> listSpots = spotRepository.getSpotsByParkIDAndOperational(park.getParkID(), true);
+            int currentCapacity = Long.valueOf(listSpots.stream().filter(x -> x.isOccupied()).count()).intValue();
+            System.out.println(listSpots);
+            List<SpotTypeOccupancyDTO> spotOccupanciesDto = Arrays
+                    .asList(SpotType
+                            .values())
+                    .stream()
+                    .map(spotType -> SpotTypeOccupancyDTO.builder().spotType(spotType)
+                            .availableSpots(Long.valueOf(listSpots.stream()
+                                    .filter(spot -> (!spot.isOccupied() && spot.getSpotType().toString().equals(spotType.toString()))).count())
+                                    .intValue())
+                            .build())
+                    .toList();
+
             listNearbyParkOccupancy.add(NearbyParkOccupancyDTO.builder().parkId(park.getParkID())
                     .parkNumber(park.getParkNumber()).occupancy(park.getMaxOcuppancy())
-                    .currentCapacity(listSpotsOccupied.size()).distanceKm(distance).build());
+                    .currentCapacity(currentCapacity).spotTypeOccupancies(spotOccupanciesDto).distanceKm(distance)
+                    .build());
         }
 
-       return listNearbyParkOccupancy;
+        return listNearbyParkOccupancy;
     }
 
     @Override
