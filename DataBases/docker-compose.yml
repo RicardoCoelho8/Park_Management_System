@@ -8,23 +8,31 @@ services:
 
   #RabbitMQ
   rabbitmq:
-    image: rabbitmq:management
-    restart: always
     container_name: rabbitmq4
-    hostname: rabbitmq4
+    image: rabbitmq:3-management-alpine
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
     networks:
-      - park20
+      park20:
+        aliases:
+          - rabbitmq4
+
 
   #Park BackOffice 1
   db_park_bo_mcs_1:
     container_name: db_park_bo_mcs_1
     hostname: db_park_bo_mcs_1
     build: ./db_park_bo_mcs
-    expose:
-      - "5502"
+    environment:
+      - POSTGRES_PASSWORD=postgrespw
+      - POSTGRES_USER=postgres
     ports:
-      - "5502:5502"
-    command: -p 5502
+      - "5502:5432"
+    command: [ "postgres", "-c", "wal_level=logical" ]
     networks:
       park20:
         aliases:
@@ -35,11 +43,12 @@ services:
     container_name: db_payments_bo_mcs_1
     hostname: db_payments_bo_mcs_1
     build: ./db_payments_bo_mcs
-    expose:
-      - "5506"
+    environment:
+      - POSTGRES_PASSWORD=postgrespw
+      - POSTGRES_USER=postgres
     ports:
-      - "5506:5506"
-    command: -p 5506
+      - "5506:5432"
+    command: [ "postgres", "-c", "wal_level=logical" ]
     networks:
       park20:
         aliases:
@@ -50,11 +59,12 @@ services:
     container_name: db_users_bo_mcs_1
     hostname: db_users_bo_mcs_1
     build: ./db_users_bo_mcs
-    expose:
-      - "5510"
+    environment:
+      - POSTGRES_PASSWORD=postgrespw
+      - POSTGRES_USER=postgres
     ports:
-      - "5510:5510"
-    command: -p 5510
+      - "5510:5432"
+    command: [ "postgres", "-c", "wal_level=logical" ]
     networks:
       park20:
         aliases:

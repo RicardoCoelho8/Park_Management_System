@@ -4,25 +4,20 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
-import jakarta.persistence.*;
-import labdsoft.payments_bo_mcs.model.priceTable.PriceTableEntry;
-import labdsoft.payments_bo_mcs.model.priceTable.ThresholdCost;
 import labdsoft.payments_bo_mcs.model.user.AppUser;
 import labdsoft.payments_bo_mcs.model.vehicle.Vehicle;
 import labdsoft.payments_bo_mcs.model.vehicle.VehicleType;
-import labdsoft.payments_bo_mcs.services.PaymentsService;
 import labdsoft.payments_bo_mcs.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.configurationprocessor.json.JSONArray;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 @Component
 public class Subscribe {

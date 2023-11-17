@@ -3,47 +3,97 @@ networks:
   park20:
     name: park20
     driver: bridge
+    external: true
 
 services:
+  eureka:
+    build:
+      context: ./eureka
+      dockerfile: Dockerfile
+    environment:
+      EUREKA_CLIENT_REGISTER-WITH-EUREKA: "false"
+      EUREKA_CLIENT_FETCH-REGISTRY: "false"
+      eureka.client.registerWithEureka: "false"
+      eureka.client.fetchRegistry: "false"
+      # without this, eureka keeps trying to register itself for some reason
+      eureka.server.maxThreadsForPeerReplication: 0
+    ports:
+        - "8761:8761"
+    networks:
+      - park20
+
+  gateway:
+    depends_on:
+      eureka:
+        condition: service_started
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    environment:
+      eureka.client.service-url.defaultZone: http://host.docker.internal:8761/eureka
+      eureka.instance.ip-address: host.docker.internal
+    ports:
+      - "8080:8080"
+    networks:
+      - park20
 
   #Park BackOffice 1
   park_bo_mcs_1:
+    depends_on:
+      - eureka
     container_name: park_bo_mcs_1
     build: ./park_bo_mcs
     restart: on-failure
+    environment:
+      eureka.client.service-url.defaultZone: http://host.docker.internal:8761/eureka
+      eureka.instance.ip-address: host.docker.internal
+      spring.application.name: park20-park-microservice
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5502/
+      spring.rabbitmq.host: rabbitmq4
+      server.port: 8094
+      spring.profiles.active: bootstrap
+
     ports:
-      - "8082:8082"
+      - "8094:8094"
     networks:
       - park20
-    environment:
-      - SERVER_PORT=8082
-      - SPRING_RABBITMQ_HOST=rabbitmq4
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db_park_bo_mcs_1:5502/
+
 
   #Payment BackOffice 1
   payments_bo_mcs_1:
+    depends_on:
+      - eureka
     container_name: payments_bo_mcs_1
     build: ./payments_bo_mcs
     restart: on-failure
+    environment:
+      eureka.client.service-url.defaultZone: http://host.docker.internal:8761/eureka
+      eureka.instance.ip-address: host.docker.internal
+      spring.application.name: park20-payments-microservice
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5502/
+      spring.rabbitmq.host: rabbitmq4
+      server.port: 8086
     ports:
       - "8086:8086"
     networks:
       - park20
-    environment:
-      - SERVER_PORT=8086
-      - SPRING_RABBITMQ_HOST=rabbitmq4
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db_payments_bo_mcs_1:5506/
 
   #User BackOffice 1
   users_bo_mcs_1:
+    depends_on:
+      - eureka
     container_name: users_bo_mcs_1
     build: ./users_bo_mcs
     restart: on-failure
+    environment:
+      eureka.client.service-url.defaultZone: http://host.docker.internal:8761/eureka
+      eureka.instance.ip-address: host.docker.internal
+      spring.application.name: park20-user-microservice
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5502/
+      spring.rabbitmq.host: rabbitmq4
+      server.port: 8090
+      spring.profiles.active: bootstrap
     ports:
       - "8090:8090"
     networks:
       - park20
-    environment:
-      - SERVER_PORT=8090
-      - SPRING_RABBITMQ_HOST=rabbitmq4
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db_users_bo_mcs_1:5510/

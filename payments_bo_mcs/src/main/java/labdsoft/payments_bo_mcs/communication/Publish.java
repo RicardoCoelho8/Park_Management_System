@@ -6,8 +6,8 @@ import com.rabbitmq.client.ConnectionFactory;
 import labdsoft.payments_bo_mcs.model.priceTable.PriceTableEntry;
 import labdsoft.payments_bo_mcs.model.priceTable.ThresholdCost;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.configurationprocessor.json.JSONArray;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
