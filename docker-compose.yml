@@ -70,9 +70,10 @@ services:
       eureka.client.service-url.defaultZone: http://host.docker.internal:8761/eureka
       eureka.instance.ip-address: host.docker.internal
       spring.application.name: park20-payments-microservice
-      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5502/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5506/
       spring.rabbitmq.host: rabbitmq4
       server.port: 8086
+      spring.profiles.active: bootstrap
     ports:
       - "8086:8086"
     networks:
@@ -89,7 +90,7 @@ services:
       eureka.client.service-url.defaultZone: http://host.docker.internal:8761/eureka
       eureka.instance.ip-address: host.docker.internal
       spring.application.name: park20-user-microservice
-      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5502/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5510/
       spring.rabbitmq.host: rabbitmq4
       server.port: 8090
       spring.profiles.active: bootstrap
