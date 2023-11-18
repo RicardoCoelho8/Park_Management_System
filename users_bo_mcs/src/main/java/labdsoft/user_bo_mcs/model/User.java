@@ -36,7 +36,7 @@ public class User {
     private Set<ParkingHistory> parkingHistory;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private Set<Vehicle> vehicles;
+    private Set<Vehicle> vehicles = new HashSet<>();
 
     @Column(nullable = false)
     private String accountNumber;
@@ -47,13 +47,14 @@ public class User {
     @Enumerated
     private Role role;
 
-    public User(Name name, Email email, Password password, String accountNumber, TaxIdNumber nif, Role role) {
+    public User(Name name, Email email, Password password, String accountNumber, TaxIdNumber nif, Role role, Vehicle vehicle) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.accountNumber = accountNumber;
         this.nif = nif;
         this.parkingHistory = new HashSet<>();
+        this.vehicles.add(vehicle);
         this.vehicles = new HashSet<>();
         this.parkies = new ParkyWallet(0);
         this.role = role;

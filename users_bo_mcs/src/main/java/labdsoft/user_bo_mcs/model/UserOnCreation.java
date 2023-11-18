@@ -22,6 +22,12 @@ public class UserOnCreation {
     private String accountNumber;
 
     private int nif;
+    
+    private String licensePlateNumber;
+
+    private VehicleType vehicleType;
+
+    
 
 
 }

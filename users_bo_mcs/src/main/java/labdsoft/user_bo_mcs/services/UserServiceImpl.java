@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
         final Name name = new Name(userOnCreation.getFirstName(), userOnCreation.getLastName());
         final User user = new User(name, new Email(userOnCreation.getEmail()),
                 new Password(this.passwordEncoder.encode(userOnCreation.getPassword())),
-                userOnCreation.getAccountNumber(), new TaxIdNumber(userOnCreation.getNif()), Role.CUSTOMER);
+                userOnCreation.getAccountNumber(), new TaxIdNumber(userOnCreation.getNif()), Role.CUSTOMER, new Vehicle(userOnCreation.getLicensePlateNumber(),userOnCreation.getVehicleType()));
 
         repository.save(user);
 

@@ -6,7 +6,6 @@ import com.jayway.jsonpath.JsonPath;
 import labdsoft.user_bo_mcs.UserMcsApplication;
 import labdsoft.user_bo_mcs.communication.Publish;
 import labdsoft.user_bo_mcs.communication.Subscribe;
-import labdsoft.user_bo_mcs.model.Role;
 import labdsoft.user_bo_mcs.model.UserOnCreation;
 import labdsoft.user_bo_mcs.model.VehicleOnCreation;
 import labdsoft.user_bo_mcs.model.VehicleType;
@@ -54,7 +53,7 @@ class UserControllerTest {
 
     @Test
     void createUser_Success() throws Exception {
-        UserOnCreation userOnCreation = new UserOnCreation("John", "Doe", "johndoe@gmail.com", "password12cA&", "1234567890", 123456789);
+        UserOnCreation userOnCreation = new UserOnCreation("John", "Doe", "johndoe@gmail.com", "password12cA&", "1234567890", 123456789, "AA-20-MM", VehicleType.ELECTRIC);
         mockMvc.perform(MockMvcRequestBuilders.post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userOnCreation)))
@@ -71,7 +70,7 @@ class UserControllerTest {
     @Test
     void addUserVehicle_Success() throws Exception {
 
-        UserOnCreation userOnCreation = new UserOnCreation("John", "Doe", "johndoe@gmail.com", "password12cA&", "1234567890", 123456789);
+        UserOnCreation userOnCreation = new UserOnCreation("John", "Doe", "johndoe@gmail.com", "password12cA&", "1234567890", 123456789, "AA-20-MM", VehicleType.ELECTRIC);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/users").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userOnCreation)))
                 .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
