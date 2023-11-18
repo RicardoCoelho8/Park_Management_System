@@ -2,18 +2,23 @@ import React, { useState } from "react";
 import { logo } from "../../images";
 import { Button, Container, Form, Image } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { setUserData } from "../../store";
+import { UserDataInput, setUserData } from "../../store";
+import { usePostUserDataMutation } from "../../store/userData/api";
+import { Link, useNavigate } from "react-router-dom";
 
-export const App: React.FC = () => {
+export const LoginScreen: React.FC = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [postUserData, { data, error, isLoading }] = usePostUserDataMutation();
+  const navigate = useNavigate();
 
   const handleOnClickSubmit = () => {
-    console.log("App.tsx", email, password);
     dispatch(setUserData({ email, password }));
+
     setEmail("");
     setPassword("");
+    navigate("/register");
   };
 
   return (
@@ -21,8 +26,8 @@ export const App: React.FC = () => {
     review image drag 
     */
     <Container style={{ padding: "20px" }}>
-      <Container style={{ display: "flex", height: "auto" }} draggable="false">
-        <Image src={logo} fluid style={{ width: "100%" }} draggable="false" />
+      <Container style={{ display: "flex", height: "auto" }}>
+        <Image src={logo} fluid style={{ width: "100%" }} />
       </Container>
       {/* Form */}
       <Container>
@@ -68,6 +73,17 @@ export const App: React.FC = () => {
             Sign in
           </Button>
         </Form>
+      </Container>
+      <Container
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginRight: "5px",
+        }}
+      >
+        <p style={{ marginRight: "0.313rem" }}> Not registered yet? </p>
+        <Link to={"/register"}>Register Here!</Link>
       </Container>
     </Container>
   );
