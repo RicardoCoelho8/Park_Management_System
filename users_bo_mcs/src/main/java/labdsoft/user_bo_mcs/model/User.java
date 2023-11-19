@@ -38,24 +38,28 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Vehicle> vehicles = new HashSet<>();
 
-    @Column(nullable = false)
-    private String accountNumber;
-
     @Embedded
     private ParkyWallet parkies;
 
     @Enumerated
     private Role role;
 
-    public User(Name name, Email email, Password password, String accountNumber, TaxIdNumber nif, Role role, Vehicle vehicle) {
+    @Enumerated
+    private PaymentMethod paymentMethod;
+
+    @Enumerated
+    private UserStatus status;
+
+    public User(Name name, Email email, Password password,  TaxIdNumber nif, Role role, Vehicle vehicle, PaymentMethod pMethod, UserStatus status) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.accountNumber = accountNumber;
         this.nif = nif;
+        this.paymentMethod = pMethod;
+        this.status = status;
         this.parkingHistory = new HashSet<>();
-        this.vehicles.add(vehicle);
         this.vehicles = new HashSet<>();
+        this.addVehicle(vehicle);
         this.parkies = new ParkyWallet(0);
         this.role = role;
     }
@@ -69,7 +73,7 @@ public class User {
 
     // missing  Subscription (probably won't be necessary)
     public UserDTO toDto() {
-        return new UserDTO(this.userId, this.name.getFirstName(), this.name.getLastName(), this.email.email(), this.accountNumber, this.getNif().number(), this.parkingHistory, this.parkies.parkies(), this.vehicles, this.role);
+        return new UserDTO(this.userId, this.name.getFirstName(), this.name.getLastName(), this.email.email(), this.getNif().number(), this.parkingHistory, this.parkies.parkies(), this.vehicles, this.role, this.paymentMethod, this.status);
     }
 
 }

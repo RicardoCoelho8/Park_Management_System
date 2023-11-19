@@ -6,6 +6,7 @@ import com.jayway.jsonpath.JsonPath;
 import labdsoft.user_bo_mcs.UserMcsApplication;
 import labdsoft.user_bo_mcs.communication.Publish;
 import labdsoft.user_bo_mcs.communication.Subscribe;
+import labdsoft.user_bo_mcs.model.PaymentMethod;
 import labdsoft.user_bo_mcs.model.UserOnCreation;
 import labdsoft.user_bo_mcs.model.VehicleOnCreation;
 import labdsoft.user_bo_mcs.model.VehicleType;
@@ -53,7 +54,7 @@ class UserControllerTest {
 
     @Test
     void createUser_Success() throws Exception {
-        UserOnCreation userOnCreation = new UserOnCreation("John", "Doe", "johndoe@gmail.com", "password12cA&", "1234567890", 123456789, "AA-20-MM", VehicleType.ELECTRIC);
+        UserOnCreation userOnCreation = new UserOnCreation("John", "Doe", "johndoe@gmail.com", "password12cA&", "1234567890", 123456789, "AA-20-MM", VehicleType.ELECTRIC, PaymentMethod.CREDIT);
         mockMvc.perform(MockMvcRequestBuilders.post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userOnCreation)))
@@ -70,7 +71,7 @@ class UserControllerTest {
     @Test
     void addUserVehicle_Success() throws Exception {
 
-        UserOnCreation userOnCreation = new UserOnCreation("John", "Doe", "johndoe@gmail.com", "password12cA&", "1234567890", 123456789, "AA-20-MM", VehicleType.ELECTRIC);
+        UserOnCreation userOnCreation = new UserOnCreation("John", "Doe", "johndoe@gmail.com", "password12cA&", "1234567890", 123456789, "AA-20-MM", VehicleType.ELECTRIC, PaymentMethod.CREDIT);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/users").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userOnCreation)))
                 .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
@@ -86,4 +87,24 @@ class UserControllerTest {
                 .content(objectMapper.writeValueAsString(vehicleOnCreation)))
                 .andExpect(MockMvcResultMatchers.status().isAccepted());
     }
+
+    @Test
+    void changePaymentMethod_Success() throws Exception {
+        UserOnCreation userOnCreation = new UserOnCreation("John", "Doe", "johndoe@gmail.com", "password12cA&", "1234567890", 123456789, "AA-20-MM", VehicleType.ELECTRIC, PaymentMethod.CREDIT);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/users").contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userOnCreation)))
+                .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
+        Integer userId = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
+
+
+
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/users/{userId}/payment-method", userId)
+                .header("X-UserRole", "CUSTOMER")
+                .header("X-UserId", userId.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(PaymentMethod.PAYPAL)))
+                .andExpect(MockMvcResultMatchers.status().isAccepted());
+    }
+
 }

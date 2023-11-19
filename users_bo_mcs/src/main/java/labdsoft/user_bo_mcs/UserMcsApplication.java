@@ -13,9 +13,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import labdsoft.user_bo_mcs.model.Email;
 import labdsoft.user_bo_mcs.model.Name;
 import labdsoft.user_bo_mcs.model.Password;
+import labdsoft.user_bo_mcs.model.PaymentMethod;
 import labdsoft.user_bo_mcs.model.Role;
 import labdsoft.user_bo_mcs.model.TaxIdNumber;
 import labdsoft.user_bo_mcs.model.User;
+import labdsoft.user_bo_mcs.model.UserStatus;
 import labdsoft.user_bo_mcs.model.Vehicle;
 import labdsoft.user_bo_mcs.model.VehicleType;
 import labdsoft.user_bo_mcs.repositories.UserRepository;
@@ -40,20 +42,16 @@ public class UserMcsApplication {
                 String password = "123PasswordX#";
 				String encodedPassword = this.passwordEncoder().encode(password);
                 final User supervisor = new User(new Name("Paulo", "Gandra"), new Email("supervisor@isep.ipp.pt"),
-                new Password(encodedPassword),
-                "123123123", new TaxIdNumber(123123123), Role.SUPERVISOR, new Vehicle("AA-20-CC", VehicleType.ELECTRIC));
+                new Password(encodedPassword), new TaxIdNumber(123123123), Role.SUPERVISOR, new Vehicle("AA-20-CC", VehicleType.ELECTRIC),PaymentMethod.NOT_DEFINED, UserStatus.ENABLED);
 
                 final User parkManager = new User(new Name("Park", "Manager"), new Email("parkmanager@isep.ipp.pt"),
-                new Password(encodedPassword),
-                "123123124", new TaxIdNumber(123123124), Role.PARK_MANAGER, new Vehicle("BB-20-CC", VehicleType.GPL));
+                new Password(encodedPassword), new TaxIdNumber(123123124), Role.PARK_MANAGER, new Vehicle("BB-20-CC", VehicleType.GPL),PaymentMethod.NOT_DEFINED, UserStatus.ENABLED);
 
                 final User customerManager = new User(new Name("Customer", "Manager"), new Email("customermanager@isep.ipp.pt"),
-                new Password(encodedPassword),
-                "123123125", new TaxIdNumber(123123125), Role.CUSTOMER_MANAGER, new Vehicle("CC-20-CC", VehicleType.OTHERS));
+                new Password(encodedPassword), new TaxIdNumber(123123125), Role.CUSTOMER_MANAGER, new Vehicle("CC-20-CC", VehicleType.OTHERS),PaymentMethod.NOT_DEFINED, UserStatus.ENABLED);
 
                 final User customer = new User(new Name("Customer", "Customer"), new Email("customer@isep.ipp.pt"),
-                new Password(encodedPassword),
-                "123123126", new TaxIdNumber(123123126), Role.CUSTOMER, new Vehicle("DD-20-CC", VehicleType.OTHERS));
+                new Password(encodedPassword), new TaxIdNumber(123123126), Role.CUSTOMER, new Vehicle("DD-20-CC", VehicleType.OTHERS),PaymentMethod.PAYPAL, UserStatus.ENABLED);
 
 				repo.saveAll(Arrays.asList(supervisor,parkManager,customerManager, customer));
 

@@ -20,7 +20,6 @@ public class UserDTO {
 
     private String email;
 
-    private String accountNumber;
 
     private int nif;
 
@@ -31,5 +30,9 @@ public class UserDTO {
     private Set<Vehicle> vehicles;
 
     private Role role;
+
+    private PaymentMethod paymentMethod;
+    
+    private UserStatus userStatus;
 
 }

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import labdsoft.user_bo_mcs.communication.Subscribe;
 import labdsoft.user_bo_mcs.model.AccessToken;
+import labdsoft.user_bo_mcs.model.PaymentMethod;
 import labdsoft.user_bo_mcs.model.Role;
 import labdsoft.user_bo_mcs.model.UserCredentials;
 import labdsoft.user_bo_mcs.model.UserDTO;
@@ -113,12 +114,41 @@ class UserController {
 
         try {
             final UserDTO user = service.addVehicle(userId, vehicle);
-            logger.info("Successfully added vehicle!");
+            logger.info("Successfully added vehicle");
             return new ResponseEntity<UserDTO>(user, HttpStatus.ACCEPTED);
         } catch (Exception e) {
             logger.info(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
         }
     }
+    @Operation(summary = "Changes user Payment Method")
+    @PutMapping("/{userId}/payment-method")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<UserDTO> changePaymentMethod(@RequestHeader("X-UserId") String headerUserId,
+            @RequestHeader("X-UserRole") String userRole,
+            @PathVariable Long userId, @RequestBody PaymentMethod pMethod) {
+        logger.info("Received change payment method to " + pMethod + " of user " + userId + " request");
+
+        if (!headerUserId.equals(userId.toString())) {
+            // only the user that is authenticated in the request is allowed to add a
+            // vehicle for himself
+            logger.info("Request invalidated due to incoherent path user id of " + userId + "and header user id of " + headerUserId);
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        }
+        if (!userRole.equals(Role.CUSTOMER.toString())) {
+            logger.info("Request invalidated due to forbidden user role: " + userRole);
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        }
+
+        try {
+            final UserDTO user = service.changePaymentMethod(userId, pMethod);
+            logger.info("Successfully changed payment method");
+            return new ResponseEntity<UserDTO>(user, HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            logger.info(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
+        }
+    }
+
 
 }
