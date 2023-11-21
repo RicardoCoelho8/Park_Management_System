@@ -1,4 +1,15 @@
-export interface UserDataInput {
+export interface UserDataRegisterInput {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  paymentMethod: string;
+  nif: string;
+  licensePlateNumber: string;
+  vehicleType: string;
+}
+
+export interface UserDataLoginInput {
   email: string;
   password: string;
 }

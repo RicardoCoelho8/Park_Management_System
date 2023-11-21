@@ -2,8 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { LoginScreen } from "./login/login";
 import { RegisterScreen } from "./register/register";
-import { Button, Container, Form, Image } from "react-bootstrap";
-import { logo } from "../images";
+import { HomeScreen } from "./home/home";
 
 export const App: React.FC = () => {
   return (
@@ -11,6 +10,7 @@ export const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<LoginScreen />} />
         <Route path="/register" element={<RegisterScreen />} />
+        <Route path="/home" element={<HomeScreen />} />
       </Routes>
     </Router>
   );
