@@ -35,7 +35,7 @@ public class PaymentsServiceImpl implements PaymentsService {
     private VehicleRepository vehicleRepository;
 
 
-    public PaymentsDTO create(final Date enterParkDate, final Date leftParkDate, final Long parkID, final String licensePlateNumber) throws Exception {
+    public PaymentsDTO createFromBarrier(final Date enterParkDate, final Date leftParkDate, final Long parkID, final String licensePlateNumber) throws Exception {
 
         final Optional<Vehicle> vehicle = vehicleRepository.findByLicensePlate(licensePlateNumber);
 

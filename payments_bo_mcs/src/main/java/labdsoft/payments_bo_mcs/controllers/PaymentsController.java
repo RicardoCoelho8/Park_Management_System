@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.Date;
+
 
 @Tag(name = "Payments", description = "Endpoints for managing payments")
 @RestController
@@ -20,14 +23,11 @@ class PaymentsController {
     @Autowired
     private PaymentsService service;
 
-    /*
-    @Operation(summary = "createPayment")
+    @Operation(summary = "create payment from information from of the barrier")
     @PostMapping
-    public ResponseEntity<Iterable<PaymentsDTO>> createPayment(final String nif) {
-        return ResponseEntity.ok().body(service.create());
+    public ResponseEntity<Iterable<PaymentsDTO>> createPayment(final Date enterParkDate, final Date leftParkDate, final Long parkID, final String licensePlateNumber) throws Exception {
+        return ResponseEntity.ok().body(Collections.singleton(service.createFromBarrier(enterParkDate, leftParkDate, parkID, licensePlateNumber)));
     }
-    */
-
 
     @Operation(summary = "gets catalog, i.e. all payments")
     @GetMapping
