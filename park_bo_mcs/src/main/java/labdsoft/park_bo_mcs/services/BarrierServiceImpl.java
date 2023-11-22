@@ -115,7 +115,7 @@ public class BarrierServiceImpl implements BarrierService {
             }
         }
 
-        return listSpotsOccupiedByTypeAndVehicleType.size() > listSpotsOperacionalByTypeAndVehicleType.size();
+        return listSpotsOperacionalByTypeAndVehicleType.size() > listSpotsOccupiedByTypeAndVehicleType.size();
     }
 
     private void processParking(Park park, Vehicle vehicle, BarrierLicenseReaderDTO barrierLicenseReaderDTO) {

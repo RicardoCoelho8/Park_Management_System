@@ -37,16 +37,16 @@ public class ParkBootstrapper implements CommandLineRunner {
     private void createSampleSpots(Long id) {
         List<Spot> list_spots = new ArrayList<>();
 
-        list_spots.add(Spot.builder().spotNumber("A1").spotType(SpotType.FUEL).floorLevel("A").occupied(false).operational(false).parkID(id).build());
-        list_spots.add(Spot.builder().spotNumber("A2").spotType(SpotType.FUEL).floorLevel("A").occupied(false).operational(true).parkID(id).build());
-        list_spots.add(Spot.builder().spotNumber("A3").spotType(SpotType.FUEL).floorLevel("A").occupied(false).operational(true).parkID(id).build());
-        list_spots.add(Spot.builder().spotNumber("A4").spotType(SpotType.FUEL).floorLevel("A").occupied(true).operational(true).parkID(id).build());
-        list_spots.add(Spot.builder().spotNumber("A5").spotType(SpotType.FUEL).floorLevel("A").occupied(false).operational(true).parkID(id).build());
-        list_spots.add(Spot.builder().spotNumber("B1").spotType(SpotType.FUEL).floorLevel("B").occupied(false).operational(true).parkID(id).build());
-        list_spots.add(Spot.builder().spotNumber("B2").spotType(SpotType.ELECTRIC).floorLevel("B").occupied(false).operational(true).parkID(id).build());
-        list_spots.add(Spot.builder().spotNumber("B3").spotType(SpotType.ELECTRIC).floorLevel("B").occupied(true).operational(true).parkID(id).build());
-        list_spots.add(Spot.builder().spotNumber("B4").spotType(SpotType.GPL).floorLevel("B").occupied(true).operational(true).parkID(id).build());
-        list_spots.add(Spot.builder().spotNumber("B5").spotType(SpotType.GPL).floorLevel("B").occupied(false).operational(true).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("A1").spotType(SpotType.FUEL).spotVehicleType(SpotVehicleType.AUTOMOBILE).floorLevel("A").occupied(false).operational(false).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("A2").spotType(SpotType.FUEL).spotVehicleType(SpotVehicleType.AUTOMOBILE).floorLevel("A").occupied(false).operational(true).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("A3").spotType(SpotType.FUEL).spotVehicleType(SpotVehicleType.AUTOMOBILE).floorLevel("A").occupied(false).operational(true).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("A4").spotType(SpotType.FUEL).spotVehicleType(SpotVehicleType.AUTOMOBILE).floorLevel("A").occupied(true).operational(true).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("A5").spotType(SpotType.FUEL).spotVehicleType(SpotVehicleType.AUTOMOBILE).floorLevel("A").occupied(false).operational(true).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("B1").spotType(SpotType.FUEL).spotVehicleType(SpotVehicleType.AUTOMOBILE).floorLevel("B").occupied(false).operational(true).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("B2").spotType(SpotType.ELECTRIC).spotVehicleType(SpotVehicleType.AUTOMOBILE).floorLevel("B").occupied(false).operational(true).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("B3").spotType(SpotType.ELECTRIC).spotVehicleType(SpotVehicleType.AUTOMOBILE).floorLevel("B").occupied(true).operational(true).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("B4").spotType(SpotType.GPL).spotVehicleType(SpotVehicleType.AUTOMOBILE).floorLevel("B").occupied(true).operational(true).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("B5").spotType(SpotType.GPL).spotVehicleType(SpotVehicleType.AUTOMOBILE).floorLevel("B").occupied(false).operational(true).parkID(id).build());
 
         sRepo.saveAll(list_spots);
     }
