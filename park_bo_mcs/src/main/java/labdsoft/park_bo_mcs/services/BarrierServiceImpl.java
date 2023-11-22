@@ -98,22 +98,8 @@ public class BarrierServiceImpl implements BarrierService {
         List<Spot> listSpotsOccupied = spotRepository.getSpotsByParkIDAndOccupiedAndOperational(park.getParkID(), true, true);
         List<Spot> listSpotsOperacional = spotRepository.getSpotsByParkIDAndOperational(park.getParkID(), true);
 
-        List<Spot> listSpotsOccupiedByTypeAndVehicleType = new ArrayList<>();
-        List<Spot> listSpotsOperacionalByTypeAndVehicleType = new ArrayList<>();
-
-        for (Spot spot : listSpotsOccupied) {
-            if (spot.getSpotType().toString().equals(vehicle.getVehicleEnergySource().toString())
-                && spot.getSpotVehicleType().toString().equals(vehicle.getVehicleType().toString())) {
-                listSpotsOccupiedByTypeAndVehicleType.add(spot);
-            }
-        }
-
-        for (Spot spot : listSpotsOperacional) {
-            if (spot.getSpotType().toString().equals(vehicle.getVehicleEnergySource().toString())
-                    && spot.getSpotVehicleType().toString().equals(vehicle.getVehicleType().toString())) {
-                listSpotsOperacionalByTypeAndVehicleType.add(spot);
-            }
-        }
+        List<Spot> listSpotsOccupiedByTypeAndVehicleType = checkForSpotTypeAndVehicleType(listSpotsOccupied, vehicle);
+        List<Spot> listSpotsOperacionalByTypeAndVehicleType = checkForSpotTypeAndVehicleType(listSpotsOperacional, vehicle);
 
         return listSpotsOperacionalByTypeAndVehicleType.size() > listSpotsOccupiedByTypeAndVehicleType.size();
     }
@@ -121,14 +107,7 @@ public class BarrierServiceImpl implements BarrierService {
     private void processParking(Park park, Vehicle vehicle, BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
         List<Spot> listSpotsOpen = spotRepository.getSpotsByParkIDAndOccupiedAndOperational(park.getParkID(), false, true);
 
-        List<Spot> listSpotsOpenByTypeAndVehicleType = new ArrayList<>();
-
-        for (Spot spot : listSpotsOpen) {
-            if (spot.getSpotType().toString().equals(vehicle.getVehicleEnergySource().toString())
-                    && spot.getSpotVehicleType().toString().equals(vehicle.getVehicleType().toString())) {
-                listSpotsOpenByTypeAndVehicleType.add(spot);
-            }
-        }
+        List<Spot> listSpotsOpenByTypeAndVehicleType = checkForSpotTypeAndVehicleType(listSpotsOpen, vehicle);
 
         Random rand = new Random();
         Spot spot = listSpotsOpenByTypeAndVehicleType.get(rand.nextInt(listSpotsOpenByTypeAndVehicleType.size()));
@@ -137,6 +116,19 @@ public class BarrierServiceImpl implements BarrierService {
 
         ParkingHistory parkingHistory = ParkingHistory.builder().customerID(vehicle.getCustomerID()).startTime(barrierLicenseReaderDTO.getDate()).endTime(barrierLicenseReaderDTO.getDate()).parkId(park.getParkID()).build();
         parkingHistoryRepository.save(parkingHistory);
+    }
+
+    private List<Spot> checkForSpotTypeAndVehicleType(List<Spot> listSpots, Vehicle vehicle) {
+        List<Spot> listSpotsByTypeAndVehicleType = new ArrayList<>();
+
+        for (Spot spot : listSpots) {
+            if (spot.getSpotType().toString().equals(vehicle.getVehicleEnergySource().toString())
+                    && spot.getSpotVehicleType().toString().equals(vehicle.getVehicleType().toString())) {
+                listSpotsByTypeAndVehicleType.add(spot);
+            }
+        }
+
+        return listSpotsByTypeAndVehicleType;
     }
 
     @Override
@@ -171,16 +163,16 @@ public class BarrierServiceImpl implements BarrierService {
     }
 
     private boolean processExit(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
-
-        //TODO: Check if the park is full for type of vehicle and energy type
         Park park = parkRepository.findByParkNumber(barrierLicenseReaderDTO.getParkNumber());
         List<Spot> listSpotsOccupied = spotRepository.getSpotsByParkIDAndOccupiedAndOperational(park.getParkID(), true, true);
 
-        if (listSpotsOccupied.isEmpty()) {
+        List<Spot> listSpotsOccupiedByTypeAndVehicleType = checkForSpotTypeAndVehicleType(listSpotsOccupied, vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()));
+
+        if (listSpotsOccupiedByTypeAndVehicleType.isEmpty()) {
             return false;
         }
 
-        clearSpot(listSpotsOccupied);
+        clearSpot(listSpotsOccupiedByTypeAndVehicleType);
         updateParkingHistory(barrierLicenseReaderDTO);
 
         return true;
