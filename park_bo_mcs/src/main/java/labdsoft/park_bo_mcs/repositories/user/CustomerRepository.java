@@ -4,5 +4,8 @@ import labdsoft.park_bo_mcs.models.user.Customer;
 import org.springframework.data.repository.CrudRepository;
 
 public interface CustomerRepository extends CrudRepository<Customer, Long> {
-    Customer getCustomerByCustomerID(Long customerID);
+    Customer findByCustomerID(final Long customerID);
+
+    Customer findByNif(final Long nif);
+
 }

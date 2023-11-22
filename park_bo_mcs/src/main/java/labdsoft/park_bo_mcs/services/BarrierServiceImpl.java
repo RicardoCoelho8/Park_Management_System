@@ -2,23 +2,19 @@ package labdsoft.park_bo_mcs.services;
 
 import labdsoft.park_bo_mcs.dtos.BarrierDisplayDTO;
 import labdsoft.park_bo_mcs.dtos.BarrierLicenseReaderDTO;
-import labdsoft.park_bo_mcs.models.park.Park;
-import labdsoft.park_bo_mcs.models.park.ParkingHistory;
-import labdsoft.park_bo_mcs.models.park.Spot;
-import labdsoft.park_bo_mcs.models.park.State;
+import labdsoft.park_bo_mcs.models.park.*;
 import labdsoft.park_bo_mcs.models.payment.PaymentHistory;
 import labdsoft.park_bo_mcs.models.user.Customer;
 import labdsoft.park_bo_mcs.models.user.Status;
-import labdsoft.park_bo_mcs.repositories.park.BarrierRepository;
-import labdsoft.park_bo_mcs.repositories.park.ParkRepository;
-import labdsoft.park_bo_mcs.repositories.park.ParkingHistoryRepository;
-import labdsoft.park_bo_mcs.repositories.park.SpotRepository;
+import labdsoft.park_bo_mcs.models.user.Vehicle;
+import labdsoft.park_bo_mcs.repositories.park.*;
 import labdsoft.park_bo_mcs.repositories.payment.PaymentHistoryRepository;
 import labdsoft.park_bo_mcs.repositories.user.CustomerRepository;
 import labdsoft.park_bo_mcs.repositories.user.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -44,105 +40,191 @@ public class BarrierServiceImpl implements BarrierService {
     private ParkRepository parkRepository;
 
     @Autowired
+    private DisplayRepository displayRepository;
+
+    @Autowired
     private SpotRepository spotRepository;
 
     @Override
-    public BarrierDisplayDTO entranceOpticalReader(BarrierLicenseReaderDTO barrierLicenseReaderDTO) throws Exception {
+    public BarrierDisplayDTO entranceOpticalReader(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
         BarrierDisplayDTO barrierDisplayDTO = barrierLicenseReaderDTO.toBarrierDisplayDTO(barrierLicenseReaderDTO);
 
-        if (vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()) != null
-                && barrierRepository.getBarrierByBarrierID(barrierLicenseReaderDTO.getBarrierID()) != null
-                && parkRepository.findByParkNumber(barrierLicenseReaderDTO.getParkNumber()) != null) {
-
-            Park park = parkRepository.findByParkNumber(barrierLicenseReaderDTO.getParkNumber());
-
-            List<Spot> listSpotsOccupied = spotRepository.getSpotsByParkIDAndOccupiedAndOperational(park.getParkID(), true, true);
-            List<Spot> listSpotsOperacional = spotRepository.getSpotsByParkIDAndOperational(park.getParkID(), true);
-
-            Customer customer = customerRepository.getCustomerByCustomerID(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getCustomerID());
-
-            List<PaymentHistory> paymentHistoryList = paymentHistoryRepository.findAllByCustomerIDAndPaid(customer.getCustomerID(), false);
-
-            if (listSpotsOperacional.size() > listSpotsOccupied.size()
-                    && barrierRepository.getBarrierByBarrierID(barrierLicenseReaderDTO.getBarrierID()).getState() == State.ACTIVE
-                    && paymentHistoryList.size() < 4
-                    && customer.getStatus() != Status.BLOCKED) {
-
-                List<Spot> listSpotsOpen = spotRepository.getSpotsByParkIDAndOccupiedAndOperational(park.getParkID(), false, true);
-
-                Random rand = new Random();
-
-                Spot spot = listSpotsOpen.get(rand.nextInt(listSpotsOpen.size()));
-                spot.setOccupied(true);
-                spotRepository.save(spot);
-
-                ParkingHistory parkingHistory = ParkingHistory.builder()
-                        .customerID(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getCustomerID())
-                        .startTime(barrierLicenseReaderDTO.getDate())
-                        .endTime(barrierLicenseReaderDTO.getDate())
-                        .parkId(park.getParkID())
-                        .build();
-
-                parkingHistoryRepository.save(parkingHistory);
-
-                barrierDisplayDTO.setSuccess(true);
-            }
+        if (checksForLicensePlate(barrierLicenseReaderDTO)) {
+            return createFailureMessage(barrierDisplayDTO, barrierLicenseReaderDTO, "Please use the Park20 app to register and use the parking. Or use the QR code to download the app.");
         }
 
-        if (barrierDisplayDTO.getSuccess()) {
-            Customer user = customerRepository.getCustomerByCustomerID(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getCustomerID());
-
-            barrierDisplayDTO.setMessage("Welcome to the park " + user.getName() + "!");
-        } else {
-            barrierDisplayDTO.setMessage("Please use the Park20 app to register and use the parking. Or use the QR code to download the app.");
+        if (initialChecksFailed(barrierLicenseReaderDTO)) {
+            return createFailureMessage(barrierDisplayDTO, barrierLicenseReaderDTO, "Please contact the park manager.");
         }
+
+        Park park = parkRepository.findByParkNumber(barrierLicenseReaderDTO.getParkNumber());
+        Vehicle vehicle = vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber());
+        Customer customer = customerRepository.findByCustomerID(vehicle.getCustomerID());
+
+        if (!customerEligibleForParking(customer)) {
+            return createFailureMessage(barrierDisplayDTO, barrierLicenseReaderDTO, "You have reached the maximum number of unpaid parking sessions. Please pay your parking sessions or contact the park manager.");
+        }
+
+        if (barrierStateCheck(barrierLicenseReaderDTO)) {
+            return createFailureMessage(barrierDisplayDTO, barrierLicenseReaderDTO, "The barrier is not active. Please contact the park manager.");
+        }
+
+        if (!parkingAvailabilityCheck(park, vehicle)) {
+            return createFailureMessage(barrierDisplayDTO, barrierLicenseReaderDTO, "The park is full. Please contact the park manager.");
+        }
+
+        processParking(park, vehicle, barrierLicenseReaderDTO);
+        updateDisplayMessages(customer, barrierLicenseReaderDTO, false, 0.0, null);
+
+        barrierDisplayDTO.setSuccess(true);
+        barrierDisplayDTO.setMessage("Welcome to the park " + customer.getName() + "!");
 
         return barrierDisplayDTO;
     }
 
-    @Override
-    public BarrierDisplayDTO exitOpticalReader(BarrierLicenseReaderDTO barrierLicenseReaderDTO) throws Exception {
-        BarrierDisplayDTO barrierDisplayDTO = barrierLicenseReaderDTO.toBarrierDisplayDTO(barrierLicenseReaderDTO);
+    private boolean customerEligibleForParking(Customer customer) {
+        if (customer == null || customer.getStatus() == Status.BLOCKED) {
+            return false;
+        }
+        List<PaymentHistory> paymentHistoryList = paymentHistoryRepository.findAllByCustomerIDAndPaid(customer.getCustomerID(), false);
+        return paymentHistoryList.size() < 4;
+    }
 
-        ParkingHistory parkingHistory = parkingHistoryRepository.findByEndTimeIsNull();
+    private boolean barrierStateCheck(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
+        return barrierRepository.getBarrierByBarrierID(barrierLicenseReaderDTO.getBarrierID()).getState() != State.ACTIVE;
+    }
 
-        if (vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()) != null
-                && barrierRepository.getBarrierByBarrierID(barrierLicenseReaderDTO.getBarrierID()) != null
-                && parkRepository.findByParkNumber(barrierLicenseReaderDTO.getParkNumber()) != null) {
+    private boolean parkingAvailabilityCheck(Park park, Vehicle vehicle) {
+        List<Spot> listSpotsOccupied = spotRepository.getSpotsByParkIDAndOccupiedAndOperational(park.getParkID(), true, true);
+        List<Spot> listSpotsOperacional = spotRepository.getSpotsByParkIDAndOperational(park.getParkID(), true);
 
-            Park park = parkRepository.findByParkNumber(barrierLicenseReaderDTO.getParkNumber());
+        List<Spot> listSpotsOccupiedByTypeAndVehicleType = new ArrayList<>();
+        List<Spot> listSpotsOperacionalByTypeAndVehicleType = new ArrayList<>();
 
-            if (barrierRepository.getBarrierByBarrierID(barrierLicenseReaderDTO.getBarrierID()).getState() == State.ACTIVE) {
-
-                List<Spot> listSpotsOccupied = spotRepository.getSpotsByParkIDAndOccupiedAndOperational(park.getParkID(), true, true);
-
-                if (listSpotsOccupied.isEmpty()) {
-                    barrierDisplayDTO.setSuccess(false);
-                    barrierDisplayDTO.setMessage("There is a problem with the exit, please contact the park administrator.");
-                    return barrierDisplayDTO;
-                }
-
-                Random rand = new Random();
-                Spot spot = listSpotsOccupied.get(rand.nextInt(listSpotsOccupied.size()));
-                spot.setOccupied(false);
-
-                spotRepository.save(spot);
-
-                parkingHistory.setEndTime(barrierLicenseReaderDTO.getDate());
-                parkingHistoryRepository.save(parkingHistory);
-
-                barrierDisplayDTO.setSuccess(true);
+        for (Spot spot : listSpotsOccupied) {
+            if (spot.getSpotType().toString().equals(vehicle.getVehicleEnergySource().toString())
+                && spot.getSpotVehicleType().toString().equals(vehicle.getVehicleType().toString())) {
+                listSpotsOccupiedByTypeAndVehicleType.add(spot);
             }
         }
 
-        if (barrierDisplayDTO.getSuccess()) {
-            Customer user = customerRepository.getCustomerByCustomerID(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getCustomerID());
-
-            barrierDisplayDTO.setMessage("Have a nice day " + user.getName() + "! Your total will be " + "€!");
-        } else {
-            barrierDisplayDTO.setMessage("There is a problem with the exit, please contact the park administrator.");
+        for (Spot spot : listSpotsOperacional) {
+            if (spot.getSpotType().toString().equals(vehicle.getVehicleEnergySource().toString())
+                    && spot.getSpotVehicleType().toString().equals(vehicle.getVehicleType().toString())) {
+                listSpotsOperacionalByTypeAndVehicleType.add(spot);
+            }
         }
 
+        return listSpotsOccupiedByTypeAndVehicleType.size() > listSpotsOperacionalByTypeAndVehicleType.size();
+    }
+
+    private void processParking(Park park, Vehicle vehicle, BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
+        List<Spot> listSpotsOpen = spotRepository.getSpotsByParkIDAndOccupiedAndOperational(park.getParkID(), false, true);
+
+        List<Spot> listSpotsOpenByTypeAndVehicleType = new ArrayList<>();
+
+        for (Spot spot : listSpotsOpen) {
+            if (spot.getSpotType().toString().equals(vehicle.getVehicleEnergySource().toString())
+                    && spot.getSpotVehicleType().toString().equals(vehicle.getVehicleType().toString())) {
+                listSpotsOpenByTypeAndVehicleType.add(spot);
+            }
+        }
+
+        Random rand = new Random();
+        Spot spot = listSpotsOpenByTypeAndVehicleType.get(rand.nextInt(listSpotsOpenByTypeAndVehicleType.size()));
+        spot.setOccupied(true);
+        spotRepository.save(spot);
+
+        ParkingHistory parkingHistory = ParkingHistory.builder().customerID(vehicle.getCustomerID()).startTime(barrierLicenseReaderDTO.getDate()).endTime(barrierLicenseReaderDTO.getDate()).parkId(park.getParkID()).build();
+        parkingHistoryRepository.save(parkingHistory);
+    }
+
+    @Override
+    public BarrierDisplayDTO exitOpticalReader(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
+        BarrierDisplayDTO barrierDisplayDTO = barrierLicenseReaderDTO.toBarrierDisplayDTO(barrierLicenseReaderDTO);
+
+        if (checksForLicensePlate(barrierLicenseReaderDTO)) {
+            return createFailureMessage(barrierDisplayDTO, barrierLicenseReaderDTO, "Your vehicle is not registered in the system. Please contact the park manager.");
+        }
+
+        if (initialChecksFailed(barrierLicenseReaderDTO)) {
+            return createFailureMessage(barrierDisplayDTO, barrierLicenseReaderDTO, "Please contact the park manager.");
+        }
+
+        if (barrierStateCheck(barrierLicenseReaderDTO)) {
+            return createFailureMessage(barrierDisplayDTO, barrierLicenseReaderDTO, "The barrier is not active. Please contact the park manager.");
+        }
+
+        if (!processExit(barrierLicenseReaderDTO)) {
+            return createFailureMessage(barrierDisplayDTO, barrierLicenseReaderDTO, "There are no occupied spots. Please contact the park manager.");
+        }
+
+        Customer customer = customerRepository.findByCustomerID(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getCustomerID());
+
+        //TODO: Get the parking history and calculate the price
+        updateDisplayMessages(customer, barrierLicenseReaderDTO, true, 0.0, null);
+
+        barrierDisplayDTO.setSuccess(true);
+        barrierDisplayDTO.setMessage("Have a nice day " + customer.getName() + "! Your total will be €!");
+
         return barrierDisplayDTO;
+    }
+
+    private boolean processExit(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
+
+        //TODO: Check if the park is full for type of vehicle and energy type
+        Park park = parkRepository.findByParkNumber(barrierLicenseReaderDTO.getParkNumber());
+        List<Spot> listSpotsOccupied = spotRepository.getSpotsByParkIDAndOccupiedAndOperational(park.getParkID(), true, true);
+
+        if (listSpotsOccupied.isEmpty()) {
+            return false;
+        }
+
+        clearSpot(listSpotsOccupied);
+        updateParkingHistory(barrierLicenseReaderDTO);
+
+        return true;
+    }
+
+    private void clearSpot(List<Spot> listSpotsOccupied) {
+        Random rand = new Random();
+        Spot spot = listSpotsOccupied.get(rand.nextInt(listSpotsOccupied.size()));
+        spot.setOccupied(false);
+        spotRepository.save(spot);
+    }
+
+    private void updateParkingHistory(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
+        ParkingHistory parkingHistory = parkingHistoryRepository.findByCustomerIDLatest(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getCustomerID());
+        parkingHistory.setEndTime(barrierLicenseReaderDTO.getDate());
+        parkingHistoryRepository.save(parkingHistory);
+    }
+
+    private boolean checksForLicensePlate(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
+        return vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()) == null;
+    }
+
+    private boolean initialChecksFailed(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
+        return barrierRepository.getBarrierByBarrierID(barrierLicenseReaderDTO.getBarrierID()) == null || parkRepository.findByParkNumber(barrierLicenseReaderDTO.getParkNumber()) == null;
+    }
+
+    private BarrierDisplayDTO createFailureMessage(BarrierDisplayDTO barrierDisplayDTO, BarrierLicenseReaderDTO barrierLicenseReaderDTO, String message) {
+        barrierDisplayDTO.setSuccess(false);
+        barrierDisplayDTO.setMessage(message);
+
+        updateDisplayMessages(null, barrierLicenseReaderDTO, false, 0.0, message);
+
+        return barrierDisplayDTO;
+    }
+
+    private void updateDisplayMessages(Customer customer, BarrierLicenseReaderDTO barrierLicenseReaderDTO, Boolean onExit, Double money, String message) {
+        List<Display> displayList = displayRepository.findAllByBarrierNumber(barrierRepository.getBarrierByBarrierID(barrierLicenseReaderDTO.getBarrierID()).getBarrierNumber());
+        for (Display display : displayList) {
+            if (display.getState() == State.ACTIVE) {
+                if (message != null) display.setMessage(message);
+                else if (onExit) display.setMessage("Have a nice day " + customer.getName() + "! Your total will be " + money + "€!");
+                else display.setMessage("Welcome to the park " + customer.getName() + "!");
+            }
+        }
+        displayRepository.saveAll(displayList);
     }
 }

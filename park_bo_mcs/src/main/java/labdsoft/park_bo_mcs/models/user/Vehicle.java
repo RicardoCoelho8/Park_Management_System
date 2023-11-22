@@ -24,5 +24,8 @@ public class Vehicle {
     private String plateNumber;
 
     @Column(nullable = false)
-    private String vehicleType;
+    private VehicleType vehicleType;
+
+    @Column(nullable = false)
+    private VehicleEnergySource vehicleEnergySource;
 }

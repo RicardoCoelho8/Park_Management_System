@@ -23,6 +23,9 @@ public class Spot {
     @Enumerated
     private SpotType spotType;
 
+    @Enumerated
+    private SpotVehicleType spotVehicleType;
+
     @Column(nullable = false)
     private String floorLevel;
 

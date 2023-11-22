@@ -1,6 +1,6 @@
-package labdsoft.park_bo_mcs.models.park;
+package labdsoft.park_bo_mcs.models.user;
 
-public enum SpotType {
+public enum VehicleEnergySource {
     FUEL {
         @Override
         public String toString() {

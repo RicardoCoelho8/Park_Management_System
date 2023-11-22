@@ -28,8 +28,7 @@ class BarrierController {
     @Operation(summary = "Entrance Optical Reader")
     @PostMapping("/entrance")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<BarrierDisplayDTO> entranceOpticalReader(@RequestBody BarrierLicenseReaderDTO barrierLicenseReaderDTO) throws Exception {
-
+    public ResponseEntity<BarrierDisplayDTO> entranceOpticalReader(@RequestBody BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
         final BarrierDisplayDTO barrierDisplayDTO = service.entranceOpticalReader(barrierLicenseReaderDTO);
         return new ResponseEntity<>(barrierDisplayDTO, HttpStatus.OK);
     }
@@ -37,8 +36,7 @@ class BarrierController {
     @Operation(summary = "Exit Optical Reader")
     @PostMapping("/exit")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<BarrierDisplayDTO> exitOpticalReader(@RequestBody BarrierLicenseReaderDTO barrierLicenseReaderDTO) throws Exception {
-
+    public ResponseEntity<BarrierDisplayDTO> exitOpticalReader(@RequestBody BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
         final BarrierDisplayDTO barrierDisplayDTO = service.exitOpticalReader(barrierLicenseReaderDTO);
         return new ResponseEntity<>(barrierDisplayDTO, HttpStatus.OK);
     }

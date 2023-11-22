@@ -37,16 +37,16 @@ public class ParkBootstrapper implements CommandLineRunner {
     private void createSampleSpots(Long id) {
         List<Spot> list_spots = new ArrayList<>();
 
-        list_spots.add(Spot.builder().spotNumber("A1").spotType(SpotType.OTHERS_SPOT).floorLevel("A").occupied(false).operational(false).parkID(id).build());
-        list_spots.add(Spot.builder().spotNumber("A2").spotType(SpotType.OTHERS_SPOT).floorLevel("A").occupied(false).operational(true).parkID(id).build());
-        list_spots.add(Spot.builder().spotNumber("A3").spotType(SpotType.OTHERS_SPOT).floorLevel("A").occupied(false).operational(true).parkID(id).build());
-        list_spots.add(Spot.builder().spotNumber("A4").spotType(SpotType.OTHERS_SPOT).floorLevel("A").occupied(true).operational(true).parkID(id).build());
-        list_spots.add(Spot.builder().spotNumber("A5").spotType(SpotType.OTHERS_SPOT).floorLevel("A").occupied(false).operational(true).parkID(id).build());
-        list_spots.add(Spot.builder().spotNumber("B1").spotType(SpotType.OTHERS_SPOT).floorLevel("B").occupied(false).operational(true).parkID(id).build());
-        list_spots.add(Spot.builder().spotNumber("B2").spotType(SpotType.ELECTRIC_SPOT).floorLevel("B").occupied(false).operational(true).parkID(id).build());
-        list_spots.add(Spot.builder().spotNumber("B3").spotType(SpotType.ELECTRIC_SPOT).floorLevel("B").occupied(true).operational(true).parkID(id).build());
-        list_spots.add(Spot.builder().spotNumber("B4").spotType(SpotType.GPL_SPOT).floorLevel("B").occupied(true).operational(true).parkID(id).build());
-        list_spots.add(Spot.builder().spotNumber("B5").spotType(SpotType.GPL_SPOT).floorLevel("B").occupied(false).operational(true).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("A1").spotType(SpotType.FUEL).floorLevel("A").occupied(false).operational(false).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("A2").spotType(SpotType.FUEL).floorLevel("A").occupied(false).operational(true).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("A3").spotType(SpotType.FUEL).floorLevel("A").occupied(false).operational(true).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("A4").spotType(SpotType.FUEL).floorLevel("A").occupied(true).operational(true).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("A5").spotType(SpotType.FUEL).floorLevel("A").occupied(false).operational(true).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("B1").spotType(SpotType.FUEL).floorLevel("B").occupied(false).operational(true).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("B2").spotType(SpotType.ELECTRIC).floorLevel("B").occupied(false).operational(true).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("B3").spotType(SpotType.ELECTRIC).floorLevel("B").occupied(true).operational(true).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("B4").spotType(SpotType.GPL).floorLevel("B").occupied(true).operational(true).parkID(id).build());
+        list_spots.add(Spot.builder().spotNumber("B5").spotType(SpotType.GPL).floorLevel("B").occupied(false).operational(true).parkID(id).build());
 
         sRepo.saveAll(list_spots);
     }
@@ -71,15 +71,15 @@ public class ParkBootstrapper implements CommandLineRunner {
     private void createSampleDisplays(Long id) {
         List<Display> list_displays = new ArrayList<>();
 
-        list_displays.add(Display.builder().displayNumber("D1.1").state(State.ACTIVE).parkID(id).build());
-        list_displays.add(Display.builder().displayNumber("D1.2").state(State.ACTIVE).parkID(id).build());
-        list_displays.add(Display.builder().displayNumber("D1.3").state(State.ACTIVE).parkID(id).build());
-        list_displays.add(Display.builder().displayNumber("D2.1").state(State.ACTIVE).parkID(id).build());
-        list_displays.add(Display.builder().displayNumber("D2.2").state(State.ACTIVE).parkID(id).build());
-        list_displays.add(Display.builder().displayNumber("D2.3").state(State.ACTIVE).parkID(id).build());
-        list_displays.add(Display.builder().displayNumber("D3.1").state(State.DISABLED).parkID(id).build());
-        list_displays.add(Display.builder().displayNumber("D3.2").state(State.DISABLED).parkID(id).build());
-        list_displays.add(Display.builder().displayNumber("D3.3").state(State.DISABLED).parkID(id).build());
+        list_displays.add(Display.builder().displayNumber("D1.1").barrierNumber("B1.1").state(State.ACTIVE).parkID(id).build());
+        list_displays.add(Display.builder().displayNumber("D1.2").barrierNumber("B1.2").state(State.ACTIVE).parkID(id).build());
+        list_displays.add(Display.builder().displayNumber("D1.3").barrierNumber("B1.2").state(State.ACTIVE).parkID(id).build());
+        list_displays.add(Display.builder().displayNumber("D2.1").barrierNumber("B2.1").state(State.ACTIVE).parkID(id).build());
+        list_displays.add(Display.builder().displayNumber("D2.2").barrierNumber("B2.2").state(State.ACTIVE).parkID(id).build());
+        list_displays.add(Display.builder().displayNumber("D2.3").barrierNumber("B2.2").state(State.ACTIVE).parkID(id).build());
+        list_displays.add(Display.builder().displayNumber("D3.1").barrierNumber("B3.1").state(State.DISABLED).parkID(id).build());
+        list_displays.add(Display.builder().displayNumber("D3.2").barrierNumber("B3.2").state(State.DISABLED).parkID(id).build());
+        list_displays.add(Display.builder().displayNumber("D3.3").barrierNumber("B3.2").state(State.DISABLED).parkID(id).build());
 
         dRepo.saveAll(list_displays);
     }

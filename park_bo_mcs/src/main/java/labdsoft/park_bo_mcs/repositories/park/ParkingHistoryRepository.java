@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ParkingHistoryRepository extends CrudRepository<ParkingHistory, Long> {
 
-    @Query("SELECT p FROM ParkingHistory p WHERE p.endTime IS NULL")
-    ParkingHistory findByEndTimeIsNull();
+    @Query("SELECT p FROM ParkingHistory p WHERE p.endTime = p.startTime AND p.customerID = ?1")
+    ParkingHistory findByCustomerIDLatest(Long customerID);
 }

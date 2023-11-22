@@ -59,7 +59,7 @@ class DisplayServiceImplTest {
     }
 
     private void createSampleSpot(Long id) {
-        sRepo.save(Spot.builder().spotNumber("TestS").spotType(SpotType.OTHERS_SPOT).floorLevel("A").occupied(false).operational(true).parkID(id).build());
+        sRepo.save(Spot.builder().spotNumber("TestS").spotType(SpotType.FUEL).floorLevel("A").occupied(false).operational(true).parkID(id).build());
     }
 
     private void createSampleBarrier(Long id) {

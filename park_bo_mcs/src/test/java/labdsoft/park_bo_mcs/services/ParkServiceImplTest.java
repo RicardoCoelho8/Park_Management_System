@@ -18,16 +18,16 @@ class ParkServiceImplTest {
         list_spots = new ArrayList<>();
         list_priceTableEntry = new ArrayList<>();
 
-        list_spots.add(Spot.builder().spotNumber("A1").spotType(SpotType.ELECTRIC_SPOT).floorLevel("A").occupied(false).operational(false).parkID(1L).build());
-        list_spots.add(Spot.builder().spotNumber("A2").spotType(SpotType.ELECTRIC_SPOT).floorLevel("A").occupied(false).operational(true).parkID(1L).build());
-        list_spots.add(Spot.builder().spotNumber("A3").spotType(SpotType.ELECTRIC_SPOT).floorLevel("A").occupied(false).operational(true).parkID(1L).build());
-        list_spots.add(Spot.builder().spotNumber("A4").spotType(SpotType.ELECTRIC_SPOT).floorLevel("A").occupied(true).operational(true).parkID(1L).build());
-        list_spots.add(Spot.builder().spotNumber("A5").spotType(SpotType.ELECTRIC_SPOT).floorLevel("A").occupied(false).operational(true).parkID(1L).build());
-        list_spots.add(Spot.builder().spotNumber("B1").spotType(SpotType.ELECTRIC_SPOT).floorLevel("B").occupied(false).operational(true).parkID(1L).build());
-        list_spots.add(Spot.builder().spotNumber("B2").spotType(SpotType.ELECTRIC_SPOT).floorLevel("B").occupied(false).operational(true).parkID(1L).build());
-        list_spots.add(Spot.builder().spotNumber("B3").spotType(SpotType.ELECTRIC_SPOT).floorLevel("B").occupied(true).operational(true).parkID(1L).build());
-        list_spots.add(Spot.builder().spotNumber("B4").spotType(SpotType.ELECTRIC_SPOT).floorLevel("B").occupied(true).operational(true).parkID(1L).build());
-        list_spots.add(Spot.builder().spotNumber("B5").spotType(SpotType.ELECTRIC_SPOT).floorLevel("B").occupied(false).operational(true).parkID(1L).build());
+        list_spots.add(Spot.builder().spotNumber("A1").spotType(SpotType.ELECTRIC).floorLevel("A").occupied(false).operational(false).parkID(1L).build());
+        list_spots.add(Spot.builder().spotNumber("A2").spotType(SpotType.ELECTRIC).floorLevel("A").occupied(false).operational(true).parkID(1L).build());
+        list_spots.add(Spot.builder().spotNumber("A3").spotType(SpotType.ELECTRIC).floorLevel("A").occupied(false).operational(true).parkID(1L).build());
+        list_spots.add(Spot.builder().spotNumber("A4").spotType(SpotType.ELECTRIC).floorLevel("A").occupied(true).operational(true).parkID(1L).build());
+        list_spots.add(Spot.builder().spotNumber("A5").spotType(SpotType.ELECTRIC).floorLevel("A").occupied(false).operational(true).parkID(1L).build());
+        list_spots.add(Spot.builder().spotNumber("B1").spotType(SpotType.ELECTRIC).floorLevel("B").occupied(false).operational(true).parkID(1L).build());
+        list_spots.add(Spot.builder().spotNumber("B2").spotType(SpotType.ELECTRIC).floorLevel("B").occupied(false).operational(true).parkID(1L).build());
+        list_spots.add(Spot.builder().spotNumber("B3").spotType(SpotType.ELECTRIC).floorLevel("B").occupied(true).operational(true).parkID(1L).build());
+        list_spots.add(Spot.builder().spotNumber("B4").spotType(SpotType.ELECTRIC).floorLevel("B").occupied(true).operational(true).parkID(1L).build());
+        list_spots.add(Spot.builder().spotNumber("B5").spotType(SpotType.ELECTRIC).floorLevel("B").occupied(false).operational(true).parkID(1L).build());
 
         list_priceTableEntry.add(PriceTableEntry.builder().periodStart("9:00").periodEnd("21:00").thresholds(createSampleThresholdCosts()).build());
         list_priceTableEntry.add(PriceTableEntry.builder().periodStart("21:00").periodEnd("9:00").thresholds(createSampleThresholdCosts()).build());
