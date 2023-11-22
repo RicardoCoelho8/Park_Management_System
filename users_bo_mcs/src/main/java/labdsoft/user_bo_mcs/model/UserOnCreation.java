@@ -27,6 +27,8 @@ public class UserOnCreation {
 
     private VehicleType vehicleType;
 
+    private VehicleEnergySource vehicleEnergySource;
+
     private PaymentMethod paymentMethod;
 
     

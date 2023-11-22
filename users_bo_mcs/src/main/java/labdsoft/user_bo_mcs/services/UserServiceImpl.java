@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
         final Name name = new Name(userOnCreation.getFirstName(), userOnCreation.getLastName());
         final User user = new User(name, new Email(userOnCreation.getEmail()),
                 new Password(this.passwordEncoder.encode(userOnCreation.getPassword())), new TaxIdNumber(userOnCreation.getNif()), Role.CUSTOMER,
-                new Vehicle(userOnCreation.getLicensePlateNumber(), userOnCreation.getVehicleType()),
+                new Vehicle(userOnCreation.getLicensePlateNumber(), userOnCreation.getVehicleType(), userOnCreation.getVehicleEnergySource()),
                 userOnCreation.getPaymentMethod(), UserStatus.ENABLED);
 
         repository.save(user);
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO addVehicle(Long userId, VehicleOnCreation vehicleOnCreation) throws Exception {
         User user = this.repository.findById(userId).orElseThrow();
 
-        Vehicle vehicle = new Vehicle(vehicleOnCreation.getLicensePlateNumber(), vehicleOnCreation.getVehicleType());
+        Vehicle vehicle = new Vehicle(vehicleOnCreation.getLicensePlateNumber(), vehicleOnCreation.getVehicleType(), vehicleOnCreation.getVehicleEnergySource());
         boolean added = user.addVehicle(vehicle);
         if (!added) {
             throw new IllegalArgumentException("Couldn't add vehicle!");

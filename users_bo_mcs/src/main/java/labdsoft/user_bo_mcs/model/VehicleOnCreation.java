@@ -16,4 +16,6 @@ public class VehicleOnCreation {
 
     private VehicleType vehicleType;
 
+    private VehicleEnergySource vehicleEnergySource;
+
 }

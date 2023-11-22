@@ -24,6 +24,7 @@ public class ApiGatewayApplication {
 				.route(p -> p
 						.path("/parks/**")
 						.or().path("/barriers/**")
+						.or().path("/display/**")
 						.uri("lb://park20-park-microservice"))
 				.route(p -> p
 						.path("/payments/**")

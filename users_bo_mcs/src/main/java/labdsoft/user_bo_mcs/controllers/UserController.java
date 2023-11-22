@@ -130,8 +130,7 @@ class UserController {
         logger.info("Received change payment method to " + pMethod + " of user " + userId + " request");
 
         if (!headerUserId.equals(userId.toString())) {
-            // only the user that is authenticated in the request is allowed to add a
-            // vehicle for himself
+            // only the user that is authenticated in the request is allowed to change his own payment method
             logger.info("Request invalidated due to incoherent path user id of " + userId + "and header user id of " + headerUserId);
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         }
@@ -146,7 +145,7 @@ class UserController {
             return new ResponseEntity<UserDTO>(user, HttpStatus.ACCEPTED);
         } catch (Exception e) {
             logger.info(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 

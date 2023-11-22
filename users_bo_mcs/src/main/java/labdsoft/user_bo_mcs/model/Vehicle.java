@@ -20,9 +20,13 @@ public class Vehicle {
     @Enumerated
     private VehicleType vehicleType;
 
+    @Enumerated
+    private VehicleEnergySource vehicleEnergySource;
 
 
-    public Vehicle(String licensePlateNumber, VehicleType vehicleType) {
+
+
+    public Vehicle(String licensePlateNumber, VehicleType vehicleType, VehicleEnergySource energySource) {
         Pattern p = Pattern.compile("^(([A-Z]{2}-\\d{2}-(\\d{2}|[A-Z]{2}))|(\\d{2}-(\\d{2}-[A-Z]{2}|[A-Z]{2}-\\d{2})))$");
         Matcher m = p.matcher(licensePlateNumber);
         if (!m.matches()) {
@@ -30,6 +34,7 @@ public class Vehicle {
         }
         this.licensePlateNumber = licensePlateNumber;
         this.vehicleType = vehicleType;
+        this.vehicleEnergySource = energySource;
     }
 
 }
