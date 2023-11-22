@@ -14,7 +14,7 @@ import java.util.Date;
 @Builder
 public class BarrierLicenseReaderDTO {
     private Long barrierID;
-    private Long parkid;
+    private Long parkID;
     private Long parkNumber;
     private String plateNumber;
     private Calendar date;
@@ -22,7 +22,7 @@ public class BarrierLicenseReaderDTO {
     public BarrierDisplayDTO toBarrierDisplayDTO(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
         return BarrierDisplayDTO.builder()
                 .barrierID(barrierLicenseReaderDTO.getBarrierID())
-                .parkid(barrierLicenseReaderDTO.getParkid())
+                .parkID(barrierLicenseReaderDTO.getParkID())
                 .success(false)
                 .build();
     }

@@ -5,5 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ParkRepository extends CrudRepository<Park, Long> {
     Park findByParkNumber(Long parkNumber);
+
+    Park findByParkID(Long parkID);
 }
 

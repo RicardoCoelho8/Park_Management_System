@@ -17,6 +17,9 @@ public class Customer {
     @Column(nullable = false, unique = true)
     private Long customerID;
 
+    @Column(nullable = false, unique = true)
+    private Long nif;
+
     @Column(nullable = false)
     private String name;
 

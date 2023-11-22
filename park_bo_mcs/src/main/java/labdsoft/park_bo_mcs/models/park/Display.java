@@ -21,8 +21,15 @@ public class Display {
     private String displayNumber;
 
     @Column(nullable = false)
+    private String barrierNumber;
+
+    @Column(nullable = false)
     private State state;
 
     @Column(nullable = false)
     private Long parkID;
+
+    private String message;
+
+    private Integer occupancy;
 }
