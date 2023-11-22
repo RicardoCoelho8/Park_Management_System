@@ -1,4 +1,4 @@
-package labdsoft.park_bo_mcs.dtos;
+package labdsoft.park_bo_mcs.dtos.park;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Calendar;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor

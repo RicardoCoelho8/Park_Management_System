@@ -1,7 +1,8 @@
 package labdsoft.park_bo_mcs.services;
 
-import labdsoft.park_bo_mcs.dtos.BarrierDisplayDTO;
-import labdsoft.park_bo_mcs.dtos.BarrierLicenseReaderDTO;
+import labdsoft.park_bo_mcs.dtos.park.BarrierDisplayDTO;
+import labdsoft.park_bo_mcs.dtos.park.BarrierLicenseReaderDTO;
+import labdsoft.park_bo_mcs.dtos.park.SendToPaymentDTO;
 import labdsoft.park_bo_mcs.models.park.*;
 import labdsoft.park_bo_mcs.models.payment.PaymentHistory;
 import labdsoft.park_bo_mcs.models.user.Customer;
@@ -153,13 +154,28 @@ public class BarrierServiceImpl implements BarrierService {
 
         Customer customer = customerRepository.findByCustomerID(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getCustomerID());
 
-        //TODO: Get the parking history and calculate the price
-        updateDisplayMessages(customer, barrierLicenseReaderDTO, true, 0.0, null);
+        Double money = getMoneyFromPayment(barrierLicenseReaderDTO);
+
+        updateDisplayMessages(customer, barrierLicenseReaderDTO, true, money, null);
 
         barrierDisplayDTO.setSuccess(true);
         barrierDisplayDTO.setMessage("Have a nice day " + customer.getName() + "! Your total will be €!");
 
         return barrierDisplayDTO;
+    }
+
+    private Double getMoneyFromPayment(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
+        ParkingHistory parkingHistory = parkingHistoryRepository.findByCustomerIDLatest(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getCustomerID());
+
+        SendToPaymentDTO.builder().parkID(barrierLicenseReaderDTO.getParkID()).enterPark(parkingHistory.getStartTime())
+                .leftPark(parkingHistory.getEndTime()).licensePlate(barrierLicenseReaderDTO.getPlateNumber()).build();
+
+        return 0.0;
+
+//        PaymentsDTO paymentsDTO = new PaymentsDTO();
+//        // TODO: Call the payment service to get the price
+//
+//        return paymentsDTO.getFinalPrice();
     }
 
     private boolean processExit(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {

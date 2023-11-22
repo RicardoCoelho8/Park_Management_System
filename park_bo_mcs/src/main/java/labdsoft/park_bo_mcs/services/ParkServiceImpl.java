@@ -1,10 +1,9 @@
 package labdsoft.park_bo_mcs.services;
 
-import labdsoft.park_bo_mcs.communications.Publish;
-import labdsoft.park_bo_mcs.dtos.NearbyParkOccupancyDTO;
-import labdsoft.park_bo_mcs.dtos.OccupancyParkDTO;
-import labdsoft.park_bo_mcs.dtos.PriceTableEntryDTO;
-import labdsoft.park_bo_mcs.dtos.SpotTypeOccupancyDTO;
+import labdsoft.park_bo_mcs.dtos.park.NearbyParkOccupancyDTO;
+import labdsoft.park_bo_mcs.dtos.park.OccupancyParkDTO;
+import labdsoft.park_bo_mcs.dtos.park.PriceTableEntryDTO;
+import labdsoft.park_bo_mcs.dtos.park.SpotTypeOccupancyDTO;
 import labdsoft.park_bo_mcs.models.park.Park;
 import labdsoft.park_bo_mcs.models.park.PriceTableEntry;
 import labdsoft.park_bo_mcs.models.park.Spot;

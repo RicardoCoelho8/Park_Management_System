@@ -1,9 +1,9 @@
 package labdsoft.park_bo_mcs.services;
 
-import labdsoft.park_bo_mcs.dtos.BarrierDisplayDTO;
-import labdsoft.park_bo_mcs.dtos.DisplayDTO;
-import labdsoft.park_bo_mcs.dtos.DisplayGetDTO;
-import labdsoft.park_bo_mcs.dtos.DisplayUpdateDTO;
+import labdsoft.park_bo_mcs.dtos.park.BarrierDisplayDTO;
+import labdsoft.park_bo_mcs.dtos.park.DisplayDTO;
+import labdsoft.park_bo_mcs.dtos.park.DisplayGetDTO;
+import labdsoft.park_bo_mcs.dtos.park.DisplayUpdateDTO;
 
 public interface DisplayService {
     BarrierDisplayDTO updateDisplayMessage(final DisplayUpdateDTO barrierLicenseReaderDTO);

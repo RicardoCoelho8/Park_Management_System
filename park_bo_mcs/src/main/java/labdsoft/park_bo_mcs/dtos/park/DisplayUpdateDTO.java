@@ -1,4 +1,4 @@
-package labdsoft.park_bo_mcs.dtos;
+package labdsoft.park_bo_mcs.dtos.park;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

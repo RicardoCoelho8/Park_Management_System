@@ -1,8 +1,8 @@
 package labdsoft.park_bo_mcs.services;
 
-import labdsoft.park_bo_mcs.dtos.NearbyParkOccupancyDTO;
-import labdsoft.park_bo_mcs.dtos.OccupancyParkDTO;
-import labdsoft.park_bo_mcs.dtos.PriceTableEntryDTO;
+import labdsoft.park_bo_mcs.dtos.park.NearbyParkOccupancyDTO;
+import labdsoft.park_bo_mcs.dtos.park.OccupancyParkDTO;
+import labdsoft.park_bo_mcs.dtos.park.PriceTableEntryDTO;
 
 import java.util.List;
 

@@ -1,7 +1,8 @@
 package labdsoft.park_bo_mcs.services;
 
 import labdsoft.park_bo_mcs.ParkMcsApplication;
-import labdsoft.park_bo_mcs.dtos.*;
+import labdsoft.park_bo_mcs.dtos.park.BarrierDisplayDTO;
+import labdsoft.park_bo_mcs.dtos.park.BarrierLicenseReaderDTO;
 import labdsoft.park_bo_mcs.models.park.*;
 import labdsoft.park_bo_mcs.models.user.*;
 import labdsoft.park_bo_mcs.repositories.park.*;

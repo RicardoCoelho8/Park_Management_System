@@ -1,4 +1,6 @@
-package labdsoft.park_bo_mcs.dtos;
+package labdsoft.park_bo_mcs.dtos.park;
+
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OccupancyParkDTO {
-    private Long parkid;
+public class NearbyParkOccupancyDTO {
+    private Long parkId;
     private Long parkNumber;
     private int occupancy;
     private int currentCapacity;
+    private List<SpotTypeOccupancyDTO> spotTypeOccupancies;
+    private double distanceKm;
 }
