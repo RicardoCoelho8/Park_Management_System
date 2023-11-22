@@ -1,12 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { userDataReducer } from "./userData";
 import { userDataApi } from "./userData/api";
-import { navigationReducer } from "./navigation";
 
 export const store = configureStore({
   reducer: {
     userData: userDataReducer,
-    navigation: navigationReducer,
     [userDataApi.reducerPath]: userDataApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>

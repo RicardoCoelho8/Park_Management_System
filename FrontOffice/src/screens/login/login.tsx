@@ -6,6 +6,7 @@ import { setUserData } from "../../store";
 import { useLoginMutation } from "../../store/userData/api";
 import { Link, useNavigate } from "react-router-dom";
 import { ModalErrorForm } from "../../components";
+import { decodeJwt } from "../../utils/jwtUtils";
 
 export const LoginScreen: React.FC = () => {
   const dispatch = useDispatch();
@@ -13,17 +14,23 @@ export const LoginScreen: React.FC = () => {
   const [password, setPassword] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [loginUser, { data, error }] = useLoginMutation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (data) {
-      console.log(data);
+      console.log("Login sucessful", data);
+      const decodedToken = decodeJwt(data.token);
+      dispatch(
+        setUserData({ userId: decodedToken.sub, userRole: decodedToken.role })
+      );
+      navigate("/home");
     } else if (error) {
       setShowModal(true);
+      console.log("Login error", error);
     }
   }, [data, error]);
 
   const handleOnClickSubmit = () => {
-    dispatch(setUserData({ email, password }));
     loginUser({ email, password });
     setEmail("");
     setPassword("");
@@ -95,7 +102,7 @@ export const LoginScreen: React.FC = () => {
           }}
         >
           <p style={{ marginRight: "0.313rem" }}> Not registered yet? </p>
-          <Link to={"/home"}>Register Here!</Link>
+          <Link to={"/register"}>Register Here!</Link>
         </Container>
       </Container>
       <ModalErrorForm showModal={showModal} setShowModal={setShowModal} />

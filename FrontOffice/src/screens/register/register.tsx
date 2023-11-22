@@ -27,7 +27,6 @@ export const RegisterScreen: React.FC = () => {
   useEffect(() => {
     if (error) {
       setShowModal(true);
-      console.log("showModal in useEffect", showModal);
     }
     if (isSuccess) {
       navigate("/");
@@ -52,7 +51,6 @@ export const RegisterScreen: React.FC = () => {
   const handleButtonOnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const vehicleType = getRandomVehicleType();
-    console.log(lastName);
 
     try {
       postUserData({
@@ -66,7 +64,7 @@ export const RegisterScreen: React.FC = () => {
         vehicleType,
       });
     } catch (error) {
-      console.log("Caught Error", error);
+      console.log("Error Registration", error);
     }
   };
 

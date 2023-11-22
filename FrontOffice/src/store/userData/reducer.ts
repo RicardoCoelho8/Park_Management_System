@@ -1,13 +1,13 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export interface UserDataState {
-  email: string;
-  password: string;
+  userId: string;
+  userRole: string;
 }
 
 export const initialState: UserDataState = {
-  email: "",
-  password: "",
+  userId: "",
+  userRole: "",
 };
 
 export const userSlice = createSlice({
@@ -15,8 +15,8 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUserData(state, action: PayloadAction<UserDataState>) {
-      state.email = action.payload.email;
-      state.password = action.payload.password;
+      state.userId = action.payload.userId;
+      state.userRole = action.payload.userRole;
     },
   },
 });
