@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Container, Form, Image, Modal } from "react-bootstrap";
+import { Button, Container, Form, Image } from "react-bootstrap";
 import { usePostUserDataMutation } from "../../store/userData/api";
 import { logo } from "../../images";
 import { ModalErrorForm } from "../../components";

@@ -18,8 +18,12 @@ export const userSlice = createSlice({
       state.userId = action.payload.userId;
       state.userRole = action.payload.userRole;
     },
+    logout(state) {
+      state.userId = "";
+      state.userRole = "";
+    },
   },
 });
 
-export const { setUserData } = userSlice.actions;
+export const { setUserData, logout } = userSlice.actions;
 export const userDataReducer = userSlice.reducer;
