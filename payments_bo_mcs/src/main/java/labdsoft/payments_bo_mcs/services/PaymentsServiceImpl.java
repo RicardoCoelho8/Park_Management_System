@@ -45,7 +45,7 @@ public class PaymentsServiceImpl implements PaymentsService {
             throw new IllegalArgumentException("Vehicle does not exist.");
         }
 
-        final Optional<AppUser> verification = userRepository.findByVehicle(vehicle.get().getLicensePlateNumber());
+        final Optional<AppUser> verification = userRepository.findByVehicle(vehicle.get().getPlateNumber());
 
         if (verification.isEmpty()) {
             throw new IllegalArgumentException("User does not exist.");

@@ -1,16 +1,16 @@
 package labdsoft.payments_bo_mcs.model.vehicle;
 
 public enum VehicleType {
-    ELECTRIC {
+    AUTOMOBILE {
         @Override
         public String toString() {
-            return "ELECTRIC";
+            return "AUTOMOBILE";
         }
     },
-    FUEL {
+    MOTORCYCLE {
         @Override
         public String toString() {
-            return "FUEL";
+            return "MOTORCYCLE";
         }
-    }
+    },
 }

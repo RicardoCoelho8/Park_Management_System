@@ -63,7 +63,7 @@ public class Subscribe {
                             String licensePlateNumber = vehicleObject.getString("licensePlateNumber");
                             String vehicleType = vehicleObject.getString("vehicleType");
 
-                            vehicles.add(Vehicle.builder().licensePlateNumber(licensePlateNumber).vehicleType(VehicleType.valueOf(vehicleType)).build());
+                            vehicles.add(Vehicle.builder().plateNumber(licensePlateNumber).vehicleType(VehicleType.valueOf(vehicleType)).build());
                         }
 
                         AppUser user = AppUser.builder().userID(userId).nif(nif).vehicles(vehicles.stream().toList()).build();

@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface VehicleRepository extends CrudRepository<Vehicle, Long> {
 
-    @Query("SELECT p FROM Vehicle p WHERE p.licensePlateNumber=:licensePlate")
+    @Query("SELECT p FROM Vehicle p WHERE p.plateNumber=:licensePlate")
     Optional<Vehicle> findByLicensePlate(String licensePlate);
 
 }

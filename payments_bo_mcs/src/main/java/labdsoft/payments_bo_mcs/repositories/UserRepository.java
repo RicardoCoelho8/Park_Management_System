@@ -12,20 +12,10 @@ import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<AppUser, Long> {
 
-    @Transactional
-    @Modifying
-    @Query("DELETE FROM AppUser p WHERE p.userID=:userID")
-    void deleteBySku(@Param("userID") Long userID);
-
-    @Transactional
-    @Modifying
-    @Query("UPDATE AppUser p SET p.userID = :sku WHERE p.userID=:userID")
-    Payments updateBySku(@Param("userID") String userID);
-
     @Query("SELECT p FROM AppUser p WHERE p.nif=:nif")
     Optional<AppUser> findByNif(Long nif);
 
-    @Query("SELECT DISTINCT p FROM AppUser p JOIN FETCH p.vehicles v WHERE v.licensePlateNumber = :licensePlateNumber")
+    @Query("SELECT DISTINCT p FROM AppUser p JOIN FETCH p.vehicles v WHERE v.plateNumber = :licensePlateNumber")
     Optional<AppUser> findByVehicle(String licensePlateNumber);
 
 
