@@ -3,6 +3,8 @@ package labdsoft.payments_bo_mcs.bootstrapper;
 import labdsoft.payments_bo_mcs.model.payment.Payments;
 import labdsoft.payments_bo_mcs.model.payment.PaymentsTableRow;
 import labdsoft.payments_bo_mcs.model.user.AppUser;
+import labdsoft.payments_bo_mcs.model.vehicle.Vehicle;
+import labdsoft.payments_bo_mcs.model.vehicle.VehicleType;
 import labdsoft.payments_bo_mcs.repositories.PaymentsRepository;
 import labdsoft.payments_bo_mcs.repositories.PaymentsTableRowRepository;
 import labdsoft.payments_bo_mcs.repositories.UserRepository;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 @Component
@@ -54,10 +57,22 @@ public class PaymentsBootstrapper implements CommandLineRunner {
         pRepo.save(p1);
     }
 
+    private static final String LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String DIGITS = "0123456789";
+
     private void userValues(Long nif) {
         AppUser u1 = new AppUser();
         u1.setNif(nif);
 
+        String licensePlate =  new Random().ints(6, 0, LETTERS.length() + DIGITS.length())
+                .mapToObj(i -> (i < LETTERS.length()) ? LETTERS.charAt(i) : DIGITS.charAt(i - LETTERS.length()))
+                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+                .toString();
+
+        List<Vehicle> vehicleList = new ArrayList<>();
+        vehicleList.add(Vehicle.builder().licensePlateNumber(licensePlate).vehicleType(VehicleType.FUEL).build());
+
+        u1.setVehicles(vehicleList);
         //System.out.println(u1);
         uRepo.save(u1);
     }

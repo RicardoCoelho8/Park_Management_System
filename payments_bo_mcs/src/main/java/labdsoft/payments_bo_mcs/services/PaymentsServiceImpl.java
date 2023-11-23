@@ -1,10 +1,12 @@
 package labdsoft.payments_bo_mcs.services;
 
 import labdsoft.payments_bo_mcs.communication.Publish;
+import labdsoft.payments_bo_mcs.model.barrier.BarrierInfoDTO;
 import labdsoft.payments_bo_mcs.model.payment.Payments;
 import labdsoft.payments_bo_mcs.model.payment.PaymentsDTO;
 import labdsoft.payments_bo_mcs.model.payment.PaymentsTableRow;
 import labdsoft.payments_bo_mcs.model.priceTable.PriceTableEntry;
+import labdsoft.payments_bo_mcs.model.priceTable.ThresholdCost;
 import labdsoft.payments_bo_mcs.model.user.AppUser;
 import labdsoft.payments_bo_mcs.model.vehicle.Vehicle;
 import labdsoft.payments_bo_mcs.repositories.PaymentsRepository;
@@ -35,27 +37,34 @@ public class PaymentsServiceImpl implements PaymentsService {
     private VehicleRepository vehicleRepository;
 
 
-    public PaymentsDTO createFromBarrier(final Date enterParkDate, final Date leftParkDate, final Long parkID, final String licensePlateNumber) throws Exception {
+    public PaymentsDTO createFromBarrier(final BarrierInfoDTO barrierInfoDTO) throws Exception {
 
-        final Optional<Vehicle> vehicle = vehicleRepository.findByLicensePlate(licensePlateNumber);
+        final Optional<Vehicle> vehicle = vehicleRepository.findByLicensePlate(barrierInfoDTO.getLicensePlateNumber());
 
-        if (vehicle.isPresent()) {
+        if (vehicle.isEmpty()) {
             throw new IllegalArgumentException("Vehicle does not exist.");
         }
 
         final Optional<AppUser> verification = userRepository.findByVehicle(vehicle.get().getLicensePlateNumber());
 
-        if (verification.isPresent()) {
+        if (verification.isEmpty()) {
             throw new IllegalArgumentException("User does not exist.");
         }
 
-        List<PriceTableEntry> listPriceTableEntry = Publish.getPriceTablePark("park", parkID.toString(), host);
+        List<PriceTableEntry> listPriceTableEntry = new ArrayList<>();
+        ArrayList<ThresholdCost> listThresholdCosts = new ArrayList<>();
+        listThresholdCosts.add(ThresholdCost.builder().thresholdMinutes(15).costPerMinuteAutomobiles(0.15).costPerMinuteMotorcycles(0.15).build());
+        listThresholdCosts.add(ThresholdCost.builder().thresholdMinutes(15).costPerMinuteAutomobiles(0.15).costPerMinuteMotorcycles(0.15).build());
+        listThresholdCosts.add(ThresholdCost.builder().thresholdMinutes(15).costPerMinuteAutomobiles(0.15).costPerMinuteMotorcycles(0.15).build());
+        listThresholdCosts.add(ThresholdCost.builder().thresholdMinutes(15).costPerMinuteAutomobiles(0.30).costPerMinuteMotorcycles(0.30).build());
 
-        Calendar enterPark = Calendar.getInstance();
-        enterPark.setTime(enterParkDate);
+        listPriceTableEntry.add(PriceTableEntry.builder().periodStart("21:00").periodEnd("9:00").thresholds(listThresholdCosts).parkId(1L).build());
+        listPriceTableEntry.add(PriceTableEntry.builder().periodStart("9:00").periodEnd("21:00").thresholds(listThresholdCosts).parkId(1L).build());
+        //List<PriceTableEntry> listPriceTableEntry = Publish.getPriceTablePark("park", barrierInfoDTO.getParkID().toString(), host);
 
-        Calendar leftPark = Calendar.getInstance();
-        leftPark.setTime(leftParkDate);
+        Calendar enterPark = barrierInfoDTO.getEnterPark();
+
+        Calendar leftPark = barrierInfoDTO.getLeftPark();
 
         List<PaymentsTableRow> rows = calculateCost(vehicle.get().getVehicleType().name(), enterPark, leftPark, listPriceTableEntry);
 
@@ -96,14 +105,14 @@ public class PaymentsServiceImpl implements PaymentsService {
             paymentsTableRow.setFractionStart(actualPeriod.get(Calendar.HOUR_OF_DAY) + ":" + actualPeriod.get(Calendar.MINUTE));
 
             if (counter < entry.getThresholds().size()) {
-                if (vehicleType.equals("Automobile")) {
+                if (vehicleType.equals("FUEL")) {
                     price = entry.getThresholds().get(counter).getCostPerMinuteAutomobiles();
                 } else {
                     price = entry.getThresholds().get(counter).getCostPerMinuteMotorcycles();
                 }
                 actualPeriod.add(Calendar.MINUTE, entry.getThresholds().get(counter).getThresholdMinutes());
             } else {
-                if (vehicleType.equals("Automobile")) {
+                if (vehicleType.equals("ELECTRIC")) {
                     price = entry.getThresholds().get(entry.getThresholds().size() - 1).getCostPerMinuteAutomobiles();
                 } else {
                     price = entry.getThresholds().get(entry.getThresholds().size() - 1).getCostPerMinuteMotorcycles();

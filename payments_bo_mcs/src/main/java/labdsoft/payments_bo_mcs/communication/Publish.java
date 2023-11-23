@@ -45,7 +45,7 @@ public class Publish {
 
     public static List<PriceTableEntry> getPriceTablePark(String exchangeName, String message, String host) throws Exception {
         try {
-            String apiUrl = parkBo + "/parks/getAllPriceTableEntries/" + message;
+            String apiUrl = "localhost:8094/parks/getAllPriceTableEntries/" + message;
             URL url = URI.create(apiUrl).toURL();
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
