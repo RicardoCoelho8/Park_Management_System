@@ -9,9 +9,7 @@ import labdsoft.payments_bo_mcs.model.priceTable.PriceTableEntry;
 import labdsoft.payments_bo_mcs.model.priceTable.ThresholdCost;
 import labdsoft.payments_bo_mcs.model.user.AppUser;
 import labdsoft.payments_bo_mcs.model.vehicle.Vehicle;
-import labdsoft.payments_bo_mcs.repositories.PaymentsRepository;
-import labdsoft.payments_bo_mcs.repositories.UserRepository;
-import labdsoft.payments_bo_mcs.repositories.VehicleRepository;
+import labdsoft.payments_bo_mcs.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -36,6 +34,12 @@ public class PaymentsServiceImpl implements PaymentsService {
     @Autowired
     private VehicleRepository vehicleRepository;
 
+    @Autowired
+    private PriceTableEntryRepository priceTableEntryRepository;
+
+    @Autowired
+    private PaymentsTableRowRepository p_tr_Repo;
+
 
     public PaymentsDTO createFromBarrier(final BarrierInfoDTO barrierInfoDTO) throws Exception {
 
@@ -51,22 +55,13 @@ public class PaymentsServiceImpl implements PaymentsService {
             throw new IllegalArgumentException("User does not exist.");
         }
 
-        List<PriceTableEntry> listPriceTableEntry = new ArrayList<>();
-        ArrayList<ThresholdCost> listThresholdCosts = new ArrayList<>();
-        listThresholdCosts.add(ThresholdCost.builder().thresholdMinutes(15).costPerMinuteAutomobiles(0.15).costPerMinuteMotorcycles(0.15).build());
-        listThresholdCosts.add(ThresholdCost.builder().thresholdMinutes(15).costPerMinuteAutomobiles(0.15).costPerMinuteMotorcycles(0.15).build());
-        listThresholdCosts.add(ThresholdCost.builder().thresholdMinutes(15).costPerMinuteAutomobiles(0.15).costPerMinuteMotorcycles(0.15).build());
-        listThresholdCosts.add(ThresholdCost.builder().thresholdMinutes(15).costPerMinuteAutomobiles(0.30).costPerMinuteMotorcycles(0.30).build());
+        List<PriceTableEntry> listPriceTableEntry = priceTableEntryRepository.findAllByParkId(barrierInfoDTO.getParkID());
 
-        listPriceTableEntry.add(PriceTableEntry.builder().periodStart("21:00").periodEnd("9:00").thresholds(listThresholdCosts).parkId(1L).build());
-        listPriceTableEntry.add(PriceTableEntry.builder().periodStart("9:00").periodEnd("21:00").thresholds(listThresholdCosts).parkId(1L).build());
-        //List<PriceTableEntry> listPriceTableEntry = Publish.getPriceTablePark("park", barrierInfoDTO.getParkID().toString(), host);
+        if (listPriceTableEntry.isEmpty()) {
+            throw new IllegalArgumentException("Park does not exist.");
+        }
 
-        Calendar enterPark = barrierInfoDTO.getEnterPark();
-
-        Calendar leftPark = barrierInfoDTO.getLeftPark();
-
-        List<PaymentsTableRow> rows = calculateCost(vehicle.get().getVehicleType().name(), enterPark, leftPark, listPriceTableEntry);
+        List<PaymentsTableRow> rows = calculateCost(vehicle.get().getVehicleType().name(), barrierInfoDTO.getEnterPark(), barrierInfoDTO.getLeftPark(), listPriceTableEntry);
 
         final Payments p = Payments.builder().discount(0D).paymentsTableRows(rows).nif(verification.get().getNif()).build();
 
@@ -128,6 +123,7 @@ public class PaymentsServiceImpl implements PaymentsService {
             paymentsTableRow.setPrice(price);
 
             rows.add(paymentsTableRow);
+            p_tr_Repo.save(paymentsTableRow);
         }
         return rows;
     }
