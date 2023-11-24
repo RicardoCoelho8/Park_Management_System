@@ -27,7 +27,8 @@ public class ApiGatewayApplication {
 						.or().path("/display/**")
 						.uri("lb://park20-park-microservice"))
 				.route(p -> p
-						.path("/payments/**")
+						.path("/payments")
+						.or().path("/payments/**")
 						.uri("lb://park20-payments-microservice"))
 				.build();
 	}

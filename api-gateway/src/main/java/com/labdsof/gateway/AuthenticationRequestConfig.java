@@ -12,9 +12,9 @@ public class AuthenticationRequestConfig {
             put("/users/login", HttpMethod.POST);
             put("/barriers/entrance", HttpMethod.POST);
             put("/barriers/exit", HttpMethod.POST);
-            put("/barriers/exit", HttpMethod.POST);
             put("/display/update", HttpMethod.POST);
             put("/display/get", HttpMethod.POST);
+            put("/payments", HttpMethod.POST);
         }
     };
 }

@@ -3,6 +3,7 @@ package labdsoft.park_bo_mcs.services;
 import labdsoft.park_bo_mcs.dtos.park.BarrierDisplayDTO;
 import labdsoft.park_bo_mcs.dtos.park.BarrierLicenseReaderDTO;
 import labdsoft.park_bo_mcs.dtos.park.SendToPaymentDTO;
+import labdsoft.park_bo_mcs.dtos.payment.PaymentsDTO;
 import labdsoft.park_bo_mcs.models.park.*;
 import labdsoft.park_bo_mcs.models.payment.PaymentHistory;
 import labdsoft.park_bo_mcs.models.user.Customer;
@@ -12,6 +13,7 @@ import labdsoft.park_bo_mcs.repositories.park.*;
 import labdsoft.park_bo_mcs.repositories.payment.PaymentHistoryRepository;
 import labdsoft.park_bo_mcs.repositories.user.CustomerRepository;
 import labdsoft.park_bo_mcs.repositories.user.VehicleRepository;
+import labdsoft.park_bo_mcs.rest.PaymentCommunication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +47,9 @@ public class BarrierServiceImpl implements BarrierService {
 
     @Autowired
     private SpotRepository spotRepository;
+
+    @Autowired
+    private PaymentCommunication paymentCommunication;
 
     @Override
     public BarrierDisplayDTO entranceOpticalReader(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
@@ -167,15 +172,18 @@ public class BarrierServiceImpl implements BarrierService {
     private Double getMoneyFromPayment(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
         ParkingHistory parkingHistory = parkingHistoryRepository.findByCustomerIDLatest(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getCustomerID());
 
-        SendToPaymentDTO.builder().parkID(barrierLicenseReaderDTO.getParkID()).enterPark(parkingHistory.getStartTime())
+        parkingHistory.setEndTime(barrierLicenseReaderDTO.getDate());
+        parkingHistoryRepository.save(parkingHistory);
+
+        SendToPaymentDTO sendToPaymentDTO = SendToPaymentDTO.builder().parkID(barrierLicenseReaderDTO.getParkID()).enterPark(parkingHistory.getStartTime())
                 .leftPark(parkingHistory.getEndTime()).licensePlate(barrierLicenseReaderDTO.getPlateNumber()).build();
 
-        return 0.0;
+        PaymentsDTO paymentsDTO = paymentCommunication.postForPayment(sendToPaymentDTO);
 
-//        PaymentsDTO paymentsDTO = new PaymentsDTO();
-//        // TODO: Call the payment service to get the price
-//
-//        return paymentsDTO.getFinalPrice();
+        if (paymentsDTO != null)
+            return paymentsDTO.getFinalPrice();
+        else
+            return 0.0;
     }
 
     private boolean processExit(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
@@ -189,7 +197,6 @@ public class BarrierServiceImpl implements BarrierService {
         }
 
         clearSpot(listSpotsOccupiedByTypeAndVehicleType);
-        updateParkingHistory(barrierLicenseReaderDTO);
 
         return true;
     }
@@ -199,12 +206,6 @@ public class BarrierServiceImpl implements BarrierService {
         Spot spot = listSpotsOccupied.get(rand.nextInt(listSpotsOccupied.size()));
         spot.setOccupied(false);
         spotRepository.save(spot);
-    }
-
-    private void updateParkingHistory(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
-        ParkingHistory parkingHistory = parkingHistoryRepository.findByCustomerIDLatest(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getCustomerID());
-        parkingHistory.setEndTime(barrierLicenseReaderDTO.getDate());
-        parkingHistoryRepository.save(parkingHistory);
     }
 
     private boolean checksForLicensePlate(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
@@ -229,7 +230,8 @@ public class BarrierServiceImpl implements BarrierService {
         for (Display display : displayList) {
             if (display.getState() == State.ACTIVE) {
                 if (message != null) display.setMessage(message);
-                else if (onExit) display.setMessage("Have a nice day " + customer.getName() + "! Your total will be " + money + "€!");
+                else if (onExit)
+                    display.setMessage("Have a nice day " + customer.getName() + "! Your total will be " + money + "€!");
                 else display.setMessage("Welcome to the park " + customer.getName() + "!");
             }
         }
