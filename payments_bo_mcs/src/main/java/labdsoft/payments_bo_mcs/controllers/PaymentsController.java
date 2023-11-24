@@ -26,8 +26,8 @@ class PaymentsController {
 
     @Operation(summary = "create payment from information from of the barrier")
     @PostMapping
-    public ResponseEntity<Iterable<PaymentsDTO>> createPayment(@RequestBody final BarrierInfoDTO barrierInfoDTO) throws Exception {
-        return ResponseEntity.ok().body(Collections.singleton(service.createFromBarrier(barrierInfoDTO)));
+    public ResponseEntity<PaymentsDTO> createPayment(@RequestBody final BarrierInfoDTO barrierInfoDTO) throws Exception {
+        return ResponseEntity.ok().body(service.createFromBarrier(barrierInfoDTO));
     }
 
     @Operation(summary = "gets catalog, i.e. all payments")
