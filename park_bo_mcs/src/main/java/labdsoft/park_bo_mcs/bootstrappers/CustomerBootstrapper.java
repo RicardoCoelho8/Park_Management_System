@@ -21,16 +21,9 @@ public class CustomerBootstrapper implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        values(502113846L, "Emily Clarke", List.of("AR77TI"));
-        values(508776392L, "Aiden Turner", List.of("45MR02"));
-        values(510229874L, "Nora Sanchez", List.of("55ND41", "28XQ51"));
-        values(507332145L, "Marcus Yamamoto", List.of("05MJ38"));
-        values(513884267L, "Isabella Rossi", List.of("71NM25"));
-        values(501776508L, "Leo Kim", List.of("76NX08", "97XZ99"));
-        values(515660392L, "Sofia Patel", List.of("04QB57", "37UP37"));
-        values(512223876L, "Oliver Johnson", List.of("93TV30", "AV09VT"));
-        values(506779330L, "Maya Gupta", List.of("19SJ63", "AH43MR", "AQ00UX"));
-        values(514884112L, "Rui Soares", List.of("46ON05", "32VT07", "AG20JZ", "57ZE77"));
+        values(501776508L, "Leo Kim", List.of("55-ND-41", "97-XZ-99", "57-ZE-77"));
+        values(506779330L, "Maya Gupta", List.of("19-SJ-63", "AH-43-MR", "AQ-00-UX"));
+        values(514884112L, "Rui Soares", List.of("46-ON-05", "32-VT-07", "AG-20-JZ", "28-XQ-51"));
     }
 
     private void createSampleVehicle(Long customerID, List<String> licensePlates) {
