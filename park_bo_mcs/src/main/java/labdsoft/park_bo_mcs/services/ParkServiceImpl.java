@@ -1,14 +1,9 @@
 package labdsoft.park_bo_mcs.services;
 
-import labdsoft.park_bo_mcs.dtos.park.NearbyParkOccupancyDTO;
-import labdsoft.park_bo_mcs.dtos.park.OccupancyParkDTO;
-import labdsoft.park_bo_mcs.dtos.park.PriceTableEntryDTO;
-import labdsoft.park_bo_mcs.dtos.park.SpotTypeOccupancyDTO;
-import labdsoft.park_bo_mcs.models.park.Park;
-import labdsoft.park_bo_mcs.models.park.PriceTableEntry;
-import labdsoft.park_bo_mcs.models.park.Spot;
-import labdsoft.park_bo_mcs.models.park.SpotType;
+import labdsoft.park_bo_mcs.dtos.park.*;
+import labdsoft.park_bo_mcs.models.park.*;
 import labdsoft.park_bo_mcs.repositories.park.ParkRepository;
+import labdsoft.park_bo_mcs.repositories.park.ParkingHistoryRepository;
 import labdsoft.park_bo_mcs.repositories.park.PriceTableEntryRepository;
 import labdsoft.park_bo_mcs.repositories.park.SpotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +22,9 @@ public class ParkServiceImpl implements ParkService {
 
     @Autowired
     private ParkRepository parkRepository;
+
+    @Autowired
+    private ParkingHistoryRepository parkHistoryRepository;
 
     @Autowired
     private SpotRepository spotRepository;
@@ -82,12 +80,10 @@ public class ParkServiceImpl implements ParkService {
                 continue;
             }
             List<Spot> listSpots = spotRepository.getSpotsByParkIDAndOperational(park.getParkID(), true);
-            int currentCapacity = Long.valueOf(listSpots.stream().filter(x -> x.isOccupied()).count()).intValue();
+            int currentCapacity = Long.valueOf(listSpots.stream().filter(Spot::isOccupied).count()).intValue();
             System.out.println(listSpots);
-            List<SpotTypeOccupancyDTO> spotOccupanciesDto = Arrays
-                    .asList(SpotType
-                            .values())
-                    .stream()
+            List<SpotTypeOccupancyDTO> spotOccupanciesDto = Arrays.stream(SpotType
+                    .values())
                     .map(spotType -> SpotTypeOccupancyDTO.builder().spotType(spotType)
                             .availableSpots(Long.valueOf(listSpots.stream()
                                     .filter(spot -> (!spot.isOccupied() && spot.getSpotType().toString().equals(spotType.toString()))).count())
@@ -102,6 +98,26 @@ public class ParkServiceImpl implements ParkService {
         }
 
         return listNearbyParkOccupancy;
+    }
+
+    @Override
+    public List<ParkHistoryDTO> getAllParkingHistoryByCustomerID(Long customerID) {
+        List<ParkHistoryDTO> listParkHistoryDTO = new ArrayList<>();
+
+        List<ParkingHistory> listParkHistory = parkHistoryRepository.findAllByCustomerID(customerID);
+        for(ParkingHistory parkHistory : listParkHistory) {
+            ParkHistoryDTO parkHistoryDTO = ParkHistoryDTO.builder()
+                    .parkingHistoryId(parkHistory.getParkingHistoryId())
+                    .startTime(parkHistory.getStartTime())
+                    .endTime(parkHistory.getEndTime())
+                    .parkId(parkHistory.getParkId())
+                    .customerID(parkHistory.getCustomerID())
+                    .build();
+
+            listParkHistoryDTO.add(parkHistoryDTO);
+        }
+
+        return listParkHistoryDTO;
     }
 
     @Override

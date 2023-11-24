@@ -12,5 +12,8 @@ public interface ParkingHistoryRepository extends CrudRepository<ParkingHistory,
     @Query("SELECT p FROM ParkingHistory p WHERE p.endTime = p.startTime AND p.customerID = ?1")
     ParkingHistory findByCustomerIDLatest(Long customerID);
 
+    @Query("SELECT p FROM ParkingHistory p WHERE p.customerID = ?1")
+    List<ParkingHistory> findAllByCustomerID(Long customerID);
+
     List<ParkingHistory> findAllByStartTime(Calendar calendar);
 }

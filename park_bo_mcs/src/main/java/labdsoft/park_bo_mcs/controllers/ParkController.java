@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import labdsoft.park_bo_mcs.communications.Subscribe;
 import labdsoft.park_bo_mcs.dtos.park.NearbyParkOccupancyDTO;
 import labdsoft.park_bo_mcs.dtos.park.OccupancyParkDTO;
+import labdsoft.park_bo_mcs.dtos.park.ParkHistoryDTO;
 import labdsoft.park_bo_mcs.dtos.park.PriceTableEntryDTO;
 import labdsoft.park_bo_mcs.services.ParkService;
 import org.slf4j.Logger;
@@ -52,4 +53,9 @@ class ParkController {
         return new ResponseEntity<>(service.getRealTimeNearbyParksOccupancy(userLatitude, userLongitude, maxDistanceKm), HttpStatus.OK);
     }
 
+    @Operation(summary = "Get all parking history by customer id")
+    @GetMapping("/parkingHistory/{customerID}")
+    public ResponseEntity<List<ParkHistoryDTO>> getAllParkingHistoryByCustomerID(@PathVariable Long customerID) {
+        return new ResponseEntity<>(service.getAllParkingHistoryByCustomerID(customerID), HttpStatus.OK);
+    }
 }
