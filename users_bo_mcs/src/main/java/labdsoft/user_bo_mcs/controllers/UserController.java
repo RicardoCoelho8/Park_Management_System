@@ -14,6 +14,7 @@ import labdsoft.user_bo_mcs.services.UserService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,7 @@ class UserController {
         try {
             final UserDTO user = service.create(userBody);
             logger.info("Successfully created user!");
-            return new ResponseEntity<UserDTO>(user, HttpStatus.CREATED);
+            return new ResponseEntity<>(user, HttpStatus.CREATED);
         } catch (Exception e) {
             logger.info(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
@@ -64,7 +65,7 @@ class UserController {
                 return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
             }
             logger.info("Successfully logged in user " + userCredentials.getEmail());
-            return new ResponseEntity<AccessToken>(token.get(), HttpStatus.CREATED);
+            return new ResponseEntity<>(token.get(), HttpStatus.CREATED);
         } catch (Exception e) {
             logger.info(e.getMessage());
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage(), e);
@@ -86,7 +87,7 @@ class UserController {
         try {
             final List<UserDTO> users = service.getAll();
             logger.info("Successfully retrieved all users!");
-            return new ResponseEntity<List<UserDTO>>(users, HttpStatus.OK);
+            return new ResponseEntity<>(users, HttpStatus.OK);
         } catch (Exception e) {
             logger.info(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
@@ -115,7 +116,7 @@ class UserController {
         try {
             final UserDTO user = service.addVehicle(userId, vehicle);
             logger.info("Successfully added vehicle");
-            return new ResponseEntity<UserDTO>(user, HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
         } catch (Exception e) {
             logger.info(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
@@ -142,12 +143,40 @@ class UserController {
         try {
             final UserDTO user = service.changePaymentMethod(userId, pMethod);
             logger.info("Successfully changed payment method");
-            return new ResponseEntity<UserDTO>(user, HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
         } catch (Exception e) {
             logger.info(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 
+
+    @Operation(summary = "gets all user vehicles")
+    @GetMapping("/{userId}/vehicles")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Set<VehicleOnCreation>> getAllUserVehicles(@RequestHeader("X-UserId") String headerUserId,
+                                                                     @RequestHeader("X-UserRole") String userRole,
+                                                                     @PathVariable Long userId) {
+
+        logger.info("Received get all user vehicles request");
+        if (!headerUserId.equals(userId.toString())) {
+            // only the user that is authenticated in the request is allowed to get his own
+            // vehicles
+            logger.info("Request invalidated due to incoherent path user id of " + userId + "and header user id of " + headerUserId);
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        }
+        if (!userRole.equals(Role.CUSTOMER.toString())) {
+            logger.info("Request invalidated due to forbidden user role: " + userRole);
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        }
+        try {
+            final Set<VehicleOnCreation> vehicles = service.getAllUserVehicles(userId);
+            logger.info("Successfully retrieved all user vehicles!");
+            return new ResponseEntity<>(vehicles, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.info(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
+        }
+    }
 
 }

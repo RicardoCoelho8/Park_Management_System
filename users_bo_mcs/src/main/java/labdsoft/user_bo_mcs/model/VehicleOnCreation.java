@@ -1,15 +1,13 @@
 package labdsoft.user_bo_mcs.model;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @ToString
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class VehicleOnCreation {
 
     private String licensePlateNumber;
@@ -17,5 +15,4 @@ public class VehicleOnCreation {
     private VehicleType vehicleType;
 
     private VehicleEnergySource vehicleEnergySource;
-
 }
