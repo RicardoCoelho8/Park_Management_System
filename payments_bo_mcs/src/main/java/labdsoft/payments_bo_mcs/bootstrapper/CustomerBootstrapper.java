@@ -23,7 +23,7 @@ public class CustomerBootstrapper implements CommandLineRunner {
     public void run(String... args) {
         values(501776508L, List.of("55-ND-41", "97-XZ-99", "57-ZE-77"));
         values(506779330L, List.of("19-SJ-63", "AH-43-MR", "AQ-00-UX"));
-        values(514884112L, List.of("46-ON-05", "32-VT-07", "AG-20-JZ", "28-XQ-51"));
+        values(514884112L, List.of("46-ON-05", "32-VT-07", "28-XQ-51"));
     }
 
     private List<Vehicle> createSampleVehicle(List<String> licensePlates) {
