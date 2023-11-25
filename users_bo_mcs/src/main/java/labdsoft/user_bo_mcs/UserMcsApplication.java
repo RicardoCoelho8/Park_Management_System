@@ -50,18 +50,45 @@ public class UserMcsApplication {
 
                 final User parkManager = new User(new Name("Park", "Manager"), new Email("parkmanager@isep.ipp.pt"),
                         new Password(encodedPassword), new TaxIdNumber(123123124), Role.PARK_MANAGER,
-                        new Vehicle("BB-20-CC", VehicleType.AUTOMOBILE, VehicleEnergySource.FUEL), PaymentMethod.NOT_DEFINED, UserStatus.ENABLED);
+                        new Vehicle("BB-20-CC", VehicleType.AUTOMOBILE, VehicleEnergySource.FUEL),
+                        PaymentMethod.NOT_DEFINED, UserStatus.ENABLED);
 
                 final User customerManager = new User(new Name("Customer", "Manager"),
                         new Email("customermanager@isep.ipp.pt"),
                         new Password(encodedPassword), new TaxIdNumber(123123125), Role.CUSTOMER_MANAGER,
-                        new Vehicle("CC-20-CC", VehicleType.MOTORCYCLE, VehicleEnergySource.FUEL), PaymentMethod.NOT_DEFINED, UserStatus.ENABLED);
+                        new Vehicle("CC-20-CC", VehicleType.MOTORCYCLE, VehicleEnergySource.FUEL),
+                        PaymentMethod.NOT_DEFINED, UserStatus.ENABLED);
 
-                final User customer = new User(new Name("Customer", "Customer"), new Email("customer@isep.ipp.pt"),
+/*                 final User customer = new User(new Name("Customer", "Customer"), new Email("customer@isep.ipp.pt"),
                         new Password(encodedPassword), new TaxIdNumber(123123126), Role.CUSTOMER,
-                        new Vehicle("DD-20-CC", VehicleType.AUTOMOBILE, VehicleEnergySource.ELECTRIC), PaymentMethod.PAYPAL, UserStatus.ENABLED);
+                        new Vehicle("DD-20-CC", VehicleType.AUTOMOBILE, VehicleEnergySource.ELECTRIC),
+                        PaymentMethod.PAYPAL, UserStatus.ENABLED);
+ */
+                final User leoKim = new User(new Name("Leo", "Kim"), new Email("leoKim@isep.ipp.pt"),
+                        new Password(encodedPassword), new TaxIdNumber(501776508), Role.CUSTOMER,
+                        new Vehicle("55-ND-41", VehicleType.AUTOMOBILE, VehicleEnergySource.ELECTRIC),
+                        PaymentMethod.PAYPAL, UserStatus.ENABLED);
+                leoKim.addVehicle(new Vehicle("97-XZ-99", VehicleType.MOTORCYCLE, VehicleEnergySource.FUEL));
+                leoKim.addVehicle(new Vehicle("57-ZE-77", VehicleType.AUTOMOBILE, VehicleEnergySource.FUEL));
 
-                repo.saveAll(Arrays.asList(supervisor, parkManager, customerManager, customer));
+                final User mayaGupta = new User(new Name("Maya", "Gupta"), new Email("mayaGupta@isep.ipp.pt"),
+                        new Password(encodedPassword), new TaxIdNumber(506779330), Role.CUSTOMER,
+                        new Vehicle("19-SJ-63", VehicleType.AUTOMOBILE, VehicleEnergySource.FUEL),
+                        PaymentMethod.PAYPAL, UserStatus.ENABLED);
+
+                mayaGupta.addVehicle(new Vehicle("AH-43-MR", VehicleType.AUTOMOBILE, VehicleEnergySource.ELECTRIC));
+                mayaGupta.addVehicle(new Vehicle("AQ-00-UX", VehicleType.AUTOMOBILE, VehicleEnergySource.FUEL));
+
+                final User ruiSoares = new User(new Name("Rui", "Soares"), new Email("ruiSoares@isep.ipp.pt"),
+                        new Password(encodedPassword), new TaxIdNumber(514884112), Role.CUSTOMER,
+                        new Vehicle("46-ON-05", VehicleType.AUTOMOBILE, VehicleEnergySource.FUEL),
+                        PaymentMethod.PAYPAL, UserStatus.ENABLED);
+
+                ruiSoares.addVehicle(new Vehicle("32-VT-07", VehicleType.AUTOMOBILE, VehicleEnergySource.FUEL));
+                ruiSoares.addVehicle(new Vehicle("28-XQ-51", VehicleType.AUTOMOBILE, VehicleEnergySource.FUEL));
+
+                repo.saveAll(Arrays.asList(supervisor, parkManager, customerManager/* , customer */, leoKim, mayaGupta,
+                        ruiSoares));
 
             } else {
                 System.out.println("Database information already exists... skipping bootstrap");
