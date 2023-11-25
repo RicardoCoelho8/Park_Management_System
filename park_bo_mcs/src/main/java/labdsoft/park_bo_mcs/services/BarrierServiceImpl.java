@@ -164,7 +164,7 @@ public class BarrierServiceImpl implements BarrierService {
         updateDisplayMessages(customer, barrierLicenseReaderDTO, true, money, null);
 
         barrierDisplayDTO.setSuccess(true);
-        barrierDisplayDTO.setMessage("Have a nice day " + customer.getName() + "! Your total will be €!");
+        barrierDisplayDTO.setMessage("Have a nice day " + customer.getName() + "! Your total will be " + money + "€!");
 
         return barrierDisplayDTO;
     }
@@ -176,7 +176,7 @@ public class BarrierServiceImpl implements BarrierService {
         parkingHistoryRepository.save(parkingHistory);
 
         SendToPaymentDTO sendToPaymentDTO = SendToPaymentDTO.builder().parkID(barrierLicenseReaderDTO.getParkID()).enterPark(parkingHistory.getStartTime())
-                .leftPark(parkingHistory.getEndTime()).licensePlate(barrierLicenseReaderDTO.getPlateNumber()).build();
+                .leftPark(parkingHistory.getEndTime()).licensePlateNumber(barrierLicenseReaderDTO.getPlateNumber()).build();
 
         PaymentsDTO paymentsDTO = paymentCommunication.postForPayment(sendToPaymentDTO);
 

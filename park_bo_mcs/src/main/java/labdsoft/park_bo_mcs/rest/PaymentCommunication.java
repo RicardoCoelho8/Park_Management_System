@@ -15,7 +15,7 @@ public class PaymentCommunication {
     @Autowired
     private final RestTemplate restTemplate;
 
-    private final String URL = "http://park20-payments-microservice/payments";
+    private final String URL = "lb://park20-payments-microservice/payments";
 
     public PaymentsDTO postForPayment(SendToPaymentDTO sendToPaymentDTO) {
         ResponseEntity<PaymentsDTO> response = this.restTemplate
