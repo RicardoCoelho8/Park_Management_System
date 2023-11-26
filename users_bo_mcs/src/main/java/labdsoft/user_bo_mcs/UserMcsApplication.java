@@ -68,8 +68,6 @@ public class UserMcsApplication {
                         new Password(encodedPassword), new TaxIdNumber(501776508), Role.CUSTOMER,
                         new Vehicle("55-ND-41", VehicleType.AUTOMOBILE, VehicleEnergySource.ELECTRIC),
                         PaymentMethod.PAYPAL, UserStatus.ENABLED);
-                leoKim.addVehicle(new Vehicle("97-XZ-99", VehicleType.MOTORCYCLE, VehicleEnergySource.FUEL));
-                leoKim.addVehicle(new Vehicle("57-ZE-77", VehicleType.AUTOMOBILE, VehicleEnergySource.FUEL));
 
                 final User mayaGupta = new User(new Name("Maya", "Gupta"), new Email("mayaGupta@isep.ipp.pt"),
                         new Password(encodedPassword), new TaxIdNumber(506779330), Role.CUSTOMER,
@@ -77,7 +75,6 @@ public class UserMcsApplication {
                         PaymentMethod.PAYPAL, UserStatus.ENABLED);
 
                 mayaGupta.addVehicle(new Vehicle("AH-43-MR", VehicleType.AUTOMOBILE, VehicleEnergySource.ELECTRIC));
-                mayaGupta.addVehicle(new Vehicle("AQ-00-UX", VehicleType.AUTOMOBILE, VehicleEnergySource.FUEL));
 
                 final User ruiSoares = new User(new Name("Rui", "Soares"), new Email("ruiSoares@isep.ipp.pt"),
                         new Password(encodedPassword), new TaxIdNumber(514884112), Role.CUSTOMER,
