@@ -5,12 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import labdsoft.user_bo_mcs.model.AccessToken;
-import labdsoft.user_bo_mcs.model.PaymentMethod;
-import labdsoft.user_bo_mcs.model.UserCredentials;
-import labdsoft.user_bo_mcs.model.UserDTO;
-import labdsoft.user_bo_mcs.model.UserOnCreation;
-import labdsoft.user_bo_mcs.model.VehicleOnCreation;
+import labdsoft.user_bo_mcs.model.*;
 
 
 public interface UserService {
@@ -19,7 +14,7 @@ public interface UserService {
 
     List<UserDTO> getAll();
     UserDTO addVehicle(Long userId, VehicleOnCreation vehicle) throws Exception;
-    UserDTO changePaymentMethod(Long userId, PaymentMethod pMethod) throws Exception;
+    UserDTO changePaymentMethod(Long userId, PaymentRequest pMethod) throws Exception;
 
     Set<VehicleOnCreation> getAllUserVehicles(Long userId) throws Exception;
 

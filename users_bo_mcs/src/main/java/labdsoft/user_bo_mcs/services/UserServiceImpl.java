@@ -1,20 +1,7 @@
 package labdsoft.user_bo_mcs.services;
 
 import labdsoft.user_bo_mcs.communication.Publish;
-import labdsoft.user_bo_mcs.model.AccessToken;
-import labdsoft.user_bo_mcs.model.Email;
-import labdsoft.user_bo_mcs.model.Name;
-import labdsoft.user_bo_mcs.model.Password;
-import labdsoft.user_bo_mcs.model.PaymentMethod;
-import labdsoft.user_bo_mcs.model.Role;
-import labdsoft.user_bo_mcs.model.TaxIdNumber;
-import labdsoft.user_bo_mcs.model.User;
-import labdsoft.user_bo_mcs.model.UserCredentials;
-import labdsoft.user_bo_mcs.model.UserDTO;
-import labdsoft.user_bo_mcs.model.UserOnCreation;
-import labdsoft.user_bo_mcs.model.UserStatus;
-import labdsoft.user_bo_mcs.model.Vehicle;
-import labdsoft.user_bo_mcs.model.VehicleOnCreation;
+import labdsoft.user_bo_mcs.model.*;
 import labdsoft.user_bo_mcs.repositories.UserRepository;
 
 import java.util.*;
@@ -112,12 +99,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO changePaymentMethod(Long userId, PaymentMethod pMethod) throws Exception {
-        if(pMethod.equals(PaymentMethod.NOT_DEFINED)) {
+    public UserDTO changePaymentMethod(Long userId, PaymentRequest pMethod) throws Exception {
+        if(pMethod.getPaymentMethod().equals(PaymentMethod.NOT_DEFINED)) {
             throw new IllegalArgumentException("Can't change payment method back to undefined");
         }
         User user = this.repository.findById(userId).orElseThrow();
-        user.setPaymentMethod(pMethod);
+        user.setPaymentMethod(pMethod.getPaymentMethod());
         this.repository.save(user);
 
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();

@@ -7,4 +7,4 @@ cd ..
 
 timeout /t 20 /nobreak
 
-docker-compose up
+docker-compose up -d

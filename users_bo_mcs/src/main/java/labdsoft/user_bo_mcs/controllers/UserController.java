@@ -3,13 +3,7 @@ package labdsoft.user_bo_mcs.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import labdsoft.user_bo_mcs.communication.Subscribe;
-import labdsoft.user_bo_mcs.model.AccessToken;
-import labdsoft.user_bo_mcs.model.PaymentMethod;
-import labdsoft.user_bo_mcs.model.Role;
-import labdsoft.user_bo_mcs.model.UserCredentials;
-import labdsoft.user_bo_mcs.model.UserDTO;
-import labdsoft.user_bo_mcs.model.UserOnCreation;
-import labdsoft.user_bo_mcs.model.VehicleOnCreation;
+import labdsoft.user_bo_mcs.model.*;
 import labdsoft.user_bo_mcs.services.UserService;
 
 import java.util.List;
@@ -127,7 +121,7 @@ class UserController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<UserDTO> changePaymentMethod(@RequestHeader("X-UserId") String headerUserId,
             @RequestHeader("X-UserRole") String userRole,
-            @PathVariable Long userId, @RequestBody PaymentMethod pMethod) {
+            @PathVariable Long userId, @RequestBody PaymentRequest pMethod) {
         logger.info("Received change payment method to " + pMethod + " of user " + userId + " request");
 
         if (!headerUserId.equals(userId.toString())) {
