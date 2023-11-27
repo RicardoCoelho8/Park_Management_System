@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO addVehicle(Long userId, VehicleOnCreation vehicleOnCreation) throws Exception {
+    public VehicleOnCreation addVehicle(Long userId, VehicleOnCreation vehicleOnCreation) throws Exception {
         User user = this.repository.findById(userId).orElseThrow();
 
         Vehicle vehicle = new Vehicle(vehicleOnCreation.getLicensePlateNumber(), vehicleOnCreation.getVehicleType(), vehicleOnCreation.getVehicleEnergySource());
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
 
         publisher.publish("exchange_user", "A User was Updated | " + json_user, host);
 
-        return user.toDto();
+        return vehicleOnCreation;
 
     }
 

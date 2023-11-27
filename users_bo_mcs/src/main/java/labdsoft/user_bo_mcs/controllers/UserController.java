@@ -91,7 +91,7 @@ class UserController {
     @Operation(summary = "Add Vehicle for user")
     @PutMapping("/{userId}/vehicle")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<UserDTO> addUserVehicle(@RequestHeader("X-UserId") String headerUserId,
+    public ResponseEntity<VehicleOnCreation> addUserVehicle(@RequestHeader("X-UserId") String headerUserId,
             @RequestHeader("X-UserRole") String userRole,
             @PathVariable Long userId, @RequestBody VehicleOnCreation vehicle) {
         logger.info("Received add vehicle " + vehicle + " to user " + userId + " request");
@@ -108,9 +108,9 @@ class UserController {
         }
 
         try {
-            final UserDTO user = service.addVehicle(userId, vehicle);
+            final VehicleOnCreation vehicleOnCreation = service.addVehicle(userId, vehicle);
             logger.info("Successfully added vehicle");
-            return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(vehicleOnCreation, HttpStatus.ACCEPTED);
         } catch (Exception e) {
             logger.info(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);

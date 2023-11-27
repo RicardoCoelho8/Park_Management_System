@@ -13,7 +13,7 @@ public interface UserService {
     Optional<AccessToken> login(final UserCredentials credentials) throws Exception;
 
     List<UserDTO> getAll();
-    UserDTO addVehicle(Long userId, VehicleOnCreation vehicle) throws Exception;
+    VehicleOnCreation addVehicle(Long userId, VehicleOnCreation vehicle) throws Exception;
     UserDTO changePaymentMethod(Long userId, PaymentRequest pMethod) throws Exception;
 
     Set<VehicleOnCreation> getAllUserVehicles(Long userId) throws Exception;
