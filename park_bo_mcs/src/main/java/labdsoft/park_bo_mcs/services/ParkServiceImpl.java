@@ -79,21 +79,24 @@ public class ParkServiceImpl implements ParkService {
             if (distance > maxDistanceKm) {
                 continue;
             }
-            List<Spot> listSpots = spotRepository.getSpotsByParkIDAndOperational(park.getParkID(), true);
-            int currentCapacity = Long.valueOf(listSpots.stream().filter(Spot::isOccupied).count()).intValue();
-            System.out.println(listSpots);
-            List<SpotTypeOccupancyDTO> spotOccupanciesDto = Arrays.stream(SpotType
-                    .values())
-                    .map(spotType -> SpotTypeOccupancyDTO.builder().spotType(spotType)
-                            .availableSpots(Long.valueOf(listSpots.stream()
-                                    .filter(spot -> (!spot.isOccupied() && spot.getSpotType().toString().equals(spotType.toString()))).count())
-                                    .intValue())
-                            .build())
+
+            List<Spot> listSpots = spotRepository.getSpotsByParkIDAndOccupiedAndOperational(park.getParkID(), false, true);
+
+            List<SpotTypeOccupancyDTO> spotOccupanciesDto = Arrays.stream(SpotVehicleType.values())
+                    .flatMap(spotVehicleType -> Arrays.stream(SpotType.values())
+                            .map(spotType -> SpotTypeOccupancyDTO.builder()
+                                    .spotVehicleType(spotVehicleType)
+                                    .spotType(spotType)
+                                    .availableSpots((int) listSpots.stream()
+                                            .filter(spot -> spot.getSpotType() == spotType && spot.getSpotVehicleType() == spotVehicleType)
+                                            .count())
+                                    .build()))
                     .toList();
 
-            listNearbyParkOccupancy.add(NearbyParkOccupancyDTO.builder().parkId(park.getParkID())
-                    .parkNumber(park.getParkNumber()).occupancy(park.getMaxOcuppancy())
-                    .currentCapacity(currentCapacity).spotTypeOccupancies(spotOccupanciesDto).distanceKm(distance)
+            listNearbyParkOccupancy.add(NearbyParkOccupancyDTO.builder()
+                    .parkId(park.getParkID())
+                    .distanceKm(distance)
+                    .spotTypeOccupancies(spotOccupanciesDto)
                     .build());
         }
 

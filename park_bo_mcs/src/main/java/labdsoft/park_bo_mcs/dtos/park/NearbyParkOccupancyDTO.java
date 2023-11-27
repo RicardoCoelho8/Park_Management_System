@@ -13,9 +13,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class NearbyParkOccupancyDTO {
     private Long parkId;
-    private Long parkNumber;
-    private int occupancy;
-    private int currentCapacity;
-    private List<SpotTypeOccupancyDTO> spotTypeOccupancies;
     private double distanceKm;
+    private List<SpotTypeOccupancyDTO> spotTypeOccupancies;
 }
