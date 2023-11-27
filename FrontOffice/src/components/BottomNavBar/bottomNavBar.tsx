@@ -3,6 +3,7 @@ import { Container, Nav, Navbar } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../store";
+import { removeUserFromLocalStorage } from "../../utils/jwtUtils";
 
 export const BottomNavBar: React.FC = () => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export const BottomNavBar: React.FC = () => {
 
   const handleOnClickLogout = () => {
     dispatch(logout());
+    removeUserFromLocalStorage();
     navigate("/");
   };
 

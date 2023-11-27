@@ -7,11 +7,18 @@ export interface UserDataRegisterInput {
   nif: string;
   licensePlateNumber: string;
   vehicleType: string;
+  vehicleEnergySource: string;
 }
 
 export interface UserDataLoginInput {
   email: string;
   password: string;
+}
+
+export interface UserDataAddNewVehicleInput {
+  licensePlateNumber: string;
+  vehicleType: string;
+  vehicleEnergySource: string;
 }
 
 export const SET_USER_DATA = "SET_USER_DATA";

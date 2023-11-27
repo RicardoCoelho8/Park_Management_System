@@ -6,7 +6,7 @@ import { setUserData } from "../../store";
 import { useLoginMutation } from "../../store/userData/api";
 import { Link, useNavigate } from "react-router-dom";
 import { ModalErrorForm } from "../../components";
-import { decodeJwt } from "../../utils/jwtUtils";
+import { decodeJwt, storeUserInLocalStorage } from "../../utils/jwtUtils";
 
 export const LoginScreen: React.FC = () => {
   const dispatch = useDispatch();
@@ -20,6 +20,7 @@ export const LoginScreen: React.FC = () => {
     if (data) {
       console.log("Login sucessful", data);
       const decodedToken = decodeJwt(data.token);
+      storeUserInLocalStorage(data.token, decodedToken.sub, decodedToken.role);
       dispatch(
         setUserData({ userId: decodedToken.sub, userRole: decodedToken.role })
       );

@@ -4,12 +4,12 @@ import { usePostUserDataMutation } from "../../store/userData/api";
 import { logo } from "../../images";
 import { ModalErrorForm } from "../../components";
 import { useNavigate } from "react-router-dom";
-
-enum VehicleType {
-  electric = "ELECTRIC",
-  gpl = "GPL",
-  others = "OTHERS",
-}
+import { VehicleEnergySource, VehicleType } from "../../utils/types";
+import {
+  getRandomVehicleEnergySource,
+  getRandomVehicleType,
+  validateLicensePlate,
+} from "../../utils/functions";
 
 export const RegisterScreen: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -33,17 +33,9 @@ export const RegisterScreen: React.FC = () => {
     }
   }, [error, isSuccess, navigate]);
 
-  const getRandomVehicleType = (): VehicleType => {
-    const types = Object.values(VehicleType);
-    const randomIndex = Math.floor(Math.random() * types.length);
-    return types[randomIndex] as VehicleType;
-  };
-
   const handleLicensePlateNumberOnChange = (e: any) => {
-    const regex =
-      /^([A-Z0-9]{2}-\d{2}-\d{2}|[A-Z0-9]{2}-\d{2}-[A-Z0-9]{2}|[A-Z0-9]{2}-\d{2}-\d{1}-[A-Z0-9]{1})$/;
     const value = e.target.value;
-    const isValid = regex.test(value);
+    const isValid = validateLicensePlate(value);
     setIsLicensePlateValid(isValid);
     setLicensePlateNumber(value);
   };
@@ -51,6 +43,7 @@ export const RegisterScreen: React.FC = () => {
   const handleButtonOnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const vehicleType = getRandomVehicleType();
+    const vehicleEnergySource = getRandomVehicleEnergySource();
 
     try {
       postUserData({
@@ -62,6 +55,7 @@ export const RegisterScreen: React.FC = () => {
         nif,
         licensePlateNumber,
         vehicleType,
+        vehicleEnergySource,
       });
     } catch (error) {
       console.log("Error Registration", error);

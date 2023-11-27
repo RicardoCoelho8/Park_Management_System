@@ -5,6 +5,7 @@ export interface MenuCard {
   title: string;
   subtitle: string;
   icon: string;
+  onClick: () => void;
 }
 
 interface MenuCardProps {
@@ -28,6 +29,7 @@ export const MenuCard: React.FC<MenuCardProps> = (props) => {
               boxShadow:
                 "rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px",
             }}
+            onClick={card.onClick}
           >
             <Container
               style={{
@@ -40,7 +42,9 @@ export const MenuCard: React.FC<MenuCardProps> = (props) => {
               <h1 style={{ fontFamily: "'Open Sans', sans-serif" }}>
                 {card.title}
               </h1>
-              <h5 style={{ fontFamily: "" }}>{card.subtitle}</h5>
+              <h5 style={{ fontFamily: "'Open Sans', sans-serif" }}>
+                {card.subtitle}
+              </h5>
             </Container>
             <Container style={{ width: "40%" }}>
               <i
