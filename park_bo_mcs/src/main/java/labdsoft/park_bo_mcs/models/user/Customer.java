@@ -13,8 +13,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, unique = true)
     private Long customerID;
 
     @Column(nullable = false, unique = true)

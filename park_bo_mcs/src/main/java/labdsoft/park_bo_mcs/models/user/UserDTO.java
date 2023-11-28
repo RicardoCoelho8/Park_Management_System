@@ -1,8 +1,8 @@
-package labdsoft.user_bo_mcs.model;
-
+package labdsoft.park_bo_mcs.models.user;
 
 import java.util.Set;
 
+import labdsoft.park_bo_mcs.models.park.ParkingHistory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,15 +13,14 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class UserDTO {
-    
+
     private Long id;
-    
+
     private String firstName;
 
     private String lastName;
 
     private String email;
-
 
     private int nif;
 
@@ -29,12 +28,12 @@ public class UserDTO {
 
     private int totalParkies;
 
-    private Set<Vehicle> vehicles;
+    private Set<VehicleDTO> vehicles;
 
-    private Role role;
+    private String role;
 
-    private PaymentMethod paymentMethod;
-    
-    private UserStatus userStatus;
+    private String paymentMethod;
+
+    private Status userStatus;
 
 }

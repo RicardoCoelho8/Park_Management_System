@@ -7,6 +7,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
 import jakarta.annotation.PostConstruct;
 import labdsoft.user_bo_mcs.model.User;
+import labdsoft.user_bo_mcs.model.UserDTO;
 
 import java.util.Arrays;
 
@@ -49,7 +50,7 @@ public class Subscribe {
 
             switch (exchangeName) {
                 case "exchange_user":
-                    User user = objectMapper.readValue(components[1], User.class);
+                    UserDTO user = objectMapper.readValue(components[1], UserDTO.class);
                     System.out.println("Received user communication " + user);
                     break;
             }

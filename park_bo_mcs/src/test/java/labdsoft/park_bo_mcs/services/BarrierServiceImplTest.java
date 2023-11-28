@@ -65,7 +65,7 @@ class BarrierServiceImplTest {
         }
 
         if (cRepo.findByNif(123L) == null) {
-            Customer customer = Customer.builder().nif(123L).name("TestC").status(Status.ACTIVE).build();
+            Customer customer = Customer.builder().nif(123L).name("TestC").status(Status.ENABLED).build();
             cRepo.save(customer);
             createSampleVehicle(customer.getCustomerID(), licensePlates);
         }

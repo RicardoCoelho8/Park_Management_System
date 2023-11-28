@@ -40,14 +40,17 @@ public class UserServiceImpl implements UserService {
 
         final Name name = new Name(userOnCreation.getFirstName(), userOnCreation.getLastName());
         final User user = new User(name, new Email(userOnCreation.getEmail()),
-                new Password(this.passwordEncoder.encode(userOnCreation.getPassword())), new TaxIdNumber(userOnCreation.getNif()), Role.CUSTOMER,
-                new Vehicle(userOnCreation.getLicensePlateNumber(), userOnCreation.getVehicleType(), userOnCreation.getVehicleEnergySource()),
+                new Password(this.passwordEncoder.encode(userOnCreation.getPassword())),
+                new TaxIdNumber(userOnCreation.getNif()), Role.CUSTOMER,
+                new Vehicle(userOnCreation.getLicensePlateNumber(), userOnCreation.getVehicleType(),
+                        userOnCreation.getVehicleEnergySource()),
                 userOnCreation.getPaymentMethod(), UserStatus.ENABLED);
 
         repository.save(user);
 
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String json_user = ow.writeValueAsString(user);
+        var userDTO = user.toDto();
+        String json_user = ow.writeValueAsString(userDTO);
 
         publisher.publish("exchange_user", "A User was Created | " + json_user, host);
 
@@ -64,7 +67,8 @@ public class UserServiceImpl implements UserService {
     public VehicleOnCreation addVehicle(Long userId, VehicleOnCreation vehicleOnCreation) throws Exception {
         User user = this.repository.findById(userId).orElseThrow();
 
-        Vehicle vehicle = new Vehicle(vehicleOnCreation.getLicensePlateNumber(), vehicleOnCreation.getVehicleType(), vehicleOnCreation.getVehicleEnergySource());
+        Vehicle vehicle = new Vehicle(vehicleOnCreation.getLicensePlateNumber(), vehicleOnCreation.getVehicleType(),
+                vehicleOnCreation.getVehicleEnergySource());
         boolean added = user.addVehicle(vehicle);
         if (!added) {
             throw new IllegalArgumentException("Couldn't add vehicle!");
@@ -72,10 +76,10 @@ public class UserServiceImpl implements UserService {
         this.repository.save(user);
 
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String json_user = ow.writeValueAsString(user);
+        var userDTO = user.toDto();
+        String json_user = ow.writeValueAsString(userDTO);
 
         publisher.publish("exchange_user", "A User was Updated | " + json_user, host);
-
         return vehicleOnCreation;
 
     }
@@ -100,7 +104,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO changePaymentMethod(Long userId, PaymentRequest pMethod) throws Exception {
-        if(pMethod.getPaymentMethod().equals(PaymentMethod.NOT_DEFINED)) {
+        if (pMethod.getPaymentMethod().equals(PaymentMethod.NOT_DEFINED)) {
             throw new IllegalArgumentException("Can't change payment method back to undefined");
         }
         User user = this.repository.findById(userId).orElseThrow();
@@ -108,10 +112,10 @@ public class UserServiceImpl implements UserService {
         this.repository.save(user);
 
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String json_user = ow.writeValueAsString(user);
+        var userDTO = user.toDto();
+        String json_user = ow.writeValueAsString(userDTO);
 
         publisher.publish("exchange_user", "A User was Updated | " + json_user, host);
-
         return user.toDto();
     }
 
@@ -123,11 +127,9 @@ public class UserServiceImpl implements UserService {
         Set<Vehicle> vehicles = user.getVehicles();
 
         for (Vehicle vehicle : vehicles) {
-            VehicleOnCreation vehicleOnCreation = VehicleOnCreation.builder().
-                    licensePlateNumber(vehicle.getLicensePlateNumber()).
-                    vehicleType(vehicle.getVehicleType()).
-                    vehicleEnergySource(vehicle.getVehicleEnergySource()).
-                    build();
+            VehicleOnCreation vehicleOnCreation = VehicleOnCreation.builder()
+                    .licensePlateNumber(vehicle.getLicensePlateNumber()).vehicleType(vehicle.getVehicleType())
+                    .vehicleEnergySource(vehicle.getVehicleEnergySource()).build();
 
             vehiclesOnCreation.add(vehicleOnCreation);
         }
