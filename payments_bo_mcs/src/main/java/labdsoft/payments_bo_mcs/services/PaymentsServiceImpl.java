@@ -63,9 +63,11 @@ public class PaymentsServiceImpl implements PaymentsService {
 
         List<PaymentsTableRow> rows = calculateCost(vehicle.get().getVehicleType().name(), barrierInfoDTO.getEnterPark(), barrierInfoDTO.getLeftPark(), listPriceTableEntry);
 
-        final Payments p = Payments.builder().discount(0D).paymentsTableRows(rows).nif(verification.get().getNif()).build();
+        rows = rows.stream().map(paymentsTableRow -> p_tr_Repo.save(paymentsTableRow)).collect(Collectors.toCollection(ArrayList::new));
 
-        repository.save(p);
+        Payments p = Payments.builder().discount(0D).paymentsTableRows(rows).nif(verification.get().getNif()).build();
+
+        p = repository.save(p);
 
         return p.toDTO();
     }
@@ -100,14 +102,14 @@ public class PaymentsServiceImpl implements PaymentsService {
             paymentsTableRow.setFractionStart(actualPeriod.get(Calendar.HOUR_OF_DAY) + ":" + actualPeriod.get(Calendar.MINUTE));
 
             if (counter < entry.getThresholds().size()) {
-                if (vehicleType.equals("FUEL")) {
+                if (vehicleType.equals("AUTOMOBILE")) {
                     price = entry.getThresholds().get(counter).getCostPerMinuteAutomobiles();
                 } else {
                     price = entry.getThresholds().get(counter).getCostPerMinuteMotorcycles();
                 }
                 actualPeriod.add(Calendar.MINUTE, entry.getThresholds().get(counter).getThresholdMinutes());
             } else {
-                if (vehicleType.equals("ELECTRIC")) {
+                if (vehicleType.equals("AUTOMOBILE")) {
                     price = entry.getThresholds().get(entry.getThresholds().size() - 1).getCostPerMinuteAutomobiles();
                 } else {
                     price = entry.getThresholds().get(entry.getThresholds().size() - 1).getCostPerMinuteMotorcycles();
@@ -123,7 +125,6 @@ public class PaymentsServiceImpl implements PaymentsService {
             paymentsTableRow.setPrice(price);
 
             rows.add(paymentsTableRow);
-            p_tr_Repo.save(paymentsTableRow);
         }
         return rows;
     }
@@ -156,13 +157,13 @@ public class PaymentsServiceImpl implements PaymentsService {
     @Override
     public Iterable<PaymentsDTO> findByUserNIF(String nif) {
         Optional<List<Payments>> possibleResult = repository.getPaymentsOfUser(nif);
-        return possibleResult.<Iterable<PaymentsDTO>>map(payments -> payments.parallelStream().map(Payments::toDTO).collect(Collectors.toCollection(ArrayList::new))).orElseGet(ArrayList::new);
+        return possibleResult.<Iterable<PaymentsDTO>>map(payments -> payments.stream().map(Payments::toDTO).collect(Collectors.toCollection(ArrayList::new))).orElseGet(ArrayList::new);
     }
 
     @Override
     public Iterable<PaymentsDTO> getCatalog() {
         Optional<List<Payments>> possibleResult = repository.getAllPayments();
-        return possibleResult.<Iterable<PaymentsDTO>>map(payments -> payments.parallelStream().map(Payments::toDTO).collect(Collectors.toCollection(ArrayList::new))).orElseGet(ArrayList::new);
+        return possibleResult.<Iterable<PaymentsDTO>>map(payments -> payments.stream().map(Payments::toDTO).collect(Collectors.toCollection(ArrayList::new))).orElseGet(ArrayList::new);
     }
 
 }

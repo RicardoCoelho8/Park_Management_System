@@ -36,7 +36,7 @@ public class Payments {
     private Long nif;
 
     public PaymentsDTO toDTO() {
-        ArrayList<PaymentsTableRowDTO> paymentsTableRowsDTO = paymentsTableRows.parallelStream().map(PaymentsTableRow::toDTO).collect(Collectors.toCollection(ArrayList::new));
-        return new PaymentsDTO(invoice, discount, paymentsTableRows.parallelStream().mapToDouble(PaymentsTableRow::getPrice).sum(), paymentsTableRowsDTO, nif);
+        ArrayList<PaymentsTableRowDTO> paymentsTableRowsDTO = paymentsTableRows.stream().map(PaymentsTableRow::toDTO).collect(Collectors.toCollection(ArrayList::new));
+        return new PaymentsDTO(invoice, discount, paymentsTableRows.stream().mapToDouble(PaymentsTableRow::getPrice).sum(), paymentsTableRowsDTO, nif);
     }
 }

@@ -18,9 +18,4 @@ public class PaymentsDTO {
     private Double finalPrice;
     private ArrayList<PaymentsTableRowDTO> paymentsTableRowsDTO;
     private Long nif;
-
-    public Payments toObject() {
-        ArrayList<PaymentsTableRow> paymentsTableRows = paymentsTableRowsDTO.parallelStream().map(PaymentsTableRowDTO::toObject).collect(Collectors.toCollection(ArrayList::new));
-        return new Payments(invoice, discount, paymentsTableRows, nif);
-    }
 }

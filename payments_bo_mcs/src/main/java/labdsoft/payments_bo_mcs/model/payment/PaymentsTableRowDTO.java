@@ -19,8 +19,4 @@ public class PaymentsTableRowDTO {
     private String fractionEnd;
     private String vehicleType;
     private Double price;
-
-    public PaymentsTableRow toObject() {
-        return new PaymentsTableRow(paymentTableRowID, periodStart, periodEnd, fractionStart, fractionEnd, vehicleType, price);
-    }
 }
