@@ -16,3 +16,6 @@ cmd /C mvn clean install -DskipTests
 cd ..
 cd display_mcs_fe
 cmd /C mvn clean install -DskipTests
+cd ..
+cd barrier_mcs_fe
+cmd /C mvn clean install -DskipTests

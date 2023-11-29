@@ -17,17 +17,17 @@ public class RestCommunication {
 
     private final String URL = "lb://park20-park-microservice/barriers/entrance";
 
-    public void postForEntrance(Barrier sendDTO) {
+    public BarrierDTO postForEntrance(Barrier sendDTO) {
         ResponseEntity<BarrierDTO> response = this.restTemplate
                 .postForEntity(URL, sendDTO, BarrierDTO.class);
 
-        response.getBody();
+        return response.getBody();
     }
 
-    public void postForExit(Barrier sendDTO) {
+    public BarrierDTO postForExit(Barrier sendDTO) {
         ResponseEntity<BarrierDTO> response = this.restTemplate
                 .postForEntity(URL, sendDTO, BarrierDTO.class);
 
-        response.getBody();
+        return response.getBody();
     }
 }
