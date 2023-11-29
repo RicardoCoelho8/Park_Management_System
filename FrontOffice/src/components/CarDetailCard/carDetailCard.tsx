@@ -1,6 +1,6 @@
 import React from "react";
 import { Container } from "react-bootstrap";
-import "./carDetailCard.css";
+import "../../utils/styles.css";
 
 export interface CarDetailCard {
   licensePlate: string;
@@ -32,9 +32,9 @@ export const CarDetailCard: React.FC<CarDetailCardProps> = (props) => {
         return (
           <Container
             style={{
+              display: "flex",
               background:
                 "linear-gradient(180deg, rgba(0, 212, 255, 0.8) 0%, rgba(20, 100, 120, 0.6) 40%, rgba(12, 57, 80, 0.4) 80%, rgba(12, 57, 80, 0.2) 100%)",
-              display: "flex",
               boxShadow:
                 "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset",
               flexDirection: "column",

@@ -28,7 +28,7 @@ export const HomeScreen: React.FC = () => {
   ];
   return (
     <>
-      <Container style={{ width: "150px", height: "150px" }} />
+      <Container style={{ width: "9.375rem", height: "9.375rem" }} />
       <Container style={{ padding: "0 0.625rem" }}>
         <MenuCard cards={cards} />
       </Container>
