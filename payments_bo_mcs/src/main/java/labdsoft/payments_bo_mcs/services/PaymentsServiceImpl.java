@@ -1,5 +1,7 @@
 package labdsoft.payments_bo_mcs.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import labdsoft.payments_bo_mcs.communication.Publish;
 import labdsoft.payments_bo_mcs.model.barrier.BarrierInfoDTO;
 import labdsoft.payments_bo_mcs.model.payment.Payments;
@@ -68,6 +70,12 @@ public class PaymentsServiceImpl implements PaymentsService {
         Payments p = Payments.builder().discount(0D).paymentsTableRows(rows).nif(verification.get().getNif()).build();
 
         p = repository.save(p);
+
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        var paymentDTO = p.toDTO();
+        String json_user = ow.writeValueAsString(paymentDTO);
+
+        publisher.publish("exchange_payment", "A Payment was Created | " + json_user, host);
 
         return p.toDTO();
     }

@@ -1,5 +1,8 @@
 package labdsoft.payments_bo_mcs.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import labdsoft.payments_bo_mcs.communication.Publish;
 import labdsoft.payments_bo_mcs.model.barrier.BarrierInfoDTO;
 import labdsoft.payments_bo_mcs.model.payment.Payments;
 import labdsoft.payments_bo_mcs.model.payment.PaymentsDTO;
@@ -17,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,6 +51,9 @@ class PaymentsServiceImplTest {
 
     @Mock
     private PaymentsTableRowRepository p_tr_Repo;
+
+    @Mock
+    private Publish publisher;
 
     @InjectMocks
     private PaymentsServiceImpl service;
@@ -116,6 +124,14 @@ class PaymentsServiceImplTest {
         Payments pResult = Payments.builder().invoice(37L).discount(0D).paymentsTableRows(rows).nif(501776508L).build();
 
         when(repository.save(p)).thenReturn(pResult);
+
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        var paymentDTO = pResult.toDTO();
+        String json_user = ow.writeValueAsString(paymentDTO);
+
+        doAnswer(invocation -> {
+            return null;
+        }).when(publisher).publish("exchange_payment", "A Payment was Created | " + json_user, null);
 
         PaymentsDTO result = service.createFromBarrier(barrierInfoDTO);
 
