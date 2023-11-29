@@ -13,3 +13,6 @@ cd payments_bo_mcs
 cd ..
 cd users_bo_mcs
  mvn clean install -DskipTests
+cd ..
+cd display_mcs_fe
+ mvn clean install -DskipTests
