@@ -16,3 +16,6 @@ cd users_bo_mcs
 cd ..
 cd display_mcs_fe
  mvn clean install -DskipTests
+cd ..
+cd barrier_mcs_fe
+ mvn clean install -DskipTests

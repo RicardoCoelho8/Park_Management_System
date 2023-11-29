@@ -35,32 +35,52 @@ public class BarrierCarPlateReader {
     @Value("${park.number}")
     private Long parkNumber;
 
+    private boolean isOpen = false;
+    private boolean started = true;
+
     private final Scanner scanner = new Scanner(System.in);
     private final Pattern licensePlatePattern = Pattern.compile("^(([A-Z]{2}-\\d{2}-(\\d{2}|[A-Z]{2}))|(\\d{2}-(\\d{2}-[A-Z]{2}|[A-Z]{2}-\\d{2})))$");
 
     @Scheduled(cron = "0/10 * * * * ?") // Run every 10 seconds
     public void checkLicensePlate() {
         try {
-            logger.info("----------------------------------------");
-            logger.info("Waiting for a car to approach the barrier:");
+
+            if (started) {
+                logger.info("----------------------------------------");
+                logger.info("Waiting for a car to approach the barrier:");
+                started = false;
+            }
+
+            if (isOpen) {
+                logger.info("....");
+                logger.info("Closing barrier.");
+                logger.info("");
+
+                logger.info("----------------------------------------");
+                logger.info("Waiting for a car to approach the barrier:");
+            }
 
             String input = scanner.nextLine();
             Matcher matcher = licensePlatePattern.matcher(input);
 
-            logger.info("License plate number: " + input);
+            if (!Objects.equals(input, "")) {
+                logger.info("License plate number: " + input);
 
-            if (!matcher.matches()) {
-                logger.info("Invalid license plate number!");
-            } else {
-                logger.info("Barrier opened for car with license plate number: " + input);
-                if ("entrance".equalsIgnoreCase(barrierType)) {
-                    restCommunication.postForEntrance(new Barrier(barrierId, parkID, parkNumber, input, Calendar.getInstance().toString()));
-                } else if ("exit".equalsIgnoreCase(barrierType)) {
-                    restCommunication.postForExit(new Barrier(barrierId, parkID, parkNumber, input, Calendar.getInstance().toString()));
+                if (!matcher.matches()) {
+                    logger.info("Invalid license plate number!");
+                    started = true;
+                } else {
+                    logger.info("Barrier opened for car with license plate number: " + input);
+                    if ("entrance".equalsIgnoreCase(barrierType)) {
+                        restCommunication.postForEntrance(new Barrier(barrierId, parkID, parkNumber, input, Calendar.getInstance()));
+                    } else if ("exit".equalsIgnoreCase(barrierType)) {
+                        restCommunication.postForExit(new Barrier(barrierId, parkID, parkNumber, input, Calendar.getInstance()));
+                    }
+
+                    isOpen = true;
                 }
-
-                logger.info("...");
-                logger.info("Barrier closed");
+            } else {
+                isOpen = false;
             }
         } catch (Exception e) {
             logger.info("Error checking lincense plate: " + e.getMessage());
