@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class BarrierServiceImpl implements BarrierService {
@@ -120,7 +121,9 @@ public class BarrierServiceImpl implements BarrierService {
         spot.setOccupied(true);
         spotRepository.save(spot);
 
-        ParkingHistory parkingHistory = ParkingHistory.builder().customerID(vehicle.getCustomerID()).startTime(barrierLicenseReaderDTO.getDate()).endTime(barrierLicenseReaderDTO.getDate()).parkId(park.getParkID()).build();
+        ParkingHistory parkingHistory = ParkingHistory.builder().customerID(vehicle.getCustomerID())
+                .startTime(barrierLicenseReaderDTO.getDate()).endTime(barrierLicenseReaderDTO.getDate())
+                .parkId(park.getParkID()).price(0.0).hoursBetweenEntranceExit(0).minutesBetweenEntranceExit(0).build();
         parkingHistoryRepository.save(parkingHistory);
     }
 
@@ -173,17 +176,36 @@ public class BarrierServiceImpl implements BarrierService {
         ParkingHistory parkingHistory = parkingHistoryRepository.findByCustomerIDLatest(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getCustomerID());
 
         parkingHistory.setEndTime(barrierLicenseReaderDTO.getDate());
-        parkingHistoryRepository.save(parkingHistory);
+
+        // Convert to milliseconds
+        long millis1 = parkingHistory.getStartTime().getTimeInMillis();
+        long millis2 = parkingHistory.getEndTime().getTimeInMillis();
+
+        // Calculate difference in milliseconds
+        long diffInMillis = Math.abs(millis2 - millis1);
+
+        // Convert to hours and minutes
+        int hours = (int) TimeUnit.MILLISECONDS.toHours(diffInMillis);
+        int minutes = (int) (TimeUnit.MILLISECONDS.toMinutes(diffInMillis) % 60); // Get remaining minutes
+
+        parkingHistory.setHoursBetweenEntranceExit(hours);
+        parkingHistory.setMinutesBetweenEntranceExit(minutes);
 
         SendToPaymentDTO sendToPaymentDTO = SendToPaymentDTO.builder().parkID(barrierLicenseReaderDTO.getParkID()).enterPark(parkingHistory.getStartTime())
                 .leftPark(parkingHistory.getEndTime()).licensePlateNumber(barrierLicenseReaderDTO.getPlateNumber()).build();
 
         PaymentsDTO paymentsDTO = paymentCommunication.postForPayment(sendToPaymentDTO);
 
-        if (paymentsDTO != null)
+
+        if (paymentsDTO != null) {
+            parkingHistory.setPrice(paymentsDTO.getFinalPrice());
+
+            parkingHistoryRepository.save(parkingHistory);
+
             return paymentsDTO.getFinalPrice();
-        else
+        } else {
             return 0.0;
+        }
     }
 
     private boolean processExit(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {

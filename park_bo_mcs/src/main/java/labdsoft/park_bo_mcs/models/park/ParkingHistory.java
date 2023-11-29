@@ -27,9 +27,18 @@ public class ParkingHistory {
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar endTime;
 
+    @Column
+    private Integer hoursBetweenEntranceExit;
+
+    @Column
+    private Integer minutesBetweenEntranceExit;
+
     @Column(nullable = false)
     private Long parkId;
 
     @Column(nullable = false)
     private Long customerID;
+
+    @Column(nullable = false)
+    private Double price;
 }

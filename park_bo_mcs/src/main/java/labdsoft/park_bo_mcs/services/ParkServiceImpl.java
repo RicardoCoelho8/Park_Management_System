@@ -115,6 +115,9 @@ public class ParkServiceImpl implements ParkService {
                     .endTime(parkHistory.getEndTime())
                     .parkId(parkHistory.getParkId())
                     .customerID(parkHistory.getCustomerID())
+                    .hoursBetweenEntranceExit(parkHistory.getHoursBetweenEntranceExit())
+                    .minutesBetweenEntranceExit(parkHistory.getMinutesBetweenEntranceExit())
+                    .price(parkHistory.getPrice())
                     .build();
 
             listParkHistoryDTO.add(parkHistoryDTO);
