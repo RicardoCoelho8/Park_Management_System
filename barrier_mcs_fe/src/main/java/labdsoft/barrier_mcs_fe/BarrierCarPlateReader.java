@@ -70,11 +70,22 @@ public class BarrierCarPlateReader {
                     logger.info("Invalid license plate number!");
                     started = true;
                 } else {
-                    logger.info("Barrier opened for car with license plate number: " + input);
+
+                    BarrierDTO barrierDTO = null;
+
                     if ("entrance".equalsIgnoreCase(barrierType)) {
-                        restCommunication.postForEntrance(new Barrier(barrierId, parkID, parkNumber, input, Calendar.getInstance()));
+                        barrierDTO = restCommunication.postForEntrance(new Barrier(barrierId, parkID, parkNumber, input, Calendar.getInstance()));
                     } else if ("exit".equalsIgnoreCase(barrierType)) {
-                        restCommunication.postForExit(new Barrier(barrierId, parkID, parkNumber, input, Calendar.getInstance()));
+                        barrierDTO = restCommunication.postForExit(new Barrier(barrierId, parkID, parkNumber, input, Calendar.getInstance()));
+                    }
+
+                    assert barrierDTO != null;
+                    if (barrierDTO.getSuccess()) {
+                        logger.info("Barrier opened for car with license plate number: " + input);
+                        logger.info(barrierDTO.getMessage());
+                    } else {
+                        logger.info("Invalid license plate number!");
+                        logger.info(barrierDTO.getMessage());
                     }
 
                     isOpen = true;
