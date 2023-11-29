@@ -1,4 +1,4 @@
-package labdsoft.display_mcs_fo;
+package labdsoft.display_mcs_fe;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

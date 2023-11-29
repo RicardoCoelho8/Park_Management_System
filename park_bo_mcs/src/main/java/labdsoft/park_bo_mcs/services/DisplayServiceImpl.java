@@ -12,13 +12,19 @@ import labdsoft.park_bo_mcs.repositories.park.BarrierRepository;
 import labdsoft.park_bo_mcs.repositories.park.DisplayRepository;
 import labdsoft.park_bo_mcs.repositories.park.ParkRepository;
 import labdsoft.park_bo_mcs.repositories.park.SpotRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class DisplayServiceImpl implements DisplayService {
+
+    private static final Logger logger = LoggerFactory.getLogger(DisplayServiceImpl.class);
 
     @Autowired
     private BarrierRepository barrierRepository;
@@ -63,6 +69,8 @@ public class DisplayServiceImpl implements DisplayService {
     @Override
     public DisplayDTO getDisplayMessage(DisplayGetDTO displayGetDTO) {
         Display display = displayRepository.findByDisplayID(displayGetDTO.getDisplayID());
+
+        logger.info("DisplayGetDTO: " + displayGetDTO);
 
         if (display == null) {
             return DisplayDTO.builder().message("Display not found!").occupancy(0).build();

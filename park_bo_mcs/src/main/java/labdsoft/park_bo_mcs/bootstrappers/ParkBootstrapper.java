@@ -71,15 +71,15 @@ public class ParkBootstrapper implements CommandLineRunner {
     private void createSampleDisplays(Long id) {
         List<Display> list_displays = new ArrayList<>();
 
-        list_displays.add(Display.builder().displayNumber("D1.1").barrierNumber("B1.1").state(State.ACTIVE).parkID(id).build());
-        list_displays.add(Display.builder().displayNumber("D1.2").barrierNumber("B1.2").state(State.ACTIVE).parkID(id).build());
-        list_displays.add(Display.builder().displayNumber("D1.3").barrierNumber("B1.2").state(State.ACTIVE).parkID(id).build());
-        list_displays.add(Display.builder().displayNumber("D2.1").barrierNumber("B2.1").state(State.ACTIVE).parkID(id).build());
-        list_displays.add(Display.builder().displayNumber("D2.2").barrierNumber("B2.2").state(State.ACTIVE).parkID(id).build());
-        list_displays.add(Display.builder().displayNumber("D2.3").barrierNumber("B2.2").state(State.ACTIVE).parkID(id).build());
-        list_displays.add(Display.builder().displayNumber("D3.1").barrierNumber("B3.1").state(State.DISABLED).parkID(id).build());
-        list_displays.add(Display.builder().displayNumber("D3.2").barrierNumber("B3.2").state(State.DISABLED).parkID(id).build());
-        list_displays.add(Display.builder().displayNumber("D3.3").barrierNumber("B3.2").state(State.DISABLED).parkID(id).build());
+        list_displays.add(Display.builder().message("Welcome!").displayNumber("D1.1").barrierNumber("B1.1").state(State.ACTIVE).parkID(id).build());
+        list_displays.add(Display.builder().message("Welcome!!").displayNumber("D1.2").barrierNumber("B1.2").state(State.ACTIVE).parkID(id).build());
+        list_displays.add(Display.builder().message("Welcome!").displayNumber("D1.3").barrierNumber("B1.2").state(State.ACTIVE).parkID(id).build());
+        list_displays.add(Display.builder().message("Welcome!").displayNumber("D2.1").barrierNumber("B2.1").state(State.ACTIVE).parkID(id).build());
+        list_displays.add(Display.builder().message("Welcome!").displayNumber("D2.2").barrierNumber("B2.2").state(State.ACTIVE).parkID(id).build());
+        list_displays.add(Display.builder().message("Welcome!").displayNumber("D2.3").barrierNumber("B2.2").state(State.ACTIVE).parkID(id).build());
+        list_displays.add(Display.builder().message("Welcome!").displayNumber("D3.1").barrierNumber("B3.1").state(State.DISABLED).parkID(id).build());
+        list_displays.add(Display.builder().message("Welcome!").displayNumber("D3.2").barrierNumber("B3.2").state(State.DISABLED).parkID(id).build());
+        list_displays.add(Display.builder().message("Welcome!").displayNumber("D3.3").barrierNumber("B3.2").state(State.DISABLED).parkID(id).build());
 
         dRepo.saveAll(list_displays);
     }

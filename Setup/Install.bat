@@ -13,3 +13,6 @@ cmd /C mvn clean install -DskipTests
 cd ..
 cd users_bo_mcs
 cmd /C mvn clean install -DskipTests
+cd ..
+cd display_mcs_fe
+cmd /C mvn clean install -DskipTests

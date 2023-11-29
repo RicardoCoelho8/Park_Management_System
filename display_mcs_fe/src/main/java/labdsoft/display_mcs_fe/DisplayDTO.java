@@ -1,11 +1,9 @@
-package labdsoft.display_mcs_fo;
+package labdsoft.display_mcs_fe;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
 
 @Data
 @AllArgsConstructor
@@ -13,5 +11,5 @@ import java.util.ArrayList;
 @Builder
 public class DisplayDTO{
     private String message;
-    private int occupancy;
+    private Integer occupancy;
 }
