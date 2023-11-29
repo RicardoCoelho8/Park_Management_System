@@ -22,8 +22,14 @@ export const LoginScreen: React.FC = () => {
       const decodedToken = decodeJwt(data.token);
       storeUserInLocalStorage(data.token, decodedToken.sub, decodedToken.role);
       dispatch(
-        setUserData({ userId: decodedToken.sub, userRole: decodedToken.role })
+        setUserData({
+          userId: decodedToken.sub,
+          userRole: decodedToken.role,
+          email,
+        })
       );
+      setEmail("");
+      setPassword("");
       navigate("/home");
     } else if (error) {
       setShowModal(true);
@@ -33,8 +39,6 @@ export const LoginScreen: React.FC = () => {
 
   const handleOnClickSubmit = () => {
     loginUser({ email, password });
-    setEmail("");
-    setPassword("");
   };
 
   return (

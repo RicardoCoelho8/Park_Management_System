@@ -35,6 +35,17 @@ export interface SpotTypeOccupancies {
   availableSpots: number;
 }
 
+export interface UserParkingHistoryOutput {
+  parkingHistoryId: string;
+  startTime: string;
+  endTime: string;
+  hoursBetweenEntranceExit: number;
+  minutesBetweenEntranceExit: number;
+  parkId: number;
+  customerId: number;
+  price: number;
+}
+
 export const SET_USER_DATA = "SET_USER_DATA";
 
 export const POST_USER_DATA = "POST_USER_DATA";

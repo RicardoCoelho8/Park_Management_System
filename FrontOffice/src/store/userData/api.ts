@@ -4,6 +4,7 @@ import {
   UserDataLoginInput,
   UserDataRegisterInput,
   UserNearbyParksType,
+  UserParkingHistoryOutput,
 } from "./types";
 import { getTokenFromLocalStorage } from "../../utils/jwtUtils";
 import { RootState } from "../store";
@@ -56,6 +57,9 @@ export const userDataApi = createApi({
         url: "/parks/real-time/occupancy/41.178496516445534/-8.607637458224238/1500",
       }),
     }),
+    getUserParkingHistory: build.query<UserParkingHistoryOutput[], string>({
+      query: (userId) => ({ url: `/parks/parkingHistory/${userId}` }),
+    }),
   }),
 });
 
@@ -65,4 +69,5 @@ export const {
   useAddNewVehicleMutation,
   useGetUserVehiclesQuery,
   useGetParksNearbyQuery,
+  useGetUserParkingHistoryQuery,
 } = userDataApi;
