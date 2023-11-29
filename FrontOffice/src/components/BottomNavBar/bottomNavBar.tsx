@@ -40,7 +40,11 @@ export const BottomNavBar: React.FC = () => {
         <p>Home</p>
       </Container>
 
-      <Container fluid style={{ display: "flex", flexDirection: "column" }}>
+      <Container
+        fluid
+        style={{ display: "flex", flexDirection: "column" }}
+        onClick={() => navigate("/map")}
+      >
         <i className="bi bi-map-fill"></i>
         <p>Map</p>
       </Container>

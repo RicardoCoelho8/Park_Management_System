@@ -3,13 +3,14 @@ import {
   UserDataAddNewVehicleInput,
   UserDataLoginInput,
   UserDataRegisterInput,
+  UserNearbyParksType,
 } from "./types";
 import { getTokenFromLocalStorage } from "../../utils/jwtUtils";
 import { RootState } from "../store";
 
 export const userDataApi = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/users",
+    baseUrl: "http://localhost:8080",
     prepareHeaders: (headers, { getState }) => {
       const { userId, userRole } = (getState() as RootState).userData;
 
@@ -25,14 +26,14 @@ export const userDataApi = createApi({
   endpoints: (build) => ({
     postUserData: build.mutation<any, UserDataRegisterInput>({
       query: (newData) => ({
-        url: "",
+        url: "/users",
         method: "POST",
         body: newData,
       }),
     }),
     login: build.mutation<any, UserDataLoginInput>({
       query: (loginData) => ({
-        url: "/login",
+        url: "/users/login",
         method: "POST",
         body: loginData,
       }),
@@ -42,13 +43,18 @@ export const userDataApi = createApi({
       { newVehicle: UserDataAddNewVehicleInput; userId: string }
     >({
       query: ({ newVehicle, userId }) => ({
-        url: `/${userId}/vehicle`,
+        url: `/users/${userId}/vehicle`,
         method: "PUT",
         body: newVehicle,
       }),
     }),
     getUserVehicles: build.query<any, string>({
-      query: (userId) => ({ url: `/${userId}/vehicles` }),
+      query: (userId) => ({ url: `/users/${userId}/vehicles` }),
+    }),
+    getParksNearby: build.query<UserNearbyParksType[], void>({
+      query: () => ({
+        url: "/parks/real-time/occupancy/41.178496516445534/-8.607637458224238/1500",
+      }),
     }),
   }),
 });
@@ -58,4 +64,5 @@ export const {
   useLoginMutation,
   useAddNewVehicleMutation,
   useGetUserVehiclesQuery,
+  useGetParksNearbyQuery,
 } = userDataApi;
