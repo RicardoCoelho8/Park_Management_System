@@ -26,6 +26,7 @@ export const LoginScreen: React.FC = () => {
           userId: decodedToken.sub,
           userRole: decodedToken.role,
           email,
+          name: data.name,
         })
       );
       setEmail("");

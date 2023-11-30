@@ -5,6 +5,7 @@ import {
   UserDataRegisterInput,
   UserNearbyParksType,
   UserParkingHistoryOutput,
+  UserPaymentMethodInput,
 } from "./types";
 import { getTokenFromLocalStorage } from "../../utils/jwtUtils";
 import { RootState } from "../store";
@@ -39,6 +40,16 @@ export const userDataApi = createApi({
         body: loginData,
       }),
     }),
+    changePayment: build.mutation<
+      any,
+      { paymentData: UserPaymentMethodInput; userId: string }
+    >({
+      query: ({ paymentData, userId }) => ({
+        url: `/users/${userId}/payment-method`,
+        method: "PUT",
+        body: paymentData,
+      }),
+    }),
     addNewVehicle: build.mutation<
       any,
       { newVehicle: UserDataAddNewVehicleInput; userId: string }
@@ -51,6 +62,9 @@ export const userDataApi = createApi({
     }),
     getUserVehicles: build.query<any, string>({
       query: (userId) => ({ url: `/users/${userId}/vehicles` }),
+    }),
+    getUserPaymentMethod: build.query<any, string>({
+      query: (userId) => ({ url: `/users/${userId}/paymentMethod` }),
     }),
     getParksNearby: build.query<UserNearbyParksType[], void>({
       query: () => ({
@@ -67,7 +81,9 @@ export const {
   usePostUserDataMutation,
   useLoginMutation,
   useAddNewVehicleMutation,
+  useChangePaymentMutation,
   useGetUserVehiclesQuery,
+  useGetUserPaymentMethodQuery,
   useGetParksNearbyQuery,
   useGetUserParkingHistoryQuery,
 } = userDataApi;

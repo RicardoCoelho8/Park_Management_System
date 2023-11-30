@@ -9,12 +9,12 @@ import {
 } from "../../components/HistoryCarousel/historyCarrousel";
 import { useUserId } from "../../store/userData/useUserId";
 import { useGetUserParkingHistoryQuery } from "../../store/userData/api";
-import { useUserEmail } from "../../store/userData/useUserEmail";
+import { useUserName } from "../../store/userData/useUserName";
 
 export const HomeScreen: React.FC = () => {
   const navigate = useNavigate();
   const userId = useUserId();
-  const userEmail = useUserEmail();
+  const userName = useUserName();
   const { data } = useGetUserParkingHistoryQuery(userId as string);
   const [historyCards, setHistoryCards] = useState<HistoryCarouselDetails[]>(
     []
@@ -55,12 +55,12 @@ export const HomeScreen: React.FC = () => {
       icon: "bi bi-credit-card-2-back",
       onClick: () => navigate("/addVechile"),
     },
-    {
+    /*{
       title: "Vechiles",
       subtitle: "View All Your Vechiles Here",
       icon: "bi bi-car-front",
       onClick: () => navigate("/addVechile"),
-    },
+    },*/
   ];
   return (
     <>
@@ -86,7 +86,7 @@ export const HomeScreen: React.FC = () => {
           }}
         >
           <h5>Welcome back </h5>
-          <h3>{userEmail}</h3>
+          <h3>{userName}</h3>
         </Container>
       </Container>
       <Container style={{ padding: "0 0.625rem" }}>

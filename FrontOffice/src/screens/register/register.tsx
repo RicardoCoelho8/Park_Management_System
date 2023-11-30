@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Button, Container, Form, Image } from "react-bootstrap";
 import { usePostUserDataMutation } from "../../store/userData/api";
 import { logo } from "../../images";
+import { Link, useNavigate } from "react-router-dom";
 import { ModalErrorForm } from "../../components";
-import { useNavigate } from "react-router-dom";
 import { VehicleEnergySource, VehicleType } from "../../utils/types";
 import {
   getRandomVehicleEnergySource,
@@ -212,6 +212,16 @@ export const RegisterScreen: React.FC = () => {
           >
             Sign up
           </Button>
+        </Container>
+        <Container
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "0.625rem",
+          }}
+        >
+          <p style={{ marginRight: "0.313rem" }}> Changed your mind? </p>
+          <Link to={"/"}>Go back to login here!</Link>
         </Container>
       </Container>
       {/* MODAL */}

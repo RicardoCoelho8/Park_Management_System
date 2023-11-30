@@ -5,6 +5,7 @@ import { RegisterScreen } from "./register/register";
 import { HomeScreen } from "./home/home";
 import { AddVechileScreen } from "./vechile/addNewVechile";
 import { MapScreen } from "./map/map";
+import { AccountScreen } from "./account/account";
 
 export const App: React.FC = () => {
   return (
@@ -15,6 +16,7 @@ export const App: React.FC = () => {
         <Route path="/home" element={<HomeScreen />} />
         <Route path="/addVechile" element={<AddVechileScreen />} />
         <Route path="/map" element={<MapScreen />} />
+        <Route path="/account" element={<AccountScreen />} />
       </Routes>
     </Router>
   );

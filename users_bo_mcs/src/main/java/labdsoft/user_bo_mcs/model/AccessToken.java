@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 public class AccessToken {
     
     private String token;
+    private String name;
 }

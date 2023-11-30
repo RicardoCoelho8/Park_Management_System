@@ -23,6 +23,10 @@ export interface UserDataAddNewVehicleInput {
   vehicleEnergySource: string;
 }
 
+export interface UserPaymentMethodInput{
+  paymentMethod: string;
+}
+
 export interface UserNearbyParksType {
   parkId: string;
   distanceKm: number;

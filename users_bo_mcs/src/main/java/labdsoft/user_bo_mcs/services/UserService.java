@@ -14,8 +14,9 @@ public interface UserService {
 
     List<UserDTO> getAll();
     VehicleOnCreation addVehicle(Long userId, VehicleOnCreation vehicle) throws Exception;
-    UserDTO changePaymentMethod(Long userId, PaymentRequest pMethod) throws Exception;
+    PaymentDTO changePaymentMethod(Long userId, PaymentRequest pMethod) throws Exception;
 
     Set<VehicleOnCreation> getAllUserVehicles(Long userId) throws Exception;
+    PaymentDTO getUserPaymentMethod(Long userId) throws Exception;
 
 }

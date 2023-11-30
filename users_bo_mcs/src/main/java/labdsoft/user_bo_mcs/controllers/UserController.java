@@ -119,7 +119,7 @@ class UserController {
     @Operation(summary = "Changes user Payment Method")
     @PutMapping("/{userId}/payment-method")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<UserDTO> changePaymentMethod(@RequestHeader("X-UserId") String headerUserId,
+    public ResponseEntity<PaymentDTO> changePaymentMethod(@RequestHeader("X-UserId") String headerUserId,
             @RequestHeader("X-UserRole") String userRole,
             @PathVariable Long userId, @RequestBody PaymentRequest pMethod) {
         logger.info("Received change payment method to " + pMethod + " of user " + userId + " request");
@@ -135,9 +135,9 @@ class UserController {
         }
 
         try {
-            final UserDTO user = service.changePaymentMethod(userId, pMethod);
+            final PaymentDTO paymentDTO = service.changePaymentMethod(userId, pMethod);
             logger.info("Successfully changed payment method");
-            return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(paymentDTO, HttpStatus.ACCEPTED);
         } catch (Exception e) {
             logger.info(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -173,4 +173,31 @@ class UserController {
         }
     }
 
+    @Operation(summary = "get user paymentMethod")
+    @GetMapping("/{userId}/paymentMethod")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<PaymentDTO> getUserPaymentMethod(@RequestHeader("X-UserId") String headerUserId,
+                                                                     @RequestHeader("X-UserRole") String userRole,
+                                                                     @PathVariable Long userId) {
+
+        logger.info("Received get all user vehicles request");
+        if (!headerUserId.equals(userId.toString())) {
+            // only the user that is authenticated in the request is allowed to get his own
+            // payment method
+            logger.info("Request invalidated due to incoherent path user id of " + userId + "and header user id of " + headerUserId);
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        }
+        if (!userRole.equals(Role.CUSTOMER.toString())) {
+            logger.info("Request invalidated due to forbidden user role: " + userRole);
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        }
+        try {
+            final PaymentDTO paymentDTO = service.getUserPaymentMethod(userId);
+            logger.info("Successfully retrieved user payment method!");
+            return new ResponseEntity<>(paymentDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.info(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
+        }
+    }
 }

@@ -81,7 +81,6 @@ public class UserServiceImpl implements UserService {
 
         publisher.publish("exchange_user", "A User was Updated | " + json_user, host);
         return vehicleOnCreation;
-
     }
 
     @Override
@@ -99,11 +98,11 @@ public class UserServiceImpl implements UserService {
                 .withClaim("role", user.getRole().toString())
                 .sign(algorithm);
 
-        return Optional.of(new AccessToken(accessToken));
+        return Optional.of(new AccessToken(accessToken, user.getName().getFirstName()));
     }
 
     @Override
-    public UserDTO changePaymentMethod(Long userId, PaymentRequest pMethod) throws Exception {
+    public PaymentDTO changePaymentMethod(Long userId, PaymentRequest pMethod) throws Exception {
         if (pMethod.getPaymentMethod().equals(PaymentMethod.NOT_DEFINED)) {
             throw new IllegalArgumentException("Can't change payment method back to undefined");
         }
@@ -115,8 +114,10 @@ public class UserServiceImpl implements UserService {
         var userDTO = user.toDto();
         String json_user = ow.writeValueAsString(userDTO);
 
+        PaymentDTO paymentDTO = PaymentDTO.builder().paymentMethod(pMethod.getPaymentMethod()).build();
+
         publisher.publish("exchange_user", "A User was Updated | " + json_user, host);
-        return user.toDto();
+        return paymentDTO;
     }
 
     @Override
@@ -135,6 +136,12 @@ public class UserServiceImpl implements UserService {
         }
 
         return vehiclesOnCreation;
+    }
+
+    @Override
+    public PaymentDTO getUserPaymentMethod(Long userId) {
+        User user = this.repository.findByUserId(userId).orElseThrow();
+        return PaymentDTO.builder().paymentMethod(user.getPaymentMethod()).build();
     }
 
 }
