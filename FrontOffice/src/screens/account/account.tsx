@@ -36,7 +36,6 @@ export const AccountScreen: React.FC = () => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   var handleDropdownToggle = () => {
-    console.log("showDropdown: ", showDropdown);
     setShowDropdown(!showDropdown);
   };
 
@@ -71,7 +70,7 @@ export const AccountScreen: React.FC = () => {
         {/* Form */}
         <Container>
           <Form style={{ display: "flex", flexDirection: "column" }}>
-            <Button variant="success" style={{ marginTop: "0.313rem" }} onClick={handleDropdownToggle}>
+            <Button style={{ marginTop: "0.313rem" }} onClick={handleDropdownToggle}>
               Change payment method
             </Button>
             <Dropdown show={showDropdown} onSelect={handlePaymentMethodSelect} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>

@@ -53,7 +53,7 @@ export const HomeScreen: React.FC = () => {
       title: "Payments",
       subtitle: "View All Your Transactions Here",
       icon: "bi bi-credit-card-2-back",
-      onClick: () => navigate("/addVechile"),
+      onClick: () => navigate("/payments"),
     },
     /*{
       title: "Vechiles",

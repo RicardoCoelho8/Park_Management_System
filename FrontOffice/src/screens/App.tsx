@@ -6,6 +6,7 @@ import { HomeScreen } from "./home/home";
 import { AddVechileScreen } from "./vechile/addNewVechile";
 import { MapScreen } from "./map/map";
 import { AccountScreen } from "./account/account";
+import { PaymentScreen } from "./payments/payments";
 
 export const App: React.FC = () => {
   return (
@@ -17,6 +18,7 @@ export const App: React.FC = () => {
         <Route path="/addVechile" element={<AddVechileScreen />} />
         <Route path="/map" element={<MapScreen />} />
         <Route path="/account" element={<AccountScreen />} />
+        <Route path="/payments" element={<PaymentScreen />} />
       </Routes>
     </Router>
   );
