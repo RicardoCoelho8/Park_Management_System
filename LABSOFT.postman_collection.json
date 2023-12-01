@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "92667f9e-3941-4aad-8794-efcaa92dd24d",
+		"_postman_id": "a08eb60e-ca5c-4047-baa9-c1e3bf97e999",
 		"name": "LABSOFT",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "18345310"
+		"_exporter_id": "17826767"
 	},
 	"item": [
 		{
@@ -527,6 +527,59 @@
 			"item": [
 				{
 					"name": "create payment from information from of the barrier",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseData = pm.response.json();",
+									"",
+									"pm.test('There should exist 4 periods', function() {",
+									"    pm.expect(responseData.paymentsTableRowsDTO).to.be.an('array');",
+									"    pm.expect(responseData.paymentsTableRowsDTO.length).equals(4);",
+									"});",
+									"",
+									"pm.test('Verify the results', function() {",
+									"    pm.expect(responseData).to.have.property('invoice');",
+									"",
+									"    pm.expect(responseData).to.have.property('discount');",
+									"    pm.expect(responseData.discount).equals(0.0);",
+									"",
+									"    pm.expect(responseData).to.have.property('finalPrice');",
+									"    pm.expect(responseData.finalPrice).equals(0.6);",
+									"",
+									"    pm.expect(responseData).to.have.property('nif');",
+									"    pm.expect(responseData.nif).equals(123456789);",
+									"});",
+									"",
+									"pm.test('Verify the first array element values', function() {",
+									"    var firstPaymentTableRow = responseData.paymentsTableRowsDTO[0];",
+									"",
+									"    pm.expect(firstPaymentTableRow).to.have.property('paymentTableRowID');",
+									"",
+									"    pm.expect(firstPaymentTableRow).to.have.property('periodStart');",
+									"    pm.expect(firstPaymentTableRow.periodStart).equals('8:30');",
+									"",
+									"    pm.expect(firstPaymentTableRow).to.have.property('periodEnd');",
+									"    pm.expect(firstPaymentTableRow.periodEnd).equals('9:30');",
+									"",
+									"    pm.expect(firstPaymentTableRow).to.have.property('fractionStart');",
+									"    pm.expect(firstPaymentTableRow.fractionStart).equals('8:30');",
+									"",
+									"    pm.expect(firstPaymentTableRow).to.have.property('fractionEnd');",
+									"    pm.expect(firstPaymentTableRow.fractionEnd).equals('8:45');",
+									"",
+									"    pm.expect(firstPaymentTableRow).to.have.property('vehicleType');",
+									"    pm.expect(firstPaymentTableRow.vehicleType).equals('AUTOMOBILE');",
+									"",
+									"    pm.expect(firstPaymentTableRow).to.have.property('price');",
+									"    pm.expect(firstPaymentTableRow.price).equals(0.15);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -542,7 +595,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"enterPark\": \"2023-11-26T09:00:00.000Z\",\r\n  \"leftPark\": \"2023-11-26T17:00:00.000Z\",\r\n  \"parkID\": 1,\r\n  \"licensePlateNumber\": \"55-ND-41\"\r\n}\r\n",
+							"raw": "{\r\n  \"enterPark\": \"2023-11-26T08:30:00.000Z\",\r\n  \"leftPark\": \"2023-11-26T09:30:00.000Z\",\r\n  \"parkID\": 1,\r\n  \"licensePlateNumber\": \"AB-12-AA\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"

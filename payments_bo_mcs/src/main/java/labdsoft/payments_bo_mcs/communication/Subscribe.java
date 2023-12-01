@@ -66,6 +66,7 @@ public class Subscribe {
                             .vehicles(vehicles)
                             .build();
 
+                    System.out.println("User received: " + appUser.toString());
                     userService.createFromSubscribe(appUser);
                     break;
             }
