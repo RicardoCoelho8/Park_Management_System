@@ -10,6 +10,7 @@ import {
   getRandomVehicleType,
   validateLicensePlate,
 } from "../../utils/functions";
+import { PaymentMethodDropdown } from "../../components/PaymentMethodDropdown/paymentDropdown";
 
 export const RegisterScreen: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -152,17 +153,7 @@ export const RegisterScreen: React.FC = () => {
               <Form.Label style={{ margin: "0 0 5px 0" }}>
                 Payment Method
               </Form.Label>
-              <Form.Control
-                style={{
-                  borderRadius: "16px",
-                  borderWidth: "1px",
-                  margin: "0 0 5px 0",
-                }}
-                type="paymentMethod"
-                placeholder="Payment Method"
-                value={paymentMethod}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              />
+              <PaymentMethodDropdown onSelect={setPaymentMethod} />
             </Form.Group>
             <Form.Group
               controlId="formBasicNIF"

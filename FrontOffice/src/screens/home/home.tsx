@@ -15,14 +15,18 @@ export const HomeScreen: React.FC = () => {
   const navigate = useNavigate();
   const userId = useUserId();
   const userName = useUserName();
-  const { data } = useGetUserParkingHistoryQuery(userId as string);
+  const { data, refetch } = useGetUserParkingHistoryQuery(userId as string);
   const [historyCards, setHistoryCards] = useState<HistoryCarouselDetails[]>(
     []
   );
+  useEffect(() => {
+    refetch();
+  }, []);
 
   useEffect(() => {
     if (data) {
       const cards: HistoryCarouselDetails[] = [];
+      console.log("data in home ", data);
       data.map((history) => {
         const inputDate = new Date(history.endTime);
         const month = new Intl.DateTimeFormat("en", { month: "short" }).format(

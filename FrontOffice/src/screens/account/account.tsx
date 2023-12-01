@@ -1,26 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { BottomNavBar } from "../../components/BottomNavBar/bottomNavBar";
-import { Button, Container, Form, Image, Dropdown } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { useUserId } from "../../store/userData/useUserId";
 import { useUserName } from "../../store/userData/useUserName";
 import { useUserEmail } from "../../store/userData/useUserEmail";
-import { useUserRole } from "../../store/userData/useUserRole";
-import { useChangePaymentMutation, useGetUserPaymentMethodQuery } from "../../store/userData/api";
-import { person } from "../../images";
-import { PaymentMethod } from "../../utils/types";
+import {
+  useChangePaymentMutation,
+  useGetUserPaymentMethodQuery,
+} from "../../store/userData/api";
 import { ModalErrorForm } from "../../components";
+import { PaymentMethodDropdown } from "../../components/PaymentMethodDropdown/paymentDropdown";
 
 export const AccountScreen: React.FC = () => {
   const userId = useUserId();
   const userName = useUserName();
   const userEmail = useUserEmail();
-  const userRole = useUserRole();
   const { data, refetch } = useGetUserPaymentMethodQuery(userId as string);
+  const [paymentMethod, setPaymentMethod] = useState("");
   const [showModalError, setShowModalError] = useState(false);
   const [changePayment, { error, data: newPayment }] =
     useChangePaymentMutation();
 
   useEffect(() => {
+    if (data) {
+      setPaymentMethod(data.paymentMethod);
+    }
     if (error) {
       setShowModalError(true);
     } else if (newPayment) {
@@ -28,62 +32,55 @@ export const AccountScreen: React.FC = () => {
     }
   }, [newPayment, error, data]);
 
-  const getUserPaymentMethod = () => {
-    return data?.paymentMethod || PaymentMethod.not_defined;
-  };
-  var userPaymentMethod = getUserPaymentMethod();
-
-  const [showDropdown, setShowDropdown] = useState(false);
-
-  var handleDropdownToggle = () => {
-    setShowDropdown(!showDropdown);
-  };
-
-  const handlePaymentMethodSelect = (selectedPaymentMethod: string | null) => {
-    if (selectedPaymentMethod !== null) {
-      try {
-        changePayment({
-          paymentData: {
-            paymentMethod: selectedPaymentMethod,
-          },
-          userId: userId as string,
-        });
-      } catch (error) {
-        console.error("Error updating payment method:", error);
-      }
+  const handlePaymentMethodSelect = (value: string) => {
+    try {
+      console.log("NEW SELECTED PAYMENT", value);
+      changePayment({
+        paymentData: {
+          paymentMethod: value,
+        },
+        userId: userId as string,
+      });
+    } catch (error) {
+      console.error("Error updating payment method:", error);
     }
-    setShowDropdown(false);
   };
-
-  const paymentMethodOptions = Object.values(PaymentMethod) as string[];
 
   return (
     <>
-      <Container style={{ padding: "20px" }}>
-        <Container style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <Image src={person} fluid style={{ width: "100%", maxWidth: "150px", borderRadius: "50%" }} />
-          <h3>{userName}</h3>
-          <p>{userEmail}</p>
-          <p>Role: {userRole}</p>
-          <p>Payment method: {userPaymentMethod}</p>
-        </Container>
-        {/* Form */}
-        <Container>
-          <Form style={{ display: "flex", flexDirection: "column" }}>
-            <Button style={{ marginTop: "0.313rem" }} onClick={handleDropdownToggle}>
-              Change payment method
-            </Button>
-            <Dropdown show={showDropdown} onSelect={handlePaymentMethodSelect} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <Dropdown.Menu>
-                {paymentMethodOptions.map((method, index) => (
-                  <Dropdown.Item key={index} eventKey={method}>
-                    {method}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
-          </Form>
-        </Container>
+      <Container
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <i
+          className="bi bi-person-circle"
+          style={{ fontSize: "6.25rem", color: "#005c66" }}
+        />
+        <h2 style={{ color: "#005c66" }}>{userName}</h2>
+        <Container
+          style={{ height: "0.063rem", background: "#005c66", width: "100%" }}
+        />
+      </Container>
+      {/* Form */}
+      <Container
+        style={{
+          padding: "0 1.875rem",
+          color: "#005c66",
+          marginTop: "0.625rem",
+        }}
+      >
+        <p style={{ margin: "0 0 0.313rem 0 " }}>Email</p>
+        <h5>{userEmail}</h5>
+        <Container
+          style={{ height: "0.063rem", background: "#005c66", width: "100%" }}
+        />
+        <p style={{ margin: "0 0 0.313rem 0 " }}>Payment method </p>
+        <h5>{paymentMethod} </h5>
+
+        <PaymentMethodDropdown onSelect={handlePaymentMethodSelect} />
       </Container>
       <ModalErrorForm
         showModal={showModalError}

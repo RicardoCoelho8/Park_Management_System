@@ -21,5 +21,4 @@ export enum PaymentMethod {
   credit = "CREDIT",
   debit = "DEBIT",
   paypal = "PAYPAL",
-  not_defined = "NOT_DEFINED",
 }
