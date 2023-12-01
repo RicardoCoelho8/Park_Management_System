@@ -18,21 +18,16 @@ export const MapScreen: React.FC = () => {
   const { data: userVehicles } = useGetUserVehiclesQuery(userId as string);
   const { data: userNearbyParks } = useGetParksNearbyQuery();
   let sortedParks: UserNearbyParksType[] = [];
-  const [mapLocationCards, setMapLocationCards] = useState<MapLocationCard[]>(
-    []
-  );
+  const [mapLocationCards, setMapLocationCards] = useState<MapLocationCard[]>([]);
 
   useEffect(() => {
     if (userNearbyParks) {
       console.log("userNearbyParks", userNearbyParks);
       console.log("userVehicles", userVehicles);
 
-      sortedParks = [...userNearbyParks].sort(
-        (a, b) => (a.distanceKm || 0) - (b.distanceKm || 0)
-      );
-
-      setMapLocationCards(getAvailableSpotsPerPark());
-      console.log("mapLocationCards", mapLocationCards);
+      sortedParks = [...userNearbyParks].sort((a, b) => (a.distanceKm || 0) - (b.distanceKm || 0));
+      const cards = getAvailableSpotsPerPark();
+      setMapLocationCards(cards);
     }
   }, [userVehicles, userNearbyParks]);
 
@@ -53,29 +48,29 @@ export const MapScreen: React.FC = () => {
   };
 
   const getAvailableSpotsPerPark = () => {
-    const cards: MapLocationCard[] = [];
-    let availableSpots: { licensePlate: string; amount: number }[] = [];
-    sortedParks.map((park) => {
+    if (!userVehicles) {
+      return [];
+    }
+
+    const cards: MapLocationCard[] = sortedParks.map((park) => {
       const distance = park.distanceKm?.toFixed(2);
       const parkId = park.parkId;
-      console.log("park", park);
-      [...userVehicles].map((userVehicle) => {
-        availableSpots = [];
-        const amount = matchAvailableSpots(
-          userVehicle,
-          park.spotTypeOccupancies
-        );
-        availableSpots.push({
+
+      const availableSpots = userVehicles.map((userVehicle) => {
+        const amount = matchAvailableSpots(userVehicle, park.spotTypeOccupancies);
+        return {
           licensePlate: userVehicle.licensePlateNumber,
           amount: amount,
-        });
+        };
       });
-      cards.push({
+
+      return {
         parkId: parkId,
         distance: distance as string,
         availableSpots: availableSpots,
-      });
+      };
     });
+
     return cards;
   };
 

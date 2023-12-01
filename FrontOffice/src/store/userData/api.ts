@@ -60,7 +60,7 @@ export const userDataApi = createApi({
         body: newVehicle,
       }),
     }),
-    getUserVehicles: build.query<any, string>({
+    getUserVehicles: build.query<UserDataAddNewVehicleInput[], string>({
       query: (userId) => ({ url: `/users/${userId}/vehicles` }),
     }),
     getUserPaymentMethod: build.query<any, string>({
