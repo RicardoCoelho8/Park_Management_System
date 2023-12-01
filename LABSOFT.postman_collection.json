@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "c49cd683-8186-469a-b637-23264ab41e7f",
+		"_postman_id": "92667f9e-3941-4aad-8794-efcaa92dd24d",
 		"name": "LABSOFT",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "17826767"
+		"_exporter_id": "18345310"
 	},
 	"item": [
 		{
@@ -402,7 +402,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"barrierID\": 1,\r\n  \"parkID\": 1,\r\n  \"parkNumber\": 1,\r\n  \"plateNumber\": \"55-ND-41\",\r\n  \"date\": \"2023-11-26T12:34:56.789Z\"\r\n}\r\n",
+							"raw": "{\r\n  \"barrierID\": 1,\r\n  \"parkID\": 1,\r\n  \"parkNumber\": 1,\r\n  \"plateNumber\": \"28-XQ-51\",\r\n  \"date\": \"2023-11-26T12:34:56.789Z\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -434,7 +434,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"barrierID\": 2,\r\n  \"parkID\": 1,\r\n  \"parkNumber\": 1,\r\n  \"plateNumber\": \"55-ND-41\",\r\n  \"date\": \"2023-11-26T15:34:56.789Z\"\r\n}\r\n",
+							"raw": "{\r\n  \"barrierID\": 2,\r\n  \"parkID\": 1,\r\n  \"parkNumber\": 1,\r\n  \"plateNumber\": \"28-XQ-51\",\r\n  \"date\": \"2023-11-26T15:34:56.789Z\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -527,67 +527,13 @@
 			"item": [
 				{
 					"name": "create payment from information from of the barrier",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var responseData = pm.response.json();",
-									"",
-									"pm.test('There should exist 4 periods', function() {",
-									"    pm.expect(responseData.paymentsTableRowsDTO).to.be.an('array');",
-									"    pm.expect(responseData.paymentsTableRowsDTO.length).equals(4);",
-									"});",
-									"",
-									"pm.test('Verify the results', function() {",
-									"",
-									"    pm.expect(responseData).to.have.property('invoice');",
-									"",
-									"    pm.expect(responseData).to.have.property('discount');",
-									"    pm.expect(responseData.discount).equals(0.0);",
-									"",
-									"    pm.expect(responseData).to.have.property('finalPrice');",
-									"    pm.expect(responseData.finalPrice).equals(0.6);",
-									"",
-									"    pm.expect(responseData).to.have.property('nif');",
-									"    pm.expect(responseData.nif).equals(501776508);",
-									"});",
-									"",
-									"pm.test('Verify the first array element values', function() {",
-									"    var firstPaymentTableRow = responseData.paymentsTableRowsDTO[0];",
-									"",
-									"    pm.expect(firstPaymentTableRow).to.have.property('paymentTableRowID');",
-									"",
-									"    pm.expect(firstPaymentTableRow).to.have.property('periodStart');",
-									"    pm.expect(firstPaymentTableRow.periodStart).equals('8:30');",
-									"",
-									"    pm.expect(firstPaymentTableRow).to.have.property('periodEnd');",
-									"    pm.expect(firstPaymentTableRow.periodEnd).equals('9:30');",
-									"",
-									"    pm.expect(firstPaymentTableRow).to.have.property('fractionStart');",
-									"    pm.expect(firstPaymentTableRow.fractionStart).equals('8:30');",
-									"",
-									"    pm.expect(firstPaymentTableRow).to.have.property('fractionEnd');",
-									"    pm.expect(firstPaymentTableRow.fractionEnd).equals('8:45');",
-									"",
-									"    pm.expect(firstPaymentTableRow).to.have.property('vehicleType');",
-									"    pm.expect(firstPaymentTableRow.vehicleType).equals('AUTOMOBILE');",
-									"",
-									"    pm.expect(firstPaymentTableRow).to.have.property('price');",
-									"    pm.expect(firstPaymentTableRow.price).equals(0.15);",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6IlBBUktfTUFOQUdFUiIsImV4cCI6MTcwMTIwNTIyMn0.w0n36v1_BsI2titBnbFeax8k8RChEzC_GDgW-oUQLZM",
+									"value": "{{bearer_token}}",
 									"type": "string"
 								}
 							]
@@ -705,6 +651,138 @@
 		},
 		{
 			"name": "Login Leo Kim",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"bearer_token\", pm.response.json().token);\r",
+							"\r",
+							"// Get the token from the environment variable\r",
+							"var jwtToken = pm.environment.get(\"bearer_token\");\r",
+							"\r",
+							"// Split the token into its parts (header, payload, signature)\r",
+							"var parts = jwtToken.split('.');\r",
+							"\r",
+							"// Decode the base64-encoded payload\r",
+							"var decodedPayload = atob(parts[1]);\r",
+							"\r",
+							"// Parse the JSON payload\r",
+							"var payloadJson = JSON.parse(decodedPayload);\r",
+							"\r",
+							"// Extract information from the payload\r",
+							"var userId = payloadJson.sub;\r",
+							"var role = payloadJson.role;\r",
+							"var expirationTime = payloadJson.exp;\r",
+							"\r",
+							"// Set variables in Postman\r",
+							"pm.environment.set(\"user_id\", userId);\r",
+							"pm.environment.set(\"user_role\", role);\r",
+							"pm.environment.set(\"token_expiration\", expirationTime);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"leoKim@isep.ipp.pt\",\r\n    \"password\":\"123PasswordX#\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/users/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login Maya",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"bearer_token\", pm.response.json().token);\r",
+							"\r",
+							"// Get the token from the environment variable\r",
+							"var jwtToken = pm.environment.get(\"bearer_token\");\r",
+							"\r",
+							"// Split the token into its parts (header, payload, signature)\r",
+							"var parts = jwtToken.split('.');\r",
+							"\r",
+							"// Decode the base64-encoded payload\r",
+							"var decodedPayload = atob(parts[1]);\r",
+							"\r",
+							"// Parse the JSON payload\r",
+							"var payloadJson = JSON.parse(decodedPayload);\r",
+							"\r",
+							"// Extract information from the payload\r",
+							"var userId = payloadJson.sub;\r",
+							"var role = payloadJson.role;\r",
+							"var expirationTime = payloadJson.exp;\r",
+							"\r",
+							"// Set variables in Postman\r",
+							"pm.environment.set(\"user_id\", userId);\r",
+							"pm.environment.set(\"user_role\", role);\r",
+							"pm.environment.set(\"token_expiration\", expirationTime);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"mayaGupta@isep.ipp.pt\",\r\n    \"password\":\"123PasswordX#\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/users/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login Rui Soares",
 			"event": [
 				{
 					"listen": "test",
