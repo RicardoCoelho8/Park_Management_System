@@ -109,18 +109,20 @@ public class ParkServiceImpl implements ParkService {
 
         List<ParkingHistory> listParkHistory = parkHistoryRepository.findAllByCustomerID(customerID);
         for(ParkingHistory parkHistory : listParkHistory) {
-            ParkHistoryDTO parkHistoryDTO = ParkHistoryDTO.builder()
-                    .parkingHistoryId(parkHistory.getParkingHistoryId())
-                    .startTime(parkHistory.getStartTime())
-                    .endTime(parkHistory.getEndTime())
-                    .parkId(parkHistory.getParkId())
-                    .customerID(parkHistory.getCustomerID())
-                    .hoursBetweenEntranceExit(parkHistory.getHoursBetweenEntranceExit())
-                    .minutesBetweenEntranceExit(parkHistory.getMinutesBetweenEntranceExit())
-                    .price(parkHistory.getPrice())
-                    .build();
+            if(parkHistory.getStartTime() != parkHistory.getEndTime()) {
+                ParkHistoryDTO parkHistoryDTO = ParkHistoryDTO.builder()
+                        .parkingHistoryId(parkHistory.getParkingHistoryId())
+                        .startTime(parkHistory.getStartTime())
+                        .endTime(parkHistory.getEndTime())
+                        .parkId(parkHistory.getParkId())
+                        .customerID(parkHistory.getCustomerID())
+                        .hoursBetweenEntranceExit(parkHistory.getHoursBetweenEntranceExit())
+                        .minutesBetweenEntranceExit(parkHistory.getMinutesBetweenEntranceExit())
+                        .price(parkHistory.getPrice())
+                        .build();
 
-            listParkHistoryDTO.add(parkHistoryDTO);
+                listParkHistoryDTO.add(parkHistoryDTO);
+            }
         }
 
         return listParkHistoryDTO;
