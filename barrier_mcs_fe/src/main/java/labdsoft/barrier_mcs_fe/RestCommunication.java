@@ -17,7 +17,7 @@ public class RestCommunication {
 
     private final String URL_ENTRANCE = "lb://park20-park-microservice/barriers/entrance";
 
-    private final String URL_EXIT = "lb://park20-park-microservice/barriers/entrance";
+    private final String URL_EXIT = "lb://park20-park-microservice/barriers/exit";
 
     public BarrierDTO postForEntrance(Barrier sendDTO) {
         ResponseEntity<BarrierDTO> response = this.restTemplate
