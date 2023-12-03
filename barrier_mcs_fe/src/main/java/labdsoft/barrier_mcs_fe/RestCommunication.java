@@ -15,18 +15,20 @@ public class RestCommunication {
     @Autowired
     private final RestTemplate restTemplate;
 
-    private final String URL = "lb://park20-park-microservice/barriers/entrance";
+    private final String URL_ENTRANCE = "lb://park20-park-microservice/barriers/entrance";
+
+    private final String URL_EXIT = "lb://park20-park-microservice/barriers/entrance";
 
     public BarrierDTO postForEntrance(Barrier sendDTO) {
         ResponseEntity<BarrierDTO> response = this.restTemplate
-                .postForEntity(URL, sendDTO, BarrierDTO.class);
+                .postForEntity(URL_ENTRANCE, sendDTO, BarrierDTO.class);
 
         return response.getBody();
     }
 
     public BarrierDTO postForExit(Barrier sendDTO) {
         ResponseEntity<BarrierDTO> response = this.restTemplate
-                .postForEntity(URL, sendDTO, BarrierDTO.class);
+                .postForEntity(URL_EXIT, sendDTO, BarrierDTO.class);
 
         return response.getBody();
     }

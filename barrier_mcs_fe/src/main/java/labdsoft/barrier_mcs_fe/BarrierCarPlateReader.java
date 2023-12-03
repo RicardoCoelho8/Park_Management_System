@@ -82,13 +82,15 @@ public class BarrierCarPlateReader {
                     assert barrierDTO != null;
                     if (barrierDTO.getSuccess()) {
                         logger.info("Barrier opened for car with license plate number: " + input);
-                        logger.info(barrierDTO.getMessage());
+                        //logger.info(barrierDTO.getMessage());
+
+                        isOpen = true;
                     } else {
                         logger.info("Invalid license plate number!");
-                        logger.info(barrierDTO.getMessage());
-                    }
+                        //logger.info(barrierDTO.getMessage());
 
-                    isOpen = true;
+                        started = true;
+                    }
                 }
             } else {
                 isOpen = false;
