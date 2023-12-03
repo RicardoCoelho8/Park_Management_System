@@ -109,7 +109,7 @@ public class ParkServiceImpl implements ParkService {
 
         List<ParkingHistory> listParkHistory = parkHistoryRepository.findAllByCustomerID(customerID);
         for(ParkingHistory parkHistory : listParkHistory) {
-            if(parkHistory.getStartTime() != parkHistory.getEndTime()) {
+            if(!parkHistory.getStartTime().toString().equalsIgnoreCase(parkHistory.getEndTime().toString())) {
                 ParkHistoryDTO parkHistoryDTO = ParkHistoryDTO.builder()
                         .parkingHistoryId(parkHistory.getParkingHistoryId())
                         .startTime(parkHistory.getStartTime())
