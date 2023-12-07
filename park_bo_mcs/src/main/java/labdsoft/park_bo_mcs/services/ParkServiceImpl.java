@@ -2,10 +2,7 @@ package labdsoft.park_bo_mcs.services;
 
 import labdsoft.park_bo_mcs.dtos.park.*;
 import labdsoft.park_bo_mcs.models.park.*;
-import labdsoft.park_bo_mcs.repositories.park.ParkRepository;
-import labdsoft.park_bo_mcs.repositories.park.ParkingHistoryRepository;
-import labdsoft.park_bo_mcs.repositories.park.PriceTableEntryRepository;
-import labdsoft.park_bo_mcs.repositories.park.SpotRepository;
+import labdsoft.park_bo_mcs.repositories.park.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,6 +25,9 @@ public class ParkServiceImpl implements ParkService {
 
     @Autowired
     private SpotRepository spotRepository;
+
+    @Autowired
+    private SpotHistoryRepository spotHistoryRepository;
 
     @Autowired
     private PriceTableEntryRepository priceTableEntryRepository;
@@ -126,6 +126,25 @@ public class ParkServiceImpl implements ParkService {
         }
 
         return listParkHistoryDTO;
+    }
+
+    @Override
+    public String enableDisableSpot(SpotHistoryDTO spotHistoryDTO) {
+        Park park = parkRepository.findByParkNumber(spotHistoryDTO.getParkNumber());
+
+        Spot spot = spotRepository.getSpotBySpotNumberAndParkID(spotHistoryDTO.getSpotNumber(), park.getParkID());
+        spot.setOperational(spotHistoryDTO.getOperational());
+        spotRepository.save(spot);
+
+        String status = spotHistoryDTO.getOperational() ? "enabled" : "disabled";
+        String message = "Spot " + spotHistoryDTO.getSpotNumber() + " is now " + status + " and was changed by " + spotHistoryDTO.getManagerName();
+
+        spotHistoryRepository.save(SpotHistory.builder()
+                .spotNumber(spotHistoryDTO.getSpotNumber())
+                .HistoryOperational(message)
+                .build());
+
+        return message;
     }
 
     @Override
