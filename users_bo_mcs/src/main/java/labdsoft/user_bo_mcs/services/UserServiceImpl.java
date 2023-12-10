@@ -4,6 +4,7 @@ import labdsoft.user_bo_mcs.communication.Publish;
 import labdsoft.user_bo_mcs.model.*;
 import labdsoft.user_bo_mcs.repositories.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -11,7 +12,7 @@ import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.auth0.jwt.JWT;
@@ -142,6 +143,43 @@ public class UserServiceImpl implements UserService {
     public PaymentDTO getUserPaymentMethod(Long userId) {
         User user = this.repository.findByUserId(userId).orElseThrow();
         return PaymentDTO.builder().paymentMethod(user.getPaymentMethod()).build();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean addParkiesToUsers(ParkyTransactionRequest request, Long customerManagerId) throws Exception {
+
+        Iterable<User> usersToAdd = this.repository.findAllById(request.getUserIds());
+
+        if (StreamSupport.stream(usersToAdd.spliterator(), false).count() == 0) {
+            throw new IllegalArgumentException("Invalid users provided!");
+        }
+
+        for (User user : usersToAdd) {
+            ParkyTransactionEvent event = new ParkyTransactionEvent(request.getAmount(), request.getReason(),
+                    LocalDateTime.now(), customerManagerId);
+            if (!user.addParkyTransactionEvent(event)) {
+                throw new IllegalArgumentException("Invalid parky transaction!");
+            }
+        }
+        // Check if any mc actually needs the parky updates
+        /*
+         * ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+         * 
+         * for (User userAlreadyAdded : usersToAdd) {
+         * var userDTO = userAlreadyAdded.toDto();
+         * String json_user = ow.writeValueAsString(userDTO);
+         * 
+         * publisher.publish("exchange_user", "A User was Updated | " + json_user,
+         * host);
+         * }
+         */ return true;
+    }
+
+    @Override
+    public ParkyWalletDTO getParkyWalletOfUser(Long userId) throws Exception {
+        User user = this.repository.findByUserId(userId).orElseThrow();
+        return new ParkyWalletDTO(user.getUserId(), user.getParkies().parkies(), user.getParkies().getParkyEvents());
     }
 
 }

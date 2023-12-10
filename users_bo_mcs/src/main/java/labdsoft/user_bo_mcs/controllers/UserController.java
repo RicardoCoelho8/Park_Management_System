@@ -99,7 +99,8 @@ class UserController {
         if (!headerUserId.equals(userId.toString())) {
             // only the user that is authenticated in the request is allowed to add a
             // vehicle for himself
-            logger.info("Request invalidated due to incoherent path user id of " + userId + "and header user id of " + headerUserId);
+            logger.info("Request invalidated due to incoherent path user id of " + userId + "and header user id of "
+                    + headerUserId);
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         }
         if (!userRole.equals(Role.CUSTOMER.toString())) {
@@ -116,6 +117,7 @@ class UserController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
         }
     }
+
     @Operation(summary = "Changes user Payment Method")
     @PutMapping("/{userId}/payment-method")
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -125,8 +127,10 @@ class UserController {
         logger.info("Received change payment method to " + pMethod + " of user " + userId + " request");
 
         if (!headerUserId.equals(userId.toString())) {
-            // only the user that is authenticated in the request is allowed to change his own payment method
-            logger.info("Request invalidated due to incoherent path user id of " + userId + "and header user id of " + headerUserId);
+            // only the user that is authenticated in the request is allowed to change his
+            // own payment method
+            logger.info("Request invalidated due to incoherent path user id of " + userId + "and header user id of "
+                    + headerUserId);
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         }
         if (!userRole.equals(Role.CUSTOMER.toString())) {
@@ -144,19 +148,19 @@ class UserController {
         }
     }
 
-
     @Operation(summary = "gets all user vehicles")
     @GetMapping("/{userId}/vehicles")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Set<VehicleOnCreation>> getAllUserVehicles(@RequestHeader("X-UserId") String headerUserId,
-                                                                     @RequestHeader("X-UserRole") String userRole,
-                                                                     @PathVariable Long userId) {
+            @RequestHeader("X-UserRole") String userRole,
+            @PathVariable Long userId) {
 
         logger.info("Received get all user vehicles request");
         if (!headerUserId.equals(userId.toString())) {
             // only the user that is authenticated in the request is allowed to get his own
             // vehicles
-            logger.info("Request invalidated due to incoherent path user id of " + userId + "and header user id of " + headerUserId);
+            logger.info("Request invalidated due to incoherent path user id of " + userId + "and header user id of "
+                    + headerUserId);
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         }
         if (!userRole.equals(Role.CUSTOMER.toString())) {
@@ -177,14 +181,15 @@ class UserController {
     @GetMapping("/{userId}/paymentMethod")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<PaymentDTO> getUserPaymentMethod(@RequestHeader("X-UserId") String headerUserId,
-                                                                     @RequestHeader("X-UserRole") String userRole,
-                                                                     @PathVariable Long userId) {
+            @RequestHeader("X-UserRole") String userRole,
+            @PathVariable Long userId) {
 
         logger.info("Received get all user vehicles request");
         if (!headerUserId.equals(userId.toString())) {
             // only the user that is authenticated in the request is allowed to get his own
             // payment method
-            logger.info("Request invalidated due to incoherent path user id of " + userId + "and header user id of " + headerUserId);
+            logger.info("Request invalidated due to incoherent path user id of " + userId + "and header user id of "
+                    + headerUserId);
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         }
         if (!userRole.equals(Role.CUSTOMER.toString())) {
@@ -195,6 +200,48 @@ class UserController {
             final PaymentDTO paymentDTO = service.getUserPaymentMethod(userId);
             logger.info("Successfully retrieved user payment method!");
             return new ResponseEntity<>(paymentDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.info(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
+        }
+    }
+
+    @Operation(summary = "Adds parkies to one User or multiple Users")
+    @PostMapping("/parkies")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Boolean> addParkiesToUsers(@RequestHeader("X-UserId") String headerUserId,
+            @RequestHeader("X-UserRole") String userRole,
+            @RequestBody ParkyTransactionRequest pRequest) {
+        logger.info("Received add parkies request: " + pRequest + " to users " + pRequest.getUserIds());
+
+        if (!userRole.equals(Role.CUSTOMER_MANAGER.toString())) {
+            logger.info("Request invalidated due to forbidden user role: " + userRole);
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        }
+
+        try {
+            final Boolean added = service.addParkiesToUsers(pRequest, Long.valueOf(headerUserId));
+            if (!added) { // should throw exception but just in case
+                return new ResponseEntity<>(false, HttpStatus.CONFLICT);
+
+            }
+            logger.info("Successfully added parkies method");
+            return new ResponseEntity<>(true, HttpStatus.CREATED);
+        } catch (Exception e) {
+            logger.info(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Gets the parky wallet of a user")
+    @GetMapping("/parkies/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<ParkyWalletDTO> getParkyWalletOfUser(@PathVariable Long userId) {
+        logger.info("Received get parkies request of user: " + userId);
+        try {
+            final ParkyWalletDTO walletDTO = service.getParkyWalletOfUser(userId);
+            logger.info("Successfully retrieved parky wallet of user!");
+            return new ResponseEntity<>(walletDTO, HttpStatus.OK);
         } catch (Exception e) {
             logger.info(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);

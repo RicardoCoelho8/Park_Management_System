@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "6563db3f-65ab-4ef0-ab12-6faf9c33a2a9",
-		"name": "LABSOFT Copy",
+		"_postman_id": "f5fb6932-0316-4695-b553-99211b69fc5e",
+		"name": "LABSOFT Copy 2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "18345310"
+		"_exporter_id": "17140390"
 	},
 	"item": [
 		{
@@ -226,6 +226,88 @@
 								"users",
 								"{{user_id}}",
 								"vehicles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add parkies (SINGULAR AND BULK)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userIds\" : [1,2,3],\r\n    \"amount\" : 50,\r\n    \"reason\" : \"For outstanding contributions to the park\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/users/parkies",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"parkies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET PARKY WALLET OF USER",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userIds\" : [1,2,3],\r\n    \"amount\" : 50,\r\n    \"reason\" : \"For outstanding contributions to the park\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/users/parkies/{{user_id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"parkies",
+								"{{user_id}}"
 							]
 						}
 					},

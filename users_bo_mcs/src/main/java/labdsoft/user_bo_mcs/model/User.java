@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
@@ -38,7 +38,7 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Vehicle> vehicles = new HashSet<>();
 
-    @Embedded
+    @OneToOne(cascade = CascadeType.ALL)
     private ParkyWallet parkies;
 
     @Enumerated
@@ -50,7 +50,8 @@ public class User {
     @Enumerated
     private UserStatus status;
 
-    public User(Name name, Email email, Password password,  TaxIdNumber nif, Role role, Vehicle vehicle, PaymentMethod pMethod, UserStatus status) {
+    public User(Name name, Email email, Password password, TaxIdNumber nif, Role role, Vehicle vehicle,
+            PaymentMethod pMethod, UserStatus status) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -71,9 +72,15 @@ public class User {
         return this.vehicles.add(vehicle);
     }
 
-    // missing  Subscription (probably won't be necessary)
+    public boolean addParkyTransactionEvent(ParkyTransactionEvent event) {
+        return this.parkies.addEvent(event);
+    }
+
+    // missing Subscription (probably won't be necessary)
     public UserDTO toDto() {
-        return new UserDTO(this.userId, this.name.getFirstName(), this.name.getLastName(), this.email.email(), this.getNif().number(), this.parkingHistory, this.parkies.parkies(), this.vehicles, this.role, this.paymentMethod, this.status);
+        return new UserDTO(this.userId, this.name.getFirstName(), this.name.getLastName(), this.email.email(),
+                this.getNif().number(), this.parkingHistory, this.parkies.parkies(), this.vehicles, this.role,
+                this.paymentMethod, this.status);
     }
 
 }
