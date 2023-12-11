@@ -10,6 +10,8 @@ public interface ParkService {
     List<NearbyParkOccupancyDTO> getRealTimeNearbyParksOccupancy(double latitude, double longitude, double maxDistanceKm);
     List<ParkHistoryDTO> getAllParkingHistoryByCustomerID(Long customerID);
     String enableDisableSpot(SpotHistoryDTO spotHistoryDTO);
+    String changeParkyThresholds(String parkNumber, ParkyConfigDTO parkyConfigDTO);
+    ParkyConfigDTO getParkyThresholds(String parkNumber);
     void createPark(String string);
     List<String> getAllParks();
     List<SpotDTO> getSpotsByParkNumber(String parkNumber);

@@ -70,4 +70,16 @@ class ParkController {
     public ResponseEntity<List<SpotDTO>> getSpotsByParkNumber(@PathVariable String parkNumber) {
         return new ResponseEntity<>(service.getSpotsByParkNumber(parkNumber), HttpStatus.OK);
     }
+
+    @Operation(summary = "Change Parky thresholds by park number")
+    @PutMapping("/changeParkyThresholds/{parkNumber}")
+    public ResponseEntity<String> changeParkyThresholds(@PathVariable String parkNumber, @RequestBody ParkyConfigDTO parkyConfigDTO) {
+        return new ResponseEntity<>(service.changeParkyThresholds(parkNumber, parkyConfigDTO), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get Parky thresholds by park number")
+    @GetMapping("/getParkyThresholds/{parkNumber}")
+    public ResponseEntity<ParkyConfigDTO> getParkyThresholds(@PathVariable String parkNumber) {
+        return new ResponseEntity<>(service.getParkyThresholds(parkNumber), HttpStatus.OK);
+    }
 }

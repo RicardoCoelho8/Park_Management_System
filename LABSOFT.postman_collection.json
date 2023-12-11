@@ -506,6 +506,37 @@
 					"response": []
 				},
 				{
+					"name": "Get parky thresholds by park number",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/parks/getParkyThresholds/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"parks",
+								"getParkyThresholds",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get all parks",
 					"request": {
 						"auth": {
@@ -569,6 +600,46 @@
 							"path": [
 								"parks",
 								"enableDisableSpot"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change parky thresholds by park number",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"parkiesPerHour\":\"10\",\r\n    \"parkiesPerMinute\":\"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/parks/changeParkyThresholds/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"parks",
+								"changeParkyThresholds",
+								"1"
 							]
 						}
 					},

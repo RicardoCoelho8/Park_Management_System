@@ -148,6 +148,28 @@ public class ParkServiceImpl implements ParkService {
     }
 
     @Override
+    public String changeParkyThresholds(String parkNumber, ParkyConfigDTO parkyConfigDTO) {
+        Park park = parkRepository.findByParkNumber(Long.parseLong(parkNumber));
+        park.setParkyConfig(ParkyConfig.builder()
+                .parkiesPerHour(parkyConfigDTO.getParkiesPerHour())
+                .parkiesPerMinute(parkyConfigDTO.getParkiesPerMinute())
+                .build());
+        parkRepository.save(park);
+
+        return "Park " + parkNumber + " thresholds changed";
+    }
+
+    @Override
+    public ParkyConfigDTO getParkyThresholds(String parkNumber) {
+        Park park = parkRepository.findByParkNumber(Long.parseLong(parkNumber));
+
+        return ParkyConfigDTO.builder()
+                .parkiesPerHour(park.getParkyConfig().getParkiesPerHour())
+                .parkiesPerMinute(park.getParkyConfig().getParkiesPerMinute())
+                .build();
+    }
+
+    @Override
     public void createPark(String string) {
         Park park = Park.builder().build();
         parkRepository.save(park);
