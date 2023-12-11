@@ -64,7 +64,7 @@ export const HomeScreen: React.FC = () => {
       subtitle: "Manage Your Parking Lot Here",
       icon: "bi bi-p-circle",
       onClick: () => navigate("/managePark"),
-    }
+    },
   ];
   return (
     <>

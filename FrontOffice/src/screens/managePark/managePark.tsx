@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { BottomNavBar } from "../../components/BottomNavBar/bottomNavBar";
-import { Container, Form, Table } from "react-bootstrap";
+import { Container, Form, Table, Button } from "react-bootstrap";
 import { useUserName } from "../../store/userData/useUserName";
 import {
   useGetAllParksQuery,
   useGetSpotsByParkNumberQuery,
+  useGetThresholdsByParkNumberQuery,
   useChangeOperationalMutation,
+  useChangeThresholdsMutation,
 } from "../../store/userData/api";
 import { SpotsDetailsInput } from "../../store/userData/types";
 import { ModalErrorForm } from "../../components";
@@ -14,11 +16,16 @@ export const ManageParkScreen: React.FC = () => {
   const userName = useUserName();
   const { data } = useGetAllParksQuery();
   const [parkNumber, setParkNumber] = useState("");
-  var { data: spots, refetch} = useGetSpotsByParkNumberQuery(parkNumber as string);
+  var { data: spots, refetch: refetchSpots} = useGetSpotsByParkNumberQuery(parkNumber as string);
+  var { data: thresholds, refetch: refecthThresholds} = useGetThresholdsByParkNumberQuery(parkNumber as string);
+  const [thresholdsHour, setThresholdsHour] = useState<number>(-1);
+  const [thresholdsMin, setThresholdsMin] = useState<number>(-1);
   const [spotsCards, setSpotsCards] = useState<SpotsDetailsInput[]>([]);
   const [showModalError, setShowModalError] = useState(false);
-  const [changeOperational, { error, data: newOperational }] =
+  const [changeOperational, { error: errorOperational, data: newOperational }] =
   useChangeOperationalMutation();
+  const [changeThresholds, { error: errorThresholds, data: newThresholds }] =
+  useChangeThresholdsMutation();
 
   const handleParkSelect = (event: any) => {
     var selectedParkNumber = event.target.value.split(" ")[1];
@@ -50,12 +57,24 @@ export const ManageParkScreen: React.FC = () => {
       setSpotsCards(cards);
     }
 
-    if(parkNumber || newOperational){
-      refetch();
-    } else if (error) {
+    if(thresholds){
+      console.log("thresholds ", thresholds);
+      setThresholdsHour(thresholds.parkiesPerHour);
+      setThresholdsMin(thresholds.parkiesPerMinute);
+    }
+
+    if(parkNumber){
+      refetchSpots();
+      refecthThresholds();
+    }else if(newOperational){
+      refetchSpots();
+    }else if(newThresholds){
+      refecthThresholds();
+    }else if(errorOperational || errorThresholds){
       setShowModalError(true);
     }
-  }, [data, spots, newOperational, error]);
+
+  }, [data, spots, newOperational, newThresholds, errorOperational, errorThresholds]);
 
   var handleEnableDisable = (spotNumber: string, state: boolean) => {
     try {
@@ -71,6 +90,24 @@ export const ManageParkScreen: React.FC = () => {
       });
     } catch (error) {
       console.error("Error changing operational state:", error);
+    }
+  }
+
+  var handleChangeThresholds = (inputHour: number, inputMinute: number) => {
+    try {
+      console.log("new operational state for: " + inputHour + " perHour and " + inputMinute + " perMin");
+      changeThresholds({
+        thresholdsData: {
+          parkiesPerHour: inputHour,
+          parkiesPerMinute: inputMinute,
+        },
+        parkNumber: parkNumber,
+      });
+
+      setThresholdsHour(-1);
+      setThresholdsMin(-1);
+    } catch (error) {
+      console.error("Error changing parky thresholds:", error);
     }
   }
 
@@ -101,7 +138,7 @@ export const ManageParkScreen: React.FC = () => {
         <form>
         <select className="form-select form-select-lg mb-3" aria-label="Large select example" onChange={handleParkSelect}>
           <option value="" selected disabled>Select a park to manage</option>
-          {data?.map((park) => (
+          {data?.map(Number).sort((a, b) => a - b).map((park) => (
             <option value={`Park ${park}`}>Park {String(park)}</option>
           ))}
         </select>
@@ -109,7 +146,7 @@ export const ManageParkScreen: React.FC = () => {
         <div
             style={{
               overflowY: "auto",
-              maxHeight: "300px", // Adjust the maximum height as needed
+              maxHeight: "300px",
               textAlign: "center",
             }}
           >
@@ -151,7 +188,29 @@ export const ManageParkScreen: React.FC = () => {
               </tbody>
             </Table>
           </div>
-
+          <br />
+          <h3>Thresholds</h3>
+          <div className="input-group mb-3">
+            <span className="input-group-text"><i className="bi bi-coin"></i>/H</span>
+            <input 
+              id={`input-${thresholdsHour}`} 
+              type="number" 
+              className="form-control" 
+              placeholder={thresholdsHour == -1 ? "Per hour" : `${thresholdsHour}`}
+              onChange={(e) => setThresholdsHour(e.target.value === '' ? -1 : Number(e.target.value))}
+              />
+            <span className="input-group-text"><i className="bi bi-coin"></i>/M</span>
+            <input 
+              id={`input-${thresholdsMin}`} 
+              type="number" 
+              className="form-control" 
+              placeholder={thresholdsMin == -1 ? "Per minute" : `${thresholdsMin}`}
+              onChange={(e) => setThresholdsMin(e.target.value === '' ? -1 : Number(e.target.value))}
+              />
+          </div>
+          <Button onClick={() => handleChangeThresholds(Number(`${thresholdsHour}`), Number(`${thresholdsMin}`))} style={{ width: "100%" }}>
+            Change Thresholds
+          </Button>
         </form>
       </Container>
       <ModalErrorForm

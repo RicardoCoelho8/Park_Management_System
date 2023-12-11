@@ -55,6 +55,11 @@ export interface SpotOutput{
   operational: boolean;
 }
 
+export interface ThresholdsOutput{
+  parkiesPerHour: number;
+  parkiesPerMinute: number;
+}
+
 export interface UserNearbyParksType {
   parkId: string;
   distanceKm: number;

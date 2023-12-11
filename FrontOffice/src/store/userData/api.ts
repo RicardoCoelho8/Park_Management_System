@@ -8,6 +8,7 @@ import {
   UserPaymentMethodInput,
   ParkOutput,
   SpotOutput,
+  ThresholdsOutput,
   SpotOperationalInput,
 } from "./types";
 import { getTokenFromLocalStorage } from "../../utils/jwtUtils";
@@ -63,6 +64,16 @@ export const userDataApi = createApi({
         body: operationalData,
       }),
     }),
+    changeThresholds: build.mutation<
+      any,
+      { thresholdsData: ThresholdsOutput; parkNumber: string }
+    >({
+      query: ({ thresholdsData, parkNumber }) => ({
+        url: `/parks/changeParkyThresholds/${parkNumber}`,
+        method: "PUT",
+        body: thresholdsData,
+      }),
+    }),
     addNewVehicle: build.mutation<
       any,
       { newVehicle: UserDataAddNewVehicleInput; userId: string }
@@ -81,6 +92,9 @@ export const userDataApi = createApi({
     }),
     getSpotsByParkNumber: build.query<SpotOutput[], string>({
       query: (parkNumber) => ({ url: `/parks/getSpotsByParkNumber/${parkNumber}` }),
+    }),
+    getThresholdsByParkNumber: build.query<ThresholdsOutput, string>({
+      query: (parkNumber) => ({ url: `/parks/getParkyThresholds/${parkNumber}` }),
     }),
     getAllParks: build.query<ParkOutput[], void>({
       query: () => ({ url: `/parks/getAllParks` }),
@@ -102,10 +116,12 @@ export const {
   useAddNewVehicleMutation,
   useChangePaymentMutation,
   useChangeOperationalMutation,
+  useChangeThresholdsMutation,
   useGetUserVehiclesQuery,
   useGetUserPaymentMethodQuery,
   useGetParksNearbyQuery,
   useGetUserParkingHistoryQuery,
   useGetAllParksQuery,
   useGetSpotsByParkNumberQuery,
+  useGetThresholdsByParkNumberQuery,
 } = userDataApi;
