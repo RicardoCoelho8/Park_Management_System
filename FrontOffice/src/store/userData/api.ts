@@ -6,6 +6,9 @@ import {
   UserNearbyParksType,
   UserParkingHistoryOutput,
   UserPaymentMethodInput,
+  ParkOutput,
+  SpotOutput,
+  SpotOperationalInput,
 } from "./types";
 import { getTokenFromLocalStorage } from "../../utils/jwtUtils";
 import { RootState } from "../store";
@@ -50,6 +53,16 @@ export const userDataApi = createApi({
         body: paymentData,
       }),
     }),
+    changeOperational: build.mutation<
+      any,
+      { operationalData: SpotOperationalInput }
+    >({
+      query: ({ operationalData }) => ({
+        url: `/parks/enableDisableSpot`,
+        method: "PUT",
+        body: operationalData,
+      }),
+    }),
     addNewVehicle: build.mutation<
       any,
       { newVehicle: UserDataAddNewVehicleInput; userId: string }
@@ -65,6 +78,12 @@ export const userDataApi = createApi({
     }),
     getUserPaymentMethod: build.query<any, string>({
       query: (userId) => ({ url: `/users/${userId}/paymentMethod` }),
+    }),
+    getSpotsByParkNumber: build.query<SpotOutput[], string>({
+      query: (parkNumber) => ({ url: `/parks/getSpotsByParkNumber/${parkNumber}` }),
+    }),
+    getAllParks: build.query<ParkOutput[], void>({
+      query: () => ({ url: `/parks/getAllParks` }),
     }),
     getParksNearby: build.query<UserNearbyParksType[], void>({
       query: () => ({
@@ -82,8 +101,11 @@ export const {
   useLoginMutation,
   useAddNewVehicleMutation,
   useChangePaymentMutation,
+  useChangeOperationalMutation,
   useGetUserVehiclesQuery,
   useGetUserPaymentMethodQuery,
   useGetParksNearbyQuery,
   useGetUserParkingHistoryQuery,
+  useGetAllParksQuery,
+  useGetSpotsByParkNumberQuery,
 } = userDataApi;

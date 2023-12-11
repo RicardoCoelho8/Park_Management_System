@@ -153,6 +153,41 @@ public class ParkServiceImpl implements ParkService {
         parkRepository.save(park);
     }
 
+    @Override
+    public List<String> getAllParks() {
+        List<String> listParks = new ArrayList<>();
+
+        Iterable<Park> listPark = parkRepository.findAll();
+        for (Park park : listPark) {
+            listParks.add(park.getParkNumber().toString());
+        }
+
+        return listParks;
+    }
+
+    @Override
+    public List<SpotDTO> getSpotsByParkNumber(String parkNumber) {
+        List<SpotDTO> listSpotDTO = new ArrayList<>();
+
+        Park park = parkRepository.findByParkNumber(Long.parseLong(parkNumber));
+
+        List<Spot> listSpots = spotRepository.getSpotsByParkID(park.getParkID());
+        for (Spot spot : listSpots) {
+            SpotDTO spotDTO = SpotDTO.builder()
+                    .spotNumber(spot.getSpotNumber())
+                    .spotType(spot.getSpotType())
+                    .spotVehicleType(spot.getSpotVehicleType())
+                    .floorLevel(spot.getFloorLevel())
+                    .operational(spot.isOperational())
+                    .occupied(spot.isOccupied())
+                    .build();
+
+            listSpotDTO.add(spotDTO);
+        }
+
+        return listSpotDTO;
+    }
+
     // https://www.geodatasource.com/developers/java
     // doesn't take into consideration height, and a straight line distance
     // isn't taking into account street routes etc

@@ -58,4 +58,16 @@ class ParkController {
     public ResponseEntity<String> enableDisableSpot(@RequestBody SpotHistoryDTO spotHistoryDTO) {
         return new ResponseEntity<>(service.enableDisableSpot(spotHistoryDTO), HttpStatus.OK);
     }
+
+    @Operation(summary = "Get all parks")
+    @GetMapping("/getAllParks")
+    public ResponseEntity<List<String>> getAllParks() {
+        return new ResponseEntity<>(service.getAllParks(), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get spots by park number")
+    @GetMapping("/getSpotsByParkNumber/{parkNumber}")
+    public ResponseEntity<List<SpotDTO>> getSpotsByParkNumber(@PathVariable String parkNumber) {
+        return new ResponseEntity<>(service.getSpotsByParkNumber(parkNumber), HttpStatus.OK);
+    }
 }

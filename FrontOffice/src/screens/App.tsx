@@ -7,6 +7,7 @@ import { AddVechileScreen } from "./vechile/addNewVechile";
 import { MapScreen } from "./map/map";
 import { AccountScreen } from "./account/account";
 import { PaymentScreen } from "./payments/payments";
+import { ManageParkScreen } from "./managePark/managePark";
 
 export const App: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ export const App: React.FC = () => {
         <Route path="/map" element={<MapScreen />} />
         <Route path="/account" element={<AccountScreen />} />
         <Route path="/payments" element={<PaymentScreen />} />
+        <Route path="/managePark" element={<ManageParkScreen />} />
       </Routes>
     </Router>
   );

@@ -27,6 +27,34 @@ export interface UserPaymentMethodInput{
   paymentMethod: string;
 }
 
+export interface SpotOperationalInput{
+  parkNumber: string;
+  spotNumber: string;
+  operational: boolean;
+  managerName: string;
+}
+
+export interface SpotsDetailsInput{
+  spotNumber: string;
+  spotType: string;
+  spotVehicleType: string;
+  floorLevel: string;
+  operational: boolean;
+}
+
+export interface ParkOutput{
+  parkNumber: string;
+}
+
+export interface SpotOutput{
+  spotNumber: string;
+  spotType: string;
+  spotVehicleType: string;
+  floorLevel: string;
+  occupied: boolean;
+  operational: boolean;
+}
+
 export interface UserNearbyParksType {
   parkId: string;
   distanceKm: number;

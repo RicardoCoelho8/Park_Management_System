@@ -59,12 +59,12 @@ export const HomeScreen: React.FC = () => {
       icon: "bi bi-credit-card-2-back",
       onClick: () => navigate("/payments"),
     },
-    /*{
-      title: "Vechiles",
-      subtitle: "View All Your Vechiles Here",
-      icon: "bi bi-car-front",
-      onClick: () => navigate("/addVechile"),
-    },*/
+    {
+      title: "Manage Parks",
+      subtitle: "Manage Your Parking Lot Here",
+      icon: "bi bi-p-circle",
+      onClick: () => navigate("/managePark"),
+    }
   ];
   return (
     <>
