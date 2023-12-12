@@ -82,4 +82,13 @@ class ParkController {
     public ResponseEntity<ParkyConfigDTO> getParkyThresholds(@PathVariable String parkNumber) {
         return new ResponseEntity<>(service.getParkyThresholds(parkNumber), HttpStatus.OK);
     }
+
+    //--------------Table of Prices-----------------
+
+    @Operation(summary = "Define the Time Periods by park number")
+    @PutMapping("/defineTimePeriods/{parkNumber}")
+    public ResponseEntity<List<PriceTableEntryDTO>> defineTimePeriods(@PathVariable String parkNumber, @RequestBody List<PriceTableEntryDTO> priceTableEntryDTO) {
+        return new ResponseEntity<>(service.defineTimePeriods(parkNumber, priceTableEntryDTO), HttpStatus.OK);
+    }
+
 }

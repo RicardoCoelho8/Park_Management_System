@@ -1,5 +1,6 @@
 package labdsoft.park_bo_mcs.services;
 
+import jakarta.transaction.Transactional;
 import labdsoft.park_bo_mcs.dtos.park.*;
 import labdsoft.park_bo_mcs.models.park.*;
 import labdsoft.park_bo_mcs.repositories.park.*;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Transactional
 @Service
 public class ParkServiceImpl implements ParkService {
 
@@ -208,6 +210,35 @@ public class ParkServiceImpl implements ParkService {
         }
 
         return listSpotDTO;
+    }
+
+    @Override
+    public List<PriceTableEntryDTO> defineTimePeriods(String parkNumber, List<PriceTableEntryDTO> priceTableEntryDTOList) {
+        Park park = parkRepository.findByParkNumber(Long.parseLong(parkNumber));
+
+        if (park == null){
+            return new ArrayList<>();
+        }
+
+        List<PriceTableEntry> existing = priceTableEntryRepository.findAllByParkId(park.getParkID());
+
+        existing.forEach(priceTableEntry -> priceTableEntry.setThresholds(new ArrayList<>()));
+        priceTableEntryRepository.saveAll(existing);
+
+        priceTableEntryRepository.deleteAllByParkId(park.getParkID());
+
+        for (PriceTableEntryDTO priceTableEntryDTO : priceTableEntryDTOList) {
+            PriceTableEntry priceTableEntry = PriceTableEntry.builder()
+                    .parkId(park.getParkID())
+                    .periodStart(priceTableEntryDTO.getPeriodStart())
+                    .periodEnd(priceTableEntryDTO.getPeriodEnd())
+                    .thresholds(priceTableEntryDTO.getThresholds())
+                    .build();
+
+            priceTableEntryRepository.save(priceTableEntry);
+        }
+
+        return priceTableEntryDTOList;
     }
 
     // https://www.geodatasource.com/developers/java

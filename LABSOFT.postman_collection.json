@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "7ae10191-1880-4dad-85f5-a59ac2886981",
+		"_postman_id": "bc971a17-3354-45d4-a698-0e9cf717c709",
 		"name": "LABSOFT",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "18345310"
+		"_exporter_id": "17826767"
 	},
 	"item": [
 		{
@@ -640,6 +640,80 @@
 								"parks",
 								"changeParkyThresholds",
 								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Time Periods of Park",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"pm.test(\"ParkId, periodStart, and periodEnd fields should exist\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(item) {",
+									"        pm.expect(item.parkId).to.exist;",
+									"        pm.expect(item.periodStart).to.exist;",
+									"        pm.expect(item.periodEnd).to.exist;",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Thresholds array is present and contains the expected number of elements\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    pm.expect(responseData[0].thresholds).to.exist.and.to.be.an('array');",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n {\r\n    \"parkId\": 2,\r\n    \"periodStart\": \"08:30\",\r\n    \"periodEnd\": \"09:30\",\r\n    \"thresholds\": [\r\n        {\r\n            \"thresholdMinutes\": \"15\",\r\n            \"costPerMinuteAutomobiles\": \"0.30\" ,\r\n            \"costPerMinuteMotorcycles\": \"0.30\"\r\n        }\r\n    ]\r\n },\r\n {\r\n    \"parkId\": 2,\r\n    \"periodStart\": \"09:30\",\r\n    \"periodEnd\": \"8:30\",\r\n    \"thresholds\": [\r\n        {\r\n            \"thresholdMinutes\": \"30\",\r\n            \"costPerMinuteAutomobiles\": \"0.30\" ,\r\n            \"costPerMinuteMotorcycles\": \"0.30\"\r\n        }\r\n    ]\r\n }          \r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/parks/defineTimePeriods/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"parks",
+								"defineTimePeriods",
+								"2"
 							]
 						}
 					},

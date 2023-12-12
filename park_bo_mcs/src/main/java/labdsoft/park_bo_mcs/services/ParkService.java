@@ -15,4 +15,5 @@ public interface ParkService {
     void createPark(String string);
     List<String> getAllParks();
     List<SpotDTO> getSpotsByParkNumber(String parkNumber);
+    List<PriceTableEntryDTO> defineTimePeriods(String parkNumber, List<PriceTableEntryDTO> priceTableEntryDTO);
 }
