@@ -2,7 +2,7 @@ import { VehicleEnergySource, VehicleType } from "./types";
 
 export const validateLicensePlate = (value: any): boolean => {
   const regex =
-    /^([A-Z0-9]{2}-\d{2}-\d{2}|[A-Z0-9]{2}-\d{2}-[A-Z0-9]{2}|[A-Z0-9]{2}-\d{2}-\d{1}-[A-Z0-9]{1})$/;
+    /(^[A-Z]{2}-\d{2}-\d{2}$)|(^\d{2}-[A-Z]{2}-\d{2}$)|(^\d{2}-\d{2}-[A-Z]{2}$)|(^[A-Z]{2}-[A-Z]{2}-\d{2}$)|(^[A-Z]{2}-\d{2}-[A-Z]{2}$)|(^\d{2}-[A-Z]{2}-[A-Z]{2}$)/;
   return regex.test(value);
 };
 

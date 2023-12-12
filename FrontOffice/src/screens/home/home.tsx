@@ -48,8 +48,8 @@ export const HomeScreen: React.FC = () => {
   }, [data]);
   const menuCards: MenuCard[] = [
     {
-      title: "Vechiles",
-      subtitle: "View All Your Vechiles Here",
+      title: "Vehicles",
+      subtitle: "View All Your Vehicles Here",
       icon: "bi bi-car-front",
       onClick: () => navigate("/addVechile"),
     },

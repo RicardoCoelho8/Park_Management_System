@@ -16,7 +16,7 @@ import {
 } from "../../utils/functions";
 import { ModalErrorForm } from "../../components";
 
-export const AddVechileScreen: React.FC = () => {
+export const AddVehicleScreen: React.FC = () => {
   const userId = useUserId();
   let carDetailsCard: CarDetailCard[] = [];
   const { data, refetch } = useGetUserVehiclesQuery(userId as string);
