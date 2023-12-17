@@ -10,6 +10,7 @@ import {
   SpotOutput,
   ThresholdsOutput,
   SpotOperationalInput,
+  PriceTableEntryOutput,
 } from "./types";
 import { getTokenFromLocalStorage } from "../../utils/jwtUtils";
 import { RootState } from "../store";
@@ -93,6 +94,9 @@ export const userDataApi = createApi({
     getSpotsByParkNumber: build.query<SpotOutput[], string>({
       query: (parkNumber) => ({ url: `/parks/getSpotsByParkNumber/${parkNumber}` }),
     }),
+    getPriceTableEntriesByParkNumber: build.query<PriceTableEntryOutput[], string>({
+      query: (parkNumber) => ({ url: `/parks/getAllPriceTableEntries/${parkNumber}` }),
+    }),
     getThresholdsByParkNumber: build.query<ThresholdsOutput, string>({
       query: (parkNumber) => ({ url: `/parks/getParkyThresholds/${parkNumber}` }),
     }),
@@ -124,4 +128,5 @@ export const {
   useGetAllParksQuery,
   useGetSpotsByParkNumberQuery,
   useGetThresholdsByParkNumberQuery,
+  useGetPriceTableEntriesByParkNumberQuery
 } = userDataApi;

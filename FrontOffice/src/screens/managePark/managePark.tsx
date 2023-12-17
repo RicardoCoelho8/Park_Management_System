@@ -8,24 +8,28 @@ import {
   useGetThresholdsByParkNumberQuery,
   useChangeOperationalMutation,
   useChangeThresholdsMutation,
+  useGetPriceTableEntriesByParkNumberQuery
 } from "../../store/userData/api";
-import { SpotsDetailsInput } from "../../store/userData/types";
+import { SpotsDetailsInput, ThresholdCost, PriceTableEntry } from "../../store/userData/types";
 import { ModalErrorForm } from "../../components";
 
 export const ManageParkScreen: React.FC = () => {
   const userName = useUserName();
   const { data } = useGetAllParksQuery();
   const [parkNumber, setParkNumber] = useState("");
-  var { data: spots, refetch: refetchSpots} = useGetSpotsByParkNumberQuery(parkNumber as string);
-  var { data: thresholds, refetch: refecthThresholds} = useGetThresholdsByParkNumberQuery(parkNumber as string);
+  var { data: spots, refetch: refetchSpots } = useGetSpotsByParkNumberQuery(parkNumber as string);
+  var { data: thresholds, refetch: refecthThresholds } = useGetThresholdsByParkNumberQuery(parkNumber as string);
   const [thresholdsHour, setThresholdsHour] = useState<number>(-1);
   const [thresholdsMin, setThresholdsMin] = useState<number>(-1);
   const [spotsCards, setSpotsCards] = useState<SpotsDetailsInput[]>([]);
   const [showModalError, setShowModalError] = useState(false);
   const [changeOperational, { error: errorOperational, data: newOperational }] =
-  useChangeOperationalMutation();
+    useChangeOperationalMutation();
   const [changeThresholds, { error: errorThresholds, data: newThresholds }] =
-  useChangeThresholdsMutation();
+    useChangeThresholdsMutation();
+
+  var { data: priceTable, refetch: refecthTableEntries } = useGetPriceTableEntriesByParkNumberQuery(parkNumber as string);
+  const [priceTableEntries, setPriceTableEntries] = useState<PriceTableEntry[]>([]);
 
   const handleParkSelect = (event: any) => {
     var selectedParkNumber = event.target.value.split(" ")[1];
@@ -37,10 +41,10 @@ export const ManageParkScreen: React.FC = () => {
       console.log("data in managePark ", data);
     }
 
-    if(spots){
+    if (spots) {
       console.log("all spots ", spots);
       const cards: SpotsDetailsInput[] = [];
-      
+
       var sortedSpots = [...spots].sort((a, b) =>
         a.spotNumber.localeCompare(b.spotNumber)
       );
@@ -57,24 +61,55 @@ export const ManageParkScreen: React.FC = () => {
       setSpotsCards(cards);
     }
 
-    if(thresholds){
+    if (thresholds) {
       console.log("thresholds ", thresholds);
       setThresholdsHour(thresholds.parkiesPerHour);
       setThresholdsMin(thresholds.parkiesPerMinute);
     }
 
-    if(parkNumber){
+    if (priceTable) {
+      console.log("Price Table Entries ", priceTable);
+
+      const entries: PriceTableEntry[] = [];
+
+      var thresholdsCosts: ThresholdCost[] = [];
+
+      priceTable.map((entry) => {
+        thresholdsCosts = [];
+
+        entry.thresholds.map((cost) => {
+          thresholdsCosts.push({
+            thresholdMinutes: cost.thresholdMinutes,
+            costPerMinuteAutomobiles: cost.costPerMinuteAutomobiles,
+            costPerMinuteMotorcycles: cost.costPerMinuteMotorcycles
+          })
+        })
+
+        entries.push({
+          parkId: entry.parkId,
+          periodStart: entry.periodStart,
+          periodEnd: entry.periodEnd,
+          thresholds: thresholdsCosts
+        })
+      })
+
+      setPriceTableEntries(entries);
+    }
+
+    if (parkNumber) {
       refetchSpots();
+      refecthTableEntries();
       refecthThresholds();
-    }else if(newOperational){
+    } else if (newOperational) {
       refetchSpots();
-    }else if(newThresholds){
+    } else if (newThresholds) {
       refecthThresholds();
-    }else if(errorOperational || errorThresholds){
+      refecthTableEntries();
+    } else if (errorOperational || errorThresholds) {
       setShowModalError(true);
     }
 
-  }, [data, spots, newOperational, newThresholds, errorOperational, errorThresholds]);
+  }, [data, spots, newOperational, newThresholds, , errorOperational, errorThresholds]);
 
   var handleEnableDisable = (spotNumber: string, state: boolean) => {
     try {
@@ -111,6 +146,85 @@ export const ManageParkScreen: React.FC = () => {
     }
   }
 
+  var handleDeleteRowPriceTable = (index: number) => {
+    try {
+      console.log("Removing entry: " + index);
+      const updatedEntries = [...priceTableEntries];
+      updatedEntries.splice(index, 1);
+      setPriceTableEntries(updatedEntries);
+    } catch (error) {
+      console.error("Error deleting Entry:", error);
+    }
+  };
+
+  var handleDeleteRowPriceTableThresholdCost = (indexPriceTable: number, indexCost: number) => {
+    try {
+      console.log("Removing entryPriceTable, cost: " + indexPriceTable + ", " + indexCost);
+
+      const updatedEntries = [...priceTableEntries];
+      updatedEntries[indexPriceTable].thresholds.splice(indexCost, 1);
+
+      setPriceTableEntries(updatedEntries);
+    } catch (error) {
+      console.error("Error deleting EntryCost:", error);
+    }
+  };
+
+  var addRowPriceTable = () => {
+    try {
+      console.log("Adding new entry");
+
+      var updatedEntries = [...priceTableEntries];
+
+      updatedEntries.push({
+        parkId: parkNumber,
+        periodStart: "00:00",
+        periodEnd: "00:00",
+        thresholds: []
+      })
+
+      setPriceTableEntries(updatedEntries);
+    } catch (error) {
+      console.error("Error adding Entry:", error);
+    }
+  };
+
+  var addRowPriceTableThresholdCost = (indexPriceTable: number) => {
+    try {
+      console.log("Adding new entryCost");
+
+      const updatedEntries = [...priceTableEntries];
+      updatedEntries[indexPriceTable].thresholds.push({
+        thresholdMinutes: "0",
+        costPerMinuteAutomobiles: "0",
+        costPerMinuteMotorcycles: "0"
+      })
+
+      setPriceTableEntries(updatedEntries);
+    } catch (error) {
+      console.error("Error adding EntryCost:", error);
+    }
+  };
+
+  var compareDatesStartEnd = (index: number) => {
+    var start = document.getElementById("period_start_" + index)!.value!;
+    var end = document.getElementById("period_end_" + index)!.value!;
+
+    var isValidInput = /^([01]\d|2[0-3]):([0-5]\d)$/.test(start);
+
+    if (!isValidInput) {
+      document.getElementById("period_start_" + index)!.value = "";
+      document.getElementById("period_end_" + index)!.value = "";
+      return;
+    }
+
+    var isValidInput = /^([01]\d|2[0-3]):([0-5]\d)$/.test(end);
+
+    if (!isValidInput) {
+      document.getElementById("period_end_" + index)!.value = "";
+    }
+  }
+
   return (
     <>
       <Container
@@ -136,14 +250,14 @@ export const ManageParkScreen: React.FC = () => {
         }}
       >
         <form>
-        <select className="form-select form-select-lg mb-3" aria-label="Large select example" onChange={handleParkSelect}>
-          <option value="" selected disabled>Select a park to manage</option>
-          {data?.map(Number).sort((a, b) => a - b).map((park) => (
-            <option value={`Park ${park}`}>Park {String(park)}</option>
-          ))}
-        </select>
+          <select className="form-select form-select-lg mb-3" aria-label="Large select example" onChange={handleParkSelect}>
+            <option value="" selected disabled>Select a park to manage</option>
+            {data?.map(Number).sort((a, b) => a - b).map((park) => (
+              <option value={`Park ${park}`}>Park {String(park)}</option>
+            ))}
+          </select>
 
-        <div
+          <div
             style={{
               overflowY: "auto",
               maxHeight: "300px",
@@ -189,24 +303,131 @@ export const ManageParkScreen: React.FC = () => {
             </Table>
           </div>
           <br />
+          <h3>Time Periods</h3>
+          <div
+            style={{
+              overflowY: "auto",
+              maxHeight: "300px",
+              textAlign: "center",
+            }}
+          >
+            <Table striped bordered hover responsive>
+              <thead>
+                <tr>
+                  <th>Period Start</th>
+                  <th>Period End</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {priceTableEntries.map((entry, index) => (
+                  <React.Fragment key={index}>
+                    <tr>
+                      <td>
+                        <input
+                          id={`period_start_${index}`}
+                          type="string"
+                          className="form-control"
+                          defaultValue={entry.periodStart}
+                          onBlur={() => compareDatesStartEnd(index)}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          id={`period_end_${index}`}
+                          type="string"
+                          className="form-control"
+                          defaultValue={entry.periodEnd}
+                          onBlur={() => compareDatesStartEnd(index)}
+                        />
+                      </td>
+                      <td>
+                        <Button type="button" onClick={() => handleDeleteRowPriceTable(index)}>Delete</Button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3}>
+                        <Table>
+                          <thead>
+                            <tr>
+                              <th>Threshold Minutes</th>
+                              <th>Automobiles</th>
+                              <th>Motorcycles</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {entry.thresholds.map((threshold: ThresholdCost, i) => (
+                              <tr key={i}>
+                                <td>
+                                  <input
+                                    type="number"
+                                    className="form-control"
+                                    defaultValue={threshold.thresholdMinutes}
+                                    onChange={(e) => e.target.value < 0 ? e.target.value = 0 : e.target.value = Number.parseInt(e.target.value)}
+                                  />
+                                </td>
+                                <td>
+                                  <input
+                                    type="number"
+                                    className="form-control"
+                                    defaultValue={threshold.costPerMinuteAutomobiles}
+                                    onChange={(e) => e.target.value < 0 ? e.target.value = 0 : e.target.value = Number.parseFloat(e.target.value)}
+
+                                  />
+                                </td>
+                                <td>
+                                  <input
+                                    type="number"
+                                    className="form-control"
+                                    defaultValue={threshold.costPerMinuteMotorcycles}
+                                    onChange={(e) => e.target.value < 0 ? e.target.value = 0 : e.target.value = Number.parseFloat(e.target.value)}
+
+                                  />
+                                </td>
+                                <td>
+                                  <Button type="button" onClick={() => handleDeleteRowPriceTableThresholdCost(index, i)}>Delete</Button>
+                                </td>
+                              </tr>
+                            ))}
+                            <tr>
+                              <td colSpan={4}>
+                                <Button type="button" onClick={() => addRowPriceTableThresholdCost(index)}>New Threshold Cost</Button>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </Table>
+                      </td>
+                    </tr>
+                  </React.Fragment>
+                ))}
+                <tr>
+                  <td colSpan={3}>
+                    <Button type="button" onClick={() => addRowPriceTable()}>New Time Period</Button>
+                  </td>
+                </tr>
+              </tbody>
+            </Table>
+          </div>
+          <br />
           <h3>Thresholds</h3>
           <div className="input-group mb-3">
             <span className="input-group-text"><i className="bi bi-coin"></i>/H</span>
-            <input 
-              id={`input-${thresholdsHour}`} 
-              type="number" 
-              className="form-control" 
+            <input
+              id={`input-${thresholdsHour}`}
+              type="number"
+              className="form-control"
               placeholder={thresholdsHour == -1 ? "Per hour" : `${thresholdsHour}`}
               onChange={(e) => setThresholdsHour(e.target.value === '' ? -1 : Number(e.target.value))}
-              />
+            />
             <span className="input-group-text"><i className="bi bi-coin"></i>/M</span>
-            <input 
-              id={`input-${thresholdsMin}`} 
-              type="number" 
-              className="form-control" 
+            <input
+              id={`input-${thresholdsMin}`}
+              type="number"
+              className="form-control"
               placeholder={thresholdsMin == -1 ? "Per minute" : `${thresholdsMin}`}
               onChange={(e) => setThresholdsMin(e.target.value === '' ? -1 : Number(e.target.value))}
-              />
+            />
           </div>
           <Button onClick={() => handleChangeThresholds(Number(`${thresholdsHour}`), Number(`${thresholdsMin}`))} style={{ width: "100%" }}>
             Change Thresholds

@@ -33,13 +33,6 @@ class ParkController {
         return new ResponseEntity<>(service.getCurrentNumberOfAvailableSpotsInsideAllParks(), HttpStatus.OK);
     }
 
-    @Operation(summary = "Get all price table entries by park id")
-    @GetMapping("/getAllPriceTableEntries/{parkId}")
-    public ResponseEntity<List<PriceTableEntryDTO>> getAllPriceTableEntriesById(@PathVariable Long parkId) {
-
-        return new ResponseEntity<>(service.getAllPriceTableEntriesById(parkId), HttpStatus.OK);
-    }
-
     @Operation(summary = "Get all nearby parks occupancy and distance")
     @GetMapping("/real-time/occupancy/{userLatitude}/{userLongitude}/{maxDistanceKm}")
     public ResponseEntity<List<NearbyParkOccupancyDTO>> getRealTimeNearbyParksOccupancy(@PathVariable double userLatitude, @PathVariable double userLongitude, @PathVariable double maxDistanceKm) {
@@ -84,6 +77,13 @@ class ParkController {
     }
 
     //--------------Table of Prices-----------------
+
+    @Operation(summary = "Get all price table entries by park id")
+    @GetMapping("/getAllPriceTableEntries/{parkId}")
+    public ResponseEntity<List<PriceTableEntryDTO>> getAllPriceTableEntriesById(@PathVariable Long parkId) {
+
+        return new ResponseEntity<>(service.getAllPriceTableEntriesById(parkId), HttpStatus.OK);
+    }
 
     @Operation(summary = "Define the Time Periods by park number")
     @PutMapping("/defineTimePeriods/{parkNumber}")

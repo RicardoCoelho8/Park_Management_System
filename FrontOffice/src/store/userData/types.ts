@@ -83,6 +83,33 @@ export interface UserParkingHistoryOutput {
   price: number;
 }
 
+export interface PriceTableEntryOutput {
+  parkId: string ;
+  periodStart: string ;
+  periodEnd: string ;
+  thresholds: ThresholdCostOutput[] ;
+}
+
+export interface ThresholdCostOutput {
+  thresholdMinutes: string ;
+  costPerMinuteAutomobiles: string ;
+  costPerMinuteMotorcycles: string ;
+}
+
+
+export interface PriceTableEntry {
+  parkId: string ;
+  periodStart: string ;
+  periodEnd: string ;
+  thresholds: ThresholdCost[] ;
+}
+
+export interface ThresholdCost {
+  thresholdMinutes: string ;
+  costPerMinuteAutomobiles: string ;
+  costPerMinuteMotorcycles: string ;
+}
+
 export const SET_USER_DATA = "SET_USER_DATA";
 
 export const POST_USER_DATA = "POST_USER_DATA";
