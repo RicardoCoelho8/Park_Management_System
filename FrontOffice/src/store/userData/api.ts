@@ -10,7 +10,7 @@ import {
   SpotOutput,
   ThresholdsOutput,
   SpotOperationalInput,
-  PriceTableEntryOutput,
+  PriceTableEntryOutput, PriceTableEntry,
 } from "./types";
 import { getTokenFromLocalStorage } from "../../utils/jwtUtils";
 import { RootState } from "../store";
@@ -85,6 +85,16 @@ export const userDataApi = createApi({
         body: newVehicle,
       }),
     }),
+    changePriceTable: build.mutation<
+        any,
+        { priceTableData: PriceTableEntry[]; parkNumber: string }
+    >({
+      query: ({ priceTableData, parkNumber }) => ({
+        url: `/defineTimePeriods/${parkNumber}`,
+        method: "PUT",
+        body: priceTableData,
+      }),
+    }),
     getUserVehicles: build.query<UserDataAddNewVehicleInput[], string>({
       query: (userId) => ({ url: `/users/${userId}/vehicles` }),
     }),
@@ -128,5 +138,6 @@ export const {
   useGetAllParksQuery,
   useGetSpotsByParkNumberQuery,
   useGetThresholdsByParkNumberQuery,
-  useGetPriceTableEntriesByParkNumberQuery
+  useGetPriceTableEntriesByParkNumberQuery,
+  useChangePriceTableMutation,
 } = userDataApi;
