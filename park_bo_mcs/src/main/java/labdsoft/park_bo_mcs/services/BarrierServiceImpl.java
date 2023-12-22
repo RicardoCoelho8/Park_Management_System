@@ -6,11 +6,15 @@ import labdsoft.park_bo_mcs.dtos.park.SendToPaymentDTO;
 import labdsoft.park_bo_mcs.dtos.payment.PaymentsDTO;
 import labdsoft.park_bo_mcs.models.park.*;
 import labdsoft.park_bo_mcs.models.payment.PaymentHistory;
+import labdsoft.park_bo_mcs.models.reporting.ParkReport;
+import labdsoft.park_bo_mcs.models.reporting.ParkTimeReport;
 import labdsoft.park_bo_mcs.models.user.Customer;
 import labdsoft.park_bo_mcs.models.user.Status;
 import labdsoft.park_bo_mcs.models.user.Vehicle;
 import labdsoft.park_bo_mcs.repositories.park.*;
 import labdsoft.park_bo_mcs.repositories.payment.PaymentHistoryRepository;
+import labdsoft.park_bo_mcs.repositories.reporting.ParkReportRepository;
+import labdsoft.park_bo_mcs.repositories.reporting.ParkTimeReportRepository;
 import labdsoft.park_bo_mcs.repositories.user.CustomerRepository;
 import labdsoft.park_bo_mcs.repositories.user.VehicleRepository;
 import labdsoft.park_bo_mcs.rest.PaymentCommunication;
@@ -18,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -51,6 +56,12 @@ public class BarrierServiceImpl implements BarrierService {
 
     @Autowired
     private PaymentCommunication paymentCommunication;
+
+    @Autowired
+    private ParkReportRepository parkReportRepository;
+
+    @Autowired
+    private ParkTimeReportRepository parkTimeReportRepository;
 
     @Override
     public BarrierDisplayDTO entranceOpticalReader(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
@@ -125,6 +136,73 @@ public class BarrierServiceImpl implements BarrierService {
                 .startTime(barrierLicenseReaderDTO.getDate()).endTime(barrierLicenseReaderDTO.getDate())
                 .parkId(park.getParkID()).price(0.0).hoursBetweenEntranceExit(0).minutesBetweenEntranceExit(0).build();
         parkingHistoryRepository.save(parkingHistory);
+
+        processParkReport(parkingHistory, vehicle);
+    }
+
+    private void processParkReport(ParkingHistory parkingHistory, Vehicle vehicle) {
+
+        ParkReport existentParkReport = parkReportRepository.findByDayAndMonthAndYearAndParkId(parkingHistory.getStartTime().get(Calendar.YEAR),
+                parkingHistory.getStartTime().get(Calendar.MONTH),
+                parkingHistory.getStartTime().get(Calendar.DAY_OF_MONTH),
+                parkingHistory.getParkId());
+
+        if (existentParkReport == null) {
+            ParkReport parkReport = ParkReport.builder().parkId(parkingHistory.getParkId())
+                    .year(parkingHistory.getStartTime().get(Calendar.YEAR))
+                    .month(parkingHistory.getStartTime().get(Calendar.MONTH))
+                    .day(parkingHistory.getStartTime().get(Calendar.DAY_OF_MONTH))
+                    .totalVehicles(1.0)
+                    .build();
+
+            switch (vehicle.getVehicleType()) {
+                case AUTOMOBILE:
+                    parkReport.setTotalCars(1.0);
+                    break;
+                case MOTORCYCLE:
+                    parkReport.setTotalMotorcycles(1.0);
+                    break;
+            }
+
+            switch (vehicle.getVehicleEnergySource()) {
+                case FUEL:
+                    parkReport.setTotalFuel(1.0);
+                    break;
+                case ELECTRIC:
+                    parkReport.setTotalElectrics(1.0);
+                    break;
+                case GPL:
+                    parkReport.setTotalGPL(1.0);
+                    break;
+            }
+
+            parkReportRepository.save(parkReport);
+        } else {
+            existentParkReport.setTotalVehicles(existentParkReport.getTotalVehicles() + 1.0);
+
+            switch (vehicle.getVehicleType()) {
+                case AUTOMOBILE:
+                    existentParkReport.setTotalCars(existentParkReport.getTotalCars() + 1.0);
+                    break;
+                case MOTORCYCLE:
+                    existentParkReport.setTotalMotorcycles(existentParkReport.getTotalMotorcycles() + 1.0);
+                    break;
+            }
+
+            switch (vehicle.getVehicleEnergySource()) {
+                case FUEL:
+                    existentParkReport.setTotalFuel(existentParkReport.getTotalFuel() + 1.0);
+                    break;
+                case ELECTRIC:
+                    existentParkReport.setTotalElectrics(existentParkReport.getTotalElectrics() + 1.0);
+                    break;
+                case GPL:
+                    existentParkReport.setTotalGPL(existentParkReport.getTotalGPL() + 1.0);
+                    break;
+            }
+
+            parkReportRepository.save(existentParkReport);
+        }
     }
 
     private List<Spot> checkForSpotTypeAndVehicleType(List<Spot> listSpots, Vehicle vehicle) {
@@ -202,10 +280,29 @@ public class BarrierServiceImpl implements BarrierService {
 
             parkingHistoryRepository.save(parkingHistory);
 
+            processParkTimeReport(parkingHistory);
+
             return paymentsDTO.getFinalPrice();
         } else {
             return 0.0;
         }
+    }
+
+    private void processParkTimeReport(ParkingHistory parkingHistory) {
+        ParkReport existentParkReport = parkReportRepository.findByDayAndMonthAndYearAndParkId(parkingHistory.getStartTime().get(Calendar.YEAR),
+                parkingHistory.getStartTime().get(Calendar.MONTH),
+                parkingHistory.getStartTime().get(Calendar.DAY_OF_MONTH),
+                parkingHistory.getParkId());
+
+        if (existentParkReport != null) {
+            ParkTimeReport parkTimeReport = ParkTimeReport.builder()
+                    .parkReportId(existentParkReport.getParkReportId())
+                    .timePeriod((double) parkingHistory.getHoursBetweenEntranceExit() * 60.0 + (double) parkingHistory.getMinutesBetweenEntranceExit())
+                    .build();
+
+            parkTimeReportRepository.save(parkTimeReport);
+        }
+
     }
 
     private boolean processExit(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
