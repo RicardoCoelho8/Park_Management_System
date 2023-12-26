@@ -18,4 +18,9 @@ public class Name {
 
     @Column(nullable = false)
     private String lastName;
+
+    @Override
+    public String toString() {
+        return firstName + ' ' + lastName;
+    }
 }
