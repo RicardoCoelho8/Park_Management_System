@@ -20,6 +20,9 @@ public class ParkTimeReport {
     @Column(nullable = false)
     private Long parkReportId;
 
+    @Column(nullable = false)
+    private Long customerId;
+
     @Column
     private Double timePeriod;
 }

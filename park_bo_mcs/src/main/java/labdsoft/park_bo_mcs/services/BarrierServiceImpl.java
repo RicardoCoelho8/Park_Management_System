@@ -158,21 +158,37 @@ public class BarrierServiceImpl implements BarrierService {
             switch (vehicle.getVehicleType()) {
                 case AUTOMOBILE:
                     parkReport.setTotalCars(1.0);
+                    switch (vehicle.getVehicleEnergySource()) {
+                        case FUEL:
+                            parkReport.setTotalFuel(1.0);
+                            parkReport.setTotalCarsFuel(1.0);
+                            break;
+                        case ELECTRIC:
+                            parkReport.setTotalElectrics(1.0);
+                            parkReport.setTotalCarsElectrics(1.0);
+                            break;
+                        case GPL:
+                            parkReport.setTotalGPL(1.0);
+                            parkReport.setTotalCarsGPL(1.0);
+                            break;
+                    }
                     break;
                 case MOTORCYCLE:
                     parkReport.setTotalMotorcycles(1.0);
-                    break;
-            }
-
-            switch (vehicle.getVehicleEnergySource()) {
-                case FUEL:
-                    parkReport.setTotalFuel(1.0);
-                    break;
-                case ELECTRIC:
-                    parkReport.setTotalElectrics(1.0);
-                    break;
-                case GPL:
-                    parkReport.setTotalGPL(1.0);
+                    switch (vehicle.getVehicleEnergySource()) {
+                        case FUEL:
+                            parkReport.setTotalFuel(1.0);
+                            parkReport.setTotalMotorcyclesFuel(1.0);
+                            break;
+                        case ELECTRIC:
+                            parkReport.setTotalElectrics(1.0);
+                            parkReport.setTotalMotorcyclesElectrics(1.0);
+                            break;
+                        case GPL:
+                            parkReport.setTotalGPL(1.0);
+                            parkReport.setTotalMotorcyclesGPL(1.0);
+                            break;
+                    }
                     break;
             }
 
@@ -183,21 +199,37 @@ public class BarrierServiceImpl implements BarrierService {
             switch (vehicle.getVehicleType()) {
                 case AUTOMOBILE:
                     existentParkReport.setTotalCars(existentParkReport.getTotalCars() + 1.0);
+                    switch (vehicle.getVehicleEnergySource()) {
+                        case FUEL:
+                            existentParkReport.setTotalFuel(existentParkReport.getTotalFuel() + 1.0);
+                            existentParkReport.setTotalCarsFuel(existentParkReport.getTotalCarsFuel() + 1.0);
+                            break;
+                        case ELECTRIC:
+                            existentParkReport.setTotalElectrics(existentParkReport.getTotalElectrics() + 1.0);
+                            existentParkReport.setTotalCarsElectrics(existentParkReport.getTotalCarsElectrics() + 1.0);
+                            break;
+                        case GPL:
+                            existentParkReport.setTotalGPL(existentParkReport.getTotalGPL() + 1.0);
+                            existentParkReport.setTotalCarsGPL(existentParkReport.getTotalCarsGPL() + 1.0);
+                            break;
+                    }
                     break;
                 case MOTORCYCLE:
                     existentParkReport.setTotalMotorcycles(existentParkReport.getTotalMotorcycles() + 1.0);
-                    break;
-            }
-
-            switch (vehicle.getVehicleEnergySource()) {
-                case FUEL:
-                    existentParkReport.setTotalFuel(existentParkReport.getTotalFuel() + 1.0);
-                    break;
-                case ELECTRIC:
-                    existentParkReport.setTotalElectrics(existentParkReport.getTotalElectrics() + 1.0);
-                    break;
-                case GPL:
-                    existentParkReport.setTotalGPL(existentParkReport.getTotalGPL() + 1.0);
+                    switch (vehicle.getVehicleEnergySource()) {
+                        case FUEL:
+                            existentParkReport.setTotalFuel(existentParkReport.getTotalFuel() + 1.0);
+                            existentParkReport.setTotalMotorcyclesFuel(existentParkReport.getTotalMotorcyclesFuel() + 1.0);
+                            break;
+                        case ELECTRIC:
+                            existentParkReport.setTotalElectrics(existentParkReport.getTotalElectrics() + 1.0);
+                            existentParkReport.setTotalMotorcyclesElectrics(existentParkReport.getTotalMotorcyclesElectrics() + 1.0);
+                            break;
+                        case GPL:
+                            existentParkReport.setTotalGPL(existentParkReport.getTotalGPL() + 1.0);
+                            existentParkReport.setTotalMotorcyclesGPL(existentParkReport.getTotalMotorcyclesGPL() + 1.0);
+                            break;
+                    }
                     break;
             }
 
@@ -297,6 +329,7 @@ public class BarrierServiceImpl implements BarrierService {
         if (existentParkReport != null) {
             ParkTimeReport parkTimeReport = ParkTimeReport.builder()
                     .parkReportId(existentParkReport.getParkReportId())
+                    .customerId(parkingHistory.getCustomerID())
                     .timePeriod((double) parkingHistory.getHoursBetweenEntranceExit() * 60.0 + (double) parkingHistory.getMinutesBetweenEntranceExit())
                     .build();
 

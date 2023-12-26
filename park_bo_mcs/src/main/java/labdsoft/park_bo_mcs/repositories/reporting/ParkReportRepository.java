@@ -8,4 +8,6 @@ import java.util.List;
 public interface ParkReportRepository extends CrudRepository<ParkReport, Long> {
 
     ParkReport findByDayAndMonthAndYearAndParkId(Integer day, Integer month, Integer year, Long parkId);
+
+    List<ParkReport> findAllByParkId(Long parkId);
 }

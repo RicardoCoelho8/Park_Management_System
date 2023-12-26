@@ -20,11 +20,13 @@ public class ApiGatewayApplication {
 		return builder.routes()
 				.route(p -> p
 						.path("/users/**")
+						.or().path("/userReport/**")
 						.uri("lb://park20-user-microservice"))
 				.route(p -> p
 						.path("/parks/**")
 						.or().path("/barriers/**")
 						.or().path("/display/**")
+						.or().path("/parkReport/**")
 						.uri("lb://park20-park-microservice"))
 				.route(p -> p
 						.path("/payments")

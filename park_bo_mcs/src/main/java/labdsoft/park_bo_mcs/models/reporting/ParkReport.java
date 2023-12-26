@@ -46,4 +46,22 @@ public class ParkReport {
 
     @Column
     private Double totalCars;
+
+    @Column
+    private Double totalMotorcyclesFuel;
+
+    @Column
+    private Double totalMotorcyclesElectrics;
+
+    @Column
+    private Double totalMotorcyclesGPL;
+
+    @Column
+    private Double totalCarsFuel;
+
+    @Column
+    private Double totalCarsElectrics;
+
+    @Column
+    private Double totalCarsGPL;
 }
