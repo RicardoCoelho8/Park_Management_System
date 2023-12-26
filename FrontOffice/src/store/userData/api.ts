@@ -90,7 +90,7 @@ export const userDataApi = createApi({
         { priceTableData: PriceTableEntry[]; parkNumber: string }
     >({
       query: ({ priceTableData, parkNumber }) => ({
-        url: `/defineTimePeriods/${parkNumber}`,
+        url: `/parks/defineTimePeriods/${parkNumber}`,
         method: "PUT",
         body: priceTableData,
       }),
