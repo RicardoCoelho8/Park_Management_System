@@ -1,5 +1,6 @@
 package labdsoft.user_bo_mcs.services;
 
+import labdsoft.user_bo_mcs.model.Role;
 import labdsoft.user_bo_mcs.model.Top10ParkyDTO;
 import labdsoft.user_bo_mcs.model.User;
 import labdsoft.user_bo_mcs.repositories.UserRepository;
@@ -16,7 +17,7 @@ public class UserReportServiceImpl implements UserReportService{
 
     @Override
     public List<Top10ParkyDTO> getTop10Parky() {
-        List<User> users = (List<User>) repository.findAll();
+        List<User> users = repository.findAllByRole(Role.CUSTOMER);
 
         if (users.isEmpty()) {
             throw new RuntimeException("No users found");
