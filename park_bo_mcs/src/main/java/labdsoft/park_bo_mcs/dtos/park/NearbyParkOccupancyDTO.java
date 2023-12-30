@@ -15,4 +15,6 @@ public class NearbyParkOccupancyDTO {
     private Long parkId;
     private double distanceKm;
     private List<SpotTypeOccupancyDTO> spotTypeOccupancies;
+    private double latitude;
+    private double longitude;
 }

@@ -99,6 +99,8 @@ public class ParkServiceImpl implements ParkService {
                     .parkId(park.getParkID())
                     .distanceKm(distance)
                     .spotTypeOccupancies(spotOccupanciesDto)
+                    .latitude(park.getLocation().getLatitude())
+                    .longitude(park.getLocation().getLongitude())
                     .build());
         }
 
