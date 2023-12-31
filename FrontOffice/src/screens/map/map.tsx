@@ -12,22 +12,40 @@ import {
   UserDataAddNewVehicleInput,
   UserNearbyParksType,
 } from "../../store";
+import { MapDisplay, MapMarker } from "../../components/MapDisplay/mapDisplay";
 
 export const MapScreen: React.FC = () => {
+  let sortedParks: UserNearbyParksType[] = [];
+  const [latitude, setLatitude] = useState<number>(0);
+  const [longitude, setLongitude] = useState<number>(0);
+  const [mapMarkers, setMapMarkers] = useState<MapMarker[]>([]);
   const userId = useUserId();
   const { data: userVehicles } = useGetUserVehiclesQuery(userId as string);
-  const { data: userNearbyParks } = useGetParksNearbyQuery();
-  let sortedParks: UserNearbyParksType[] = [];
-  const [mapLocationCards, setMapLocationCards] = useState<MapLocationCard[]>([]);
+  const { data: userNearbyParks } = useGetParksNearbyQuery(
+    { latitude, longitude },
+    { skip: latitude === 0 && longitude === 0 }
+  );
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        console.log("Latitude is :", position.coords.latitude);
+        console.log("Longitude is :", position.coords.longitude);
+        setLatitude(position.coords.latitude);
+        setLongitude(position.coords.longitude);
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (userNearbyParks) {
       console.log("userNearbyParks", userNearbyParks);
       console.log("userVehicles", userVehicles);
 
-      sortedParks = [...userNearbyParks].sort((a, b) => (a.distanceKm || 0) - (b.distanceKm || 0));
+      sortedParks = [...userNearbyParks].sort(
+        (a, b) => (a.distanceKm || 0) - (b.distanceKm || 0)
+      );
       const cards = getAvailableSpotsPerPark();
-      setMapLocationCards(cards);
+      setMapMarkers(cards);
     }
   }, [userVehicles, userNearbyParks]);
 
@@ -52,12 +70,15 @@ export const MapScreen: React.FC = () => {
       return [];
     }
 
-    const cards: MapLocationCard[] = sortedParks.map((park) => {
+    const cards: MapMarker[] = sortedParks.map((park) => {
       const distance = park.distanceKm?.toFixed(2);
       const parkId = park.parkId;
 
       const availableSpots = userVehicles.map((userVehicle) => {
-        const amount = matchAvailableSpots(userVehicle, park.spotTypeOccupancies);
+        const amount = matchAvailableSpots(
+          userVehicle,
+          park.spotTypeOccupancies
+        );
         return {
           licensePlate: userVehicle.licensePlateNumber,
           amount: amount,
@@ -65,9 +86,9 @@ export const MapScreen: React.FC = () => {
       });
 
       return {
-        parkId: parkId,
-        distance: distance as string,
-        availableSpots: availableSpots,
+        latitude: park.latitude,
+        longitude: park.longitude,
+        popupText: `Park ${parkId} - ${distance} km away`,
       };
     });
 
@@ -76,10 +97,19 @@ export const MapScreen: React.FC = () => {
 
   return (
     <>
-      <Container style={{ width: "6.25rem", height: "6.25rem" }} />
-      {mapLocationCards.length > 0 && (
-        <MapLocationCard cards={mapLocationCards} />
-      )}
+      <Container style={{ padding: 0 }}>
+        {latitude !== 0 && longitude !== 0 && (
+          <MapDisplay
+            markers={mapMarkers}
+            center={[latitude, longitude]}
+            userMarker={{
+              latitude: latitude,
+              longitude: longitude,
+              popupText: `You are here`,
+            }}
+          />
+        )}
+      </Container>
       <BottomNavBar />
     </>
   );

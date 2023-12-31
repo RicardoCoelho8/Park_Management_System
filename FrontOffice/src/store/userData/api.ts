@@ -10,7 +10,8 @@ import {
   SpotOutput,
   ThresholdsOutput,
   SpotOperationalInput,
-  PriceTableEntryOutput, PriceTableEntry,
+  PriceTableEntryOutput,
+  PriceTableEntry,
 } from "./types";
 import { getTokenFromLocalStorage } from "../../utils/jwtUtils";
 import { RootState } from "../store";
@@ -86,8 +87,8 @@ export const userDataApi = createApi({
       }),
     }),
     changePriceTable: build.mutation<
-        any,
-        { priceTableData: PriceTableEntry[]; parkNumber: string }
+      any,
+      { priceTableData: PriceTableEntry[]; parkNumber: string }
     >({
       query: ({ priceTableData, parkNumber }) => ({
         url: `/parks/defineTimePeriods/${parkNumber}`,
@@ -102,20 +103,32 @@ export const userDataApi = createApi({
       query: (userId) => ({ url: `/users/${userId}/paymentMethod` }),
     }),
     getSpotsByParkNumber: build.query<SpotOutput[], string>({
-      query: (parkNumber) => ({ url: `/parks/getSpotsByParkNumber/${parkNumber}` }),
+      query: (parkNumber) => ({
+        url: `/parks/getSpotsByParkNumber/${parkNumber}`,
+      }),
     }),
-    getPriceTableEntriesByParkNumber: build.query<PriceTableEntryOutput[], string>({
-      query: (parkNumber) => ({ url: `/parks/getAllPriceTableEntries/${parkNumber}` }),
+    getPriceTableEntriesByParkNumber: build.query<
+      PriceTableEntryOutput[],
+      string
+    >({
+      query: (parkNumber) => ({
+        url: `/parks/getAllPriceTableEntries/${parkNumber}`,
+      }),
     }),
     getThresholdsByParkNumber: build.query<ThresholdsOutput, string>({
-      query: (parkNumber) => ({ url: `/parks/getParkyThresholds/${parkNumber}` }),
+      query: (parkNumber) => ({
+        url: `/parks/getParkyThresholds/${parkNumber}`,
+      }),
     }),
     getAllParks: build.query<ParkOutput[], void>({
       query: () => ({ url: `/parks/getAllParks` }),
     }),
-    getParksNearby: build.query<UserNearbyParksType[], void>({
-      query: () => ({
-        url: "/parks/real-time/occupancy/41.178496516445534/-8.607637458224238/1500",
+    getParksNearby: build.query<
+      UserNearbyParksType[],
+      { latitude: number; longitude: number }
+    >({
+      query: ({ latitude, longitude }) => ({
+        url: `/parks/real-time/occupancy/${latitude}/${longitude}/1500`,
       }),
     }),
     getUserParkingHistory: build.query<UserParkingHistoryOutput[], string>({

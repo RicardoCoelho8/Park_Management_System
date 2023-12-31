@@ -23,18 +23,18 @@ export interface UserDataAddNewVehicleInput {
   vehicleEnergySource: string;
 }
 
-export interface UserPaymentMethodInput{
+export interface UserPaymentMethodInput {
   paymentMethod: string;
 }
 
-export interface SpotOperationalInput{
+export interface SpotOperationalInput {
   parkNumber: string;
   spotNumber: string;
   operational: boolean;
   managerName: string;
 }
 
-export interface SpotsDetailsInput{
+export interface SpotsDetailsInput {
   spotNumber: string;
   spotType: string;
   spotVehicleType: string;
@@ -42,11 +42,11 @@ export interface SpotsDetailsInput{
   operational: boolean;
 }
 
-export interface ParkOutput{
+export interface ParkOutput {
   parkNumber: string;
 }
 
-export interface SpotOutput{
+export interface SpotOutput {
   spotNumber: string;
   spotType: string;
   spotVehicleType: string;
@@ -55,7 +55,7 @@ export interface SpotOutput{
   operational: boolean;
 }
 
-export interface ThresholdsOutput{
+export interface ThresholdsOutput {
   parkiesPerHour: number;
   parkiesPerMinute: number;
 }
@@ -64,6 +64,8 @@ export interface UserNearbyParksType {
   parkId: string;
   distanceKm: number;
   spotTypeOccupancies: SpotTypeOccupancies[];
+  latitude: number;
+  longitude: number;
 }
 
 export interface SpotTypeOccupancies {
@@ -84,30 +86,29 @@ export interface UserParkingHistoryOutput {
 }
 
 export interface PriceTableEntryOutput {
-  parkId: string ;
-  periodStart: string ;
-  periodEnd: string ;
-  thresholds: ThresholdCostOutput[] ;
+  parkId: string;
+  periodStart: string;
+  periodEnd: string;
+  thresholds: ThresholdCostOutput[];
 }
 
 export interface ThresholdCostOutput {
-  thresholdMinutes: string ;
-  costPerMinuteAutomobiles: string ;
-  costPerMinuteMotorcycles: string ;
+  thresholdMinutes: string;
+  costPerMinuteAutomobiles: string;
+  costPerMinuteMotorcycles: string;
 }
 
-
 export interface PriceTableEntry {
-  parkId: string ;
-  periodStart: string ;
-  periodEnd: string ;
-  thresholds: ThresholdCost[] ;
+  parkId: string;
+  periodStart: string;
+  periodEnd: string;
+  thresholds: ThresholdCost[];
 }
 
 export interface ThresholdCost {
-  thresholdMinutes: string ;
-  costPerMinuteAutomobiles: string ;
-  costPerMinuteMotorcycles: string ;
+  thresholdMinutes: string;
+  costPerMinuteAutomobiles: string;
+  costPerMinuteMotorcycles: string;
 }
 
 export const SET_USER_DATA = "SET_USER_DATA";
