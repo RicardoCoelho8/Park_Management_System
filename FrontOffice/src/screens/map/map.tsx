@@ -70,11 +70,12 @@ export const MapScreen: React.FC = () => {
       return [];
     }
 
-    const cards: MapMarker[] = sortedParks.map((park) => {
+    const cards: MapMarker[] = sortedParks.map((park, index) => {
       const distance = park.distanceKm?.toFixed(2);
       const parkId = park.parkId;
-
-      const availableSpots = userVehicles.map((userVehicle) => {
+      const isNearestPark = index === 0;
+      // Add available spots to each park not being used at the moment
+      /* const availableSpots = userVehicles.map((userVehicle) => {
         const amount = matchAvailableSpots(
           userVehicle,
           park.spotTypeOccupancies
@@ -83,12 +84,16 @@ export const MapScreen: React.FC = () => {
           licensePlate: userVehicle.licensePlateNumber,
           amount: amount,
         };
-      });
+      }); */
 
       return {
         latitude: park.latitude,
         longitude: park.longitude,
-        popupText: `Park ${parkId} - ${distance} km away`,
+        popupText: isNearestPark
+          ? `This is the nearest Park ${(
+              <br />
+            )} Park ${parkId} - ${distance} km away`
+          : `Park ${parkId} - ${distance} km away`,
       };
     });
 
