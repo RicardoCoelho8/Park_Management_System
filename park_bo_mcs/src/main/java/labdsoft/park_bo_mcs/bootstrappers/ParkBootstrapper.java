@@ -27,11 +27,11 @@ public class ParkBootstrapper implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        values(1L, 10, createSampleParkyConfig(), Location.builder().latitude(40.36841685539075).longitude(-8.659655996430294).build());
-        values(2L, 10, createSampleParkyConfig(), Location.builder().latitude(41.15932631626018).longitude(-8.659665314733802).build());
-        values(3L, 10, createSampleParkyConfig(), Location.builder().latitude(40.63197951206417).longitude(-8.631234173497187).build());
-        values(4L, 10, createSampleParkyConfig(), Location.builder().latitude(41.538183003885216).longitude(-8.431420332359862).build());
-        values(5L, 10, createSampleParkyConfig(), Location.builder().latitude(41.17643631180696).longitude(-8.55806931330527).build());
+        values(1L, 10, createSampleParkyConfig(), Location.builder().latitude(40.36841685539075).longitude(-8.659655996430294).build(), OvernightConfig.builder().enabled(true).overnightFee(5.0).build());
+        values(2L, 10, createSampleParkyConfig(), Location.builder().latitude(41.15932631626018).longitude(-8.659665314733802).build(), OvernightConfig.builder().enabled(true).overnightFee(4.0).build());
+        values(3L, 10, createSampleParkyConfig(), Location.builder().latitude(40.63197951206417).longitude(-8.631234173497187).build(), OvernightConfig.builder().enabled(false).overnightFee(8.0).build());
+        values(4L, 10, createSampleParkyConfig(), Location.builder().latitude(41.538183003885216).longitude(-8.431420332359862).build(), OvernightConfig.builder().enabled(false).overnightFee(6.0).build());
+        values(5L, 10, createSampleParkyConfig(), Location.builder().latitude(41.17643631180696).longitude(-8.55806931330527).build(), OvernightConfig.builder().enabled(true).overnightFee(7.0).build());
     }
 
     private void createSampleSpots(Long id) {
@@ -105,9 +105,9 @@ public class ParkBootstrapper implements CommandLineRunner {
         ptRepo.saveAll(list_priceTableEntry);
     }
 
-    private void values(Long parkNumber, int maxOcuppancy, ParkyConfig parkyConfig, Location location) {
+    private void values(Long parkNumber, int maxOcuppancy, ParkyConfig parkyConfig, Location location, OvernightConfig overnightConfig) {
         if (pRepo.findByParkNumber(parkNumber) == null) {
-            Park p1 = Park.builder().parkNumber(parkNumber).maxOcuppancy(maxOcuppancy).parkyConfig(parkyConfig).location(location).build();
+            Park p1 = Park.builder().parkNumber(parkNumber).maxOcuppancy(maxOcuppancy).parkyConfig(parkyConfig).location(location).overnightConfig(overnightConfig).build();
             pRepo.save(p1);
             createSampleSpots(p1.getParkID());
             createSampleBarriers(p1.getParkID());

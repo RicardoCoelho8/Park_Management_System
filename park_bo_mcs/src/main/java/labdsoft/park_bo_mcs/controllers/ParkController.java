@@ -76,6 +76,24 @@ class ParkController {
         return new ResponseEntity<>(service.getParkyThresholds(parkNumber), HttpStatus.OK);
     }
 
+    @Operation(summary = "Get Overnight config by park number")
+    @GetMapping("/getOvernightConfig/{parkNumber}")
+    public ResponseEntity<OvernightConfigDTO> getOvernightConfigByParkNumber(@PathVariable String parkNumber) {
+        return new ResponseEntity<>(service.getOvernightConfigByParkNumber(parkNumber), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Enable or disable overnight fee by park number")
+    @PutMapping("/enableDisableOvernightFee/{parkNumber}")
+    public ResponseEntity<String> enableDisableOvernightFeeByParkNumber(@RequestBody Boolean status, @PathVariable String parkNumber) {
+        return new ResponseEntity<>(service.enableDisableOvernightFeeByParkNumber(parkNumber, status), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Change overnight fee price by park number")
+    @PutMapping("/changeOvernightFeePrice/{parkNumber}")
+    public ResponseEntity<String> changeOvernightFeePriceByParkNumber(@PathVariable String parkNumber, @RequestBody Double newPrice) {
+        return new ResponseEntity<>(service.changeOvernightFeePriceByParkNumber(parkNumber, newPrice), HttpStatus.OK);
+    }
+
     //--------------Table of Prices-----------------
 
     @Operation(summary = "Get all price table entries by park id")
@@ -90,5 +108,6 @@ class ParkController {
     public ResponseEntity<List<PriceTableEntryDTO>> defineTimePeriods(@PathVariable String parkNumber, @RequestBody List<PriceTableEntryDTO> priceTableEntryDTO) {
         return new ResponseEntity<>(service.defineTimePeriods(parkNumber, priceTableEntryDTO), HttpStatus.OK);
     }
+
 
 }

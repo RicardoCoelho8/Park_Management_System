@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "bc971a17-3354-45d4-a698-0e9cf717c709",
+		"_postman_id": "85593058-0554-4e7c-8d3f-60db606a3e03",
 		"name": "LABSOFT",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "17826767"
+		"_exporter_id": "18345310"
 	},
 	"item": [
 		{
@@ -537,6 +537,37 @@
 					"response": []
 				},
 				{
+					"name": "Get overnight fee configs by park number",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/parks/getOvernightConfig/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"parks",
+								"getOvernightConfig",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get all parks",
 					"request": {
 						"auth": {
@@ -606,6 +637,46 @@
 					"response": []
 				},
 				{
+					"name": "Enable/Disable overnight fee by park number",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/parks/enableDisableOvernightFee/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"parks",
+								"enableDisableOvernightFee",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Change parky thresholds by park number",
 					"request": {
 						"auth": {
@@ -639,6 +710,46 @@
 							"path": [
 								"parks",
 								"changeParkyThresholds",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change overnight fee price by park number",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"newPrice\": 20.0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/parks/changeOvernightFeePrice/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"parks",
+								"changeOvernightFeePrice",
 								"1"
 							]
 						}

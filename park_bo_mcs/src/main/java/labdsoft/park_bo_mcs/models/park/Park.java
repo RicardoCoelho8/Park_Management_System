@@ -30,4 +30,8 @@ public class Park {
     @Embedded
     @Column(nullable = false)
     private Location location;
+
+    @Embedded
+    @Column(nullable = false)
+    private OvernightConfig overnightConfig;
 }
