@@ -11,8 +11,8 @@ public interface ParkService {
     List<ParkHistoryDTO> getAllParkingHistoryByCustomerID(Long customerID);
     String enableDisableSpot(SpotHistoryDTO spotHistoryDTO);
     String changeParkyThresholds(String parkNumber, ParkyConfigDTO parkyConfigDTO);
-    String enableDisableOvernightFeeByParkNumber(String parkNumber, Boolean status);
-    String changeOvernightFeePriceByParkNumber(String parkNumber, Double newPrice);
+    String enableDisableOvernightFeeByParkNumber(OvernightEnableDTO dto);
+    String changeOvernightFeePriceByParkNumber(OvernightPriceDTO dto);
     ParkyConfigDTO getParkyThresholds(String parkNumber);
     OvernightConfigDTO getOvernightConfigByParkNumber(String parkNumber);
     void createPark(String string);

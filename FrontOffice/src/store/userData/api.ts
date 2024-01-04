@@ -12,6 +12,9 @@ import {
   SpotOperationalInput,
   PriceTableEntryOutput,
   PriceTableEntry,
+  OvernightConfig,
+  OvernightEnableInput,
+  OvernightFeeInput,
 } from "./types";
 import { getTokenFromLocalStorage } from "../../utils/jwtUtils";
 import { RootState } from "../store";
@@ -66,6 +69,26 @@ export const userDataApi = createApi({
         body: operationalData,
       }),
     }),
+    changeOvernightEnable: build.mutation<
+      any,
+      { overnightEnable: OvernightEnableInput}
+    >({
+      query: ({ overnightEnable }) => ({
+        url: `/parks/enableDisableOvernightFee`,
+        method: "PUT",
+        body: overnightEnable,
+      }),
+    }),
+    changeOvernightFee: build.mutation<
+      any,
+      { overnightPrice: OvernightFeeInput}
+    >({
+      query: ({ overnightPrice}) => ({
+        url: `/parks/changeOvernightFeePrice`,
+        method: "PUT",
+        body: overnightPrice,
+      }),
+    }),
     changeThresholds: build.mutation<
       any,
       { thresholdsData: ThresholdsOutput; parkNumber: string }
@@ -107,6 +130,11 @@ export const userDataApi = createApi({
         url: `/parks/getSpotsByParkNumber/${parkNumber}`,
       }),
     }),
+    getOvernightConfigByParkNumber: build.query<OvernightConfig, string>({
+      query: (parkNumber) => ({
+        url: `/parks/getOvernightConfig/${parkNumber}`,
+      }),
+    }),
     getPriceTableEntriesByParkNumber: build.query<
       PriceTableEntryOutput[],
       string
@@ -144,6 +172,8 @@ export const {
   useChangePaymentMutation,
   useChangeOperationalMutation,
   useChangeThresholdsMutation,
+  useChangeOvernightEnableMutation,
+  useChangeOvernightFeeMutation,
   useGetUserVehiclesQuery,
   useGetUserPaymentMethodQuery,
   useGetParksNearbyQuery,
@@ -152,5 +182,6 @@ export const {
   useGetSpotsByParkNumberQuery,
   useGetThresholdsByParkNumberQuery,
   useGetPriceTableEntriesByParkNumberQuery,
+  useGetOvernightConfigByParkNumberQuery,
   useChangePriceTableMutation,
 } = userDataApi;

@@ -9,7 +9,10 @@ import {
     useChangeOperationalMutation,
     useChangeThresholdsMutation,
     useGetPriceTableEntriesByParkNumberQuery,
-    useChangePriceTableMutation
+    useChangePriceTableMutation,
+    useGetOvernightConfigByParkNumberQuery,
+    useChangeOvernightEnableMutation,
+    useChangeOvernightFeeMutation,    
 } from "../../store/userData/api";
 import {SpotsDetailsInput, ThresholdCost, PriceTableEntry} from "../../store/userData/types";
 import {ModalErrorForm} from "../../components";
@@ -20,12 +23,19 @@ export const ManageParkScreen: React.FC = () => {
         const [parkNumber, setParkNumber] = useState("");
         var {data: spots, refetch: refetchSpots} = useGetSpotsByParkNumberQuery(parkNumber as string);
         var {data: thresholds, refetch: refecthThresholds} = useGetThresholdsByParkNumberQuery(parkNumber as string);
+        var {data: overnightConfigs, refetch: refetchOvernightConfigs} = useGetOvernightConfigByParkNumberQuery(parkNumber as string);
         const [thresholdsHour, setThresholdsHour] = useState<number>(-1);
         const [thresholdsMin, setThresholdsMin] = useState<number>(-1);
+        const [overnightEnabled, setOvernightEnabled] = useState<boolean>(false);
+        const [overnightFee, setOvernightFee] = useState<number>(-1);
         const [spotsCards, setSpotsCards] = useState<SpotsDetailsInput[]>([]);
         const [showModalError, setShowModalError] = useState(false);
         const [changeOperational, {error: errorOperational, data: newOperational}] =
             useChangeOperationalMutation();
+        const [changeOvernightEnable, {error: errorOvernightEnable, data: newOvernightEnable}] =
+            useChangeOvernightEnableMutation();
+        const [changeOvernightFee, {error: errorOvernightFee, data: newOvernightFee}] =
+            useChangeOvernightFeeMutation();
         const [changeThresholds, {error: errorThresholds, data: newThresholds}] =
             useChangeThresholdsMutation();
 
@@ -67,6 +77,12 @@ export const ManageParkScreen: React.FC = () => {
                 setSpotsCards(cards);
             }
 
+            if (overnightConfigs) {
+                console.log("overnightConfigs ", overnightConfigs);
+                setOvernightEnabled(overnightConfigs.enabled);
+                setOvernightFee(overnightConfigs.overnightFee);
+            }
+
             if (thresholds) {
                 console.log("thresholds ", thresholds);
                 setThresholdsHour(thresholds.parkiesPerHour);
@@ -106,16 +122,47 @@ export const ManageParkScreen: React.FC = () => {
                 refetchSpots();
                 refecthTableEntries();
                 refecthThresholds();
+                refetchOvernightConfigs();
             } else if (newOperational) {
                 refetchSpots();
             } else if (newThresholds) {
                 refecthThresholds();
                 refecthTableEntries();
-            } else if (errorOperational || errorThresholds) {
+            } else if(newOvernightEnable || newOvernightFee){
+                refetchOvernightConfigs();
+            }else if (errorOperational || errorThresholds || errorOvernightEnable || errorOvernightFee) {
                 setShowModalError(true);
             }
 
-        }, [data, spots, newOperational, newThresholds, errorOperational, errorThresholds]);
+        }, [data, spots, newOperational, newThresholds, errorOperational, errorThresholds, priceTable, overnightConfigs, newOvernightEnable, newOvernightFee, errorOvernightEnable, errorOvernightFee]);
+
+        var handleEnableDisableOvernightConfig = (state: boolean) => {
+            try {
+                console.log(state);
+                changeOvernightEnable({
+                    overnightEnable: {
+                        parkNumber: parkNumber,
+                        status: state
+                    },
+                });
+            } catch (error) {
+                console.error("Error enabling/disabling overnight fee:", error);
+            }
+        }
+
+        var handleChangeOvernightFee = (newprice: number) => {
+            try {
+                console.log(newprice);
+                changeOvernightFee({
+                    overnightPrice: {
+                        parkNumber: parkNumber,
+                        price: newprice
+                    },
+                });
+            } catch (error) {
+                console.error("Error changing overnight fee price:", error);
+            }
+        }
 
         var handleEnableDisable = (spotNumber: string, state: boolean) => {
             try {
@@ -533,6 +580,40 @@ export const ManageParkScreen: React.FC = () => {
                             style={{width: "100%"}}>
                             Change Thresholds
                         </Button>
+                        <br/>
+                        <h3>Overnight fee config</h3>
+                        <div className="input-group mb-3">
+                            <Form.Check
+                                type="switch"
+                                id={`enable-disable-switch-overnightfee`}
+                                label=""
+                                onChange={(e) =>
+                                    handleEnableDisableOvernightConfig(
+                                        e.target.checked
+                                    )
+                                }
+                                checked={overnightEnabled}
+                            />
+                            <input
+                                id={`input-overnightprice`}
+                                type="number"
+                                className="form-control"
+                                placeholder={overnightFee == -1 ? "Overnight Price" : `${overnightFee}`}
+                                onChange={(e) => setOvernightFee(e.target.value === '' ? -1 : Number(e.target.value))}
+                                hidden={!overnightEnabled}
+                            />
+                        </div>
+                        <Button
+                            onClick={() => handleChangeOvernightFee(overnightFee)}
+                            style={{width: "100%"}}>
+                            Change Overnight fee
+                        </Button>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
                     </form>
                 </Container>
                 <ModalErrorForm

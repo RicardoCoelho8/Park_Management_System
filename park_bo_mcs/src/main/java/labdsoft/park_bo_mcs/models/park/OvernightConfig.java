@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class OvernightConfig {
     @Column(nullable = false)
-    private double overnightFee;
+    private Integer overnightFee;
 
     @Column(nullable = false)
     private boolean enabled;

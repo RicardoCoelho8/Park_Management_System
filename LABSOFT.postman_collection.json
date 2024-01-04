@@ -653,7 +653,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "false",
+							"raw": "{\r\n    \"parkNumber\": \"1\",\r\n    \"status\": false\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -661,7 +661,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/parks/enableDisableOvernightFee/2",
+							"raw": "http://localhost:8080/parks/enableDisableOvernightFee",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -669,8 +669,7 @@
 							"port": "8080",
 							"path": [
 								"parks",
-								"enableDisableOvernightFee",
-								"2"
+								"enableDisableOvernightFee"
 							]
 						}
 					},
@@ -733,7 +732,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "100.0",
+							"raw": "{\r\n    \"parkNumber\": \"1\",\r\n    \"price\": 100\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -741,7 +740,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/parks/changeOvernightFeePrice/1",
+							"raw": "http://localhost:8080/parks/changeOvernightFeePrice",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -749,8 +748,7 @@
 							"port": "8080",
 							"path": [
 								"parks",
-								"changeOvernightFeePrice",
-								"1"
+								"changeOvernightFeePrice"
 							]
 						}
 					},
