@@ -27,4 +27,7 @@ public class AppUser {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Vehicle> vehicles;
 
+    @Column(nullable = false)
+    private int totalParkies;
+
 }
