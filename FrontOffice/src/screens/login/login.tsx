@@ -7,6 +7,7 @@ import { useLoginMutation } from "../../store/userData/api";
 import { Link, useNavigate } from "react-router-dom";
 import { ModalErrorForm } from "../../components";
 import { decodeJwt, storeUserInLocalStorage } from "../../utils/jwtUtils";
+import { useUserIsAuth } from "../../store/userData/useUserIsAuth";
 
 export const LoginScreen: React.FC = () => {
   const dispatch = useDispatch();
@@ -28,6 +29,7 @@ export const LoginScreen: React.FC = () => {
           userRole: decodedToken.role,
           email,
           name: data.name,
+          isAuth: true,
         })
       );
       setEmail("");

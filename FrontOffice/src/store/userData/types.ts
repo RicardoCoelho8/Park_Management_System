@@ -92,17 +92,17 @@ export interface PriceTableEntryOutput {
   thresholds: ThresholdCostOutput[];
 }
 
-export interface OvernightConfig{
+export interface OvernightConfig {
   overnightFee: number;
   enabled: boolean;
 }
 
-export interface OvernightEnableInput{
+export interface OvernightEnableInput {
   parkNumber: string;
   status: boolean;
 }
 
-export interface OvernightFeeInput{
+export interface OvernightFeeInput {
   parkNumber: string;
   price: number;
 }
@@ -124,6 +124,38 @@ export interface ThresholdCost {
   thresholdMinutes: string;
   costPerMinuteAutomobiles: string;
   costPerMinuteMotorcycles: string;
+}
+
+export interface AddParkiesToUserInput {
+  userIds: string[];
+  amount: number;
+  reason: string;
+}
+
+export interface GetAllUsersOutputItem {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  nif: number;
+  parkingHistory: [];
+  totalParkies: number;
+  vehicles: [
+    {
+      licensePlateNumber: string;
+      vehicleType: string;
+      vehicleEnergySource: string;
+    }
+  ];
+  role: string;
+  paymentMethod: string;
+  userStatus: string;
+}
+
+export interface AssignParkyCoinsInput {
+  userIds: number[];
+  amount: number;
+  reason: "";
 }
 
 export enum UserRoles {

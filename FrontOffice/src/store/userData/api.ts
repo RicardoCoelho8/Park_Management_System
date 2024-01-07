@@ -15,6 +15,8 @@ import {
   OvernightConfig,
   OvernightEnableInput,
   OvernightFeeInput,
+  GetAllUsersOutputItem,
+  AssignParkyCoinsInput,
 } from "./types";
 import { getTokenFromLocalStorage } from "../../utils/jwtUtils";
 import { RootState } from "../store";
@@ -71,7 +73,7 @@ export const userDataApi = createApi({
     }),
     changeOvernightEnable: build.mutation<
       any,
-      { overnightEnable: OvernightEnableInput}
+      { overnightEnable: OvernightEnableInput }
     >({
       query: ({ overnightEnable }) => ({
         url: `/parks/enableDisableOvernightFee`,
@@ -81,9 +83,9 @@ export const userDataApi = createApi({
     }),
     changeOvernightFee: build.mutation<
       any,
-      { overnightPrice: OvernightFeeInput}
+      { overnightPrice: OvernightFeeInput }
     >({
-      query: ({ overnightPrice}) => ({
+      query: ({ overnightPrice }) => ({
         url: `/parks/changeOvernightFeePrice`,
         method: "PUT",
         body: overnightPrice,
@@ -117,6 +119,13 @@ export const userDataApi = createApi({
         url: `/parks/defineTimePeriods/${parkNumber}`,
         method: "PUT",
         body: priceTableData,
+      }),
+    }),
+    assignParkyCoins: build.mutation<any, AssignParkyCoinsInput>({
+      query: (assignParkyCoinsInputBody) => ({
+        url: `/users/parkies`,
+        method: "POST",
+        body: assignParkyCoinsInputBody,
       }),
     }),
     getUserVehicles: build.query<UserDataAddNewVehicleInput[], string>({
@@ -162,6 +171,14 @@ export const userDataApi = createApi({
     getUserParkingHistory: build.query<UserParkingHistoryOutput[], string>({
       query: (userId) => ({ url: `/parks/parkingHistory/${userId}` }),
     }),
+    getAllUsers: build.query<GetAllUsersOutputItem[], void>({
+      query: () => ({ url: `/users` }),
+    }),
+    getUserNumberOfVisits: build.query<number, string>({
+      query: (userId) => ({
+        url: `/parks/getQuantityOfHistoryByCustomerID/${userId}`,
+      }),
+    }),
   }),
 });
 
@@ -174,6 +191,7 @@ export const {
   useChangeThresholdsMutation,
   useChangeOvernightEnableMutation,
   useChangeOvernightFeeMutation,
+  useAssignParkyCoinsMutation,
   useGetUserVehiclesQuery,
   useGetUserPaymentMethodQuery,
   useGetParksNearbyQuery,
@@ -184,4 +202,6 @@ export const {
   useGetPriceTableEntriesByParkNumberQuery,
   useGetOvernightConfigByParkNumberQuery,
   useChangePriceTableMutation,
+  useGetAllUsersQuery,
+  useGetUserNumberOfVisitsQuery,
 } = userDataApi;

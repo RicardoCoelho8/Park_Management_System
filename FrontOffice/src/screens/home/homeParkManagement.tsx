@@ -1,7 +1,7 @@
 import React from "react";
 import { NavBar } from "../../components/BottomNavBar/navBar";
 import { useUserName } from "../../store/userData/useUserName";
-import { Container } from "react-bootstrap";
+import { Container, Table } from "react-bootstrap";
 import { ManageParkScreen } from "../managePark/managePark";
 
 export const HomeScreenParkManager: React.FC = () => {
