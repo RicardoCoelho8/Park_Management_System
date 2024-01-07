@@ -73,8 +73,6 @@ class UserController {
             @RequestHeader("X-UserRole") String userRole) {
 
         logger.info("Received get all users request");
-        System.out.println(Role.SUPERVISOR.toString().equals(userRole));
-        System.out.println(Role.CUSTOMER_MANAGER.toString().equals(userRole));
 
         if (!((Role.SUPERVISOR.toString().equals(userRole)) || (Role.CUSTOMER_MANAGER.toString().equals(userRole)))) {
             // only admins can use this endpoint
