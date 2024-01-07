@@ -76,7 +76,7 @@ export const MapScreen: React.FC = () => {
       const parkId = park.parkId;
       const isNearestPark = index === 0;
       // Add available spots to each park not being used at the moment
-      /* const availableSpots = userVehicles.map((userVehicle) => {
+      const availableSpots = userVehicles.map((userVehicle) => {
         const amount = matchAvailableSpots(
           userVehicle,
           park.spotTypeOccupancies
@@ -85,7 +85,7 @@ export const MapScreen: React.FC = () => {
           licensePlate: userVehicle.licensePlateNumber,
           amount: amount,
         };
-      }); */
+      });
 
       return {
         latitude: park.latitude,
@@ -93,7 +93,9 @@ export const MapScreen: React.FC = () => {
         popupText: isNearestPark
           ? `This is the nearest Park ${(
               <br />
-            )} Park ${parkId} - ${distance} km away`
+            )} Park ${parkId} - ${distance} km away ${(<br />)} ${
+              availableSpots[0].amount
+            } available spots`
           : `Park ${parkId} - ${distance} km away`,
       };
     });
