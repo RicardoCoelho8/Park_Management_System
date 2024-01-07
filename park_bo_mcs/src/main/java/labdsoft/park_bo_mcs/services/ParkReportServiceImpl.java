@@ -1,5 +1,6 @@
 package labdsoft.park_bo_mcs.services;
 
+import labdsoft.park_bo_mcs.dtos.reporting.ParkPercentageReportDTO;
 import labdsoft.park_bo_mcs.dtos.reporting.ParkReportDTO;
 import labdsoft.park_bo_mcs.dtos.reporting.ParkTimeReportDTO;
 import labdsoft.park_bo_mcs.models.reporting.ParkReport;
@@ -133,231 +134,31 @@ public class ParkReportServiceImpl implements ParkReportService {
     }
 
     @Override
-    public List<ParkReportDTO> getParkingReport(String vehicleType, String fuelType, Long parkId, String timePeriod) {
-        List<ParkReportDTO> parkReportDTO = new ArrayList<>();
-
+    public ParkPercentageReportDTO getParkingReport(Long parkId) {
         List<ParkReport> parkReports = parkReportRepository.findAllByParkId(parkId);
 
+        double auxTotal = 0.0;
+        double auxTotalCar = 0.0;
+        double auxTotalMotor = 0.0;
+        double auxTotalFuel = 0.0;
+        double auxTotalGas = 0.0;
+        double auxTotalElectric = 0.0;
+
         for (ParkReport parkReport : parkReports) {
-            switch (vehicleType) {
-                case "car":
-                    switch (fuelType) {
-                        case "fuel":
-                            parkReportDTO.add(ParkReportDTO.builder()
-                                    .percentage(parkReport.getTotalCarsFuel() / parkReport.getTotalVehicles() * 100)
-                                    .totalVehicles(parkReport.getTotalVehicles())
-                                    .totalRequested(parkReport.getTotalCarsFuel())
-                                    .year(parkReport.getYear())
-                                    .month(parkReport.getMonth())
-                                    .day(parkReport.getDay())
-                                    .build());
-
-                            break;
-                        case "electric":
-                            parkReportDTO.add(ParkReportDTO.builder()
-                                    .percentage(parkReport.getTotalCarsElectrics() / parkReport.getTotalVehicles() * 100)
-                                    .totalVehicles(parkReport.getTotalVehicles())
-                                    .totalRequested(parkReport.getTotalCarsElectrics())
-                                    .year(parkReport.getYear())
-                                    .month(parkReport.getMonth())
-                                    .day(parkReport.getDay())
-                                    .build());
-
-                            break;
-                        case "gpl":
-                            parkReportDTO.add(ParkReportDTO.builder()
-                                    .percentage(parkReport.getTotalCarsGPL() / parkReport.getTotalVehicles() * 100)
-                                    .totalVehicles(parkReport.getTotalVehicles())
-                                    .totalRequested(parkReport.getTotalCarsGPL())
-                                    .year(parkReport.getYear())
-                                    .month(parkReport.getMonth())
-                                    .day(parkReport.getDay())
-                                    .build());
-
-                            break;
-                        case "all":
-                            parkReportDTO.add(ParkReportDTO.builder()
-                                    .percentage(parkReport.getTotalCars() / parkReport.getTotalVehicles() * 100)
-                                    .totalVehicles(parkReport.getTotalVehicles())
-                                    .totalRequested(parkReport.getTotalCars())
-                                    .year(parkReport.getYear())
-                                    .month(parkReport.getMonth())
-                                    .day(parkReport.getDay())
-                                    .build());
-
-                            break;
-                        default:
-                            return null;
-                    }
-                    break;
-                case "motorcycle":
-                    switch (fuelType) {
-                        case "fuel":
-                            parkReportDTO.add(ParkReportDTO.builder()
-                                    .percentage(parkReport.getTotalMotorcyclesFuel() / parkReport.getTotalVehicles() * 100)
-                                    .totalVehicles(parkReport.getTotalVehicles())
-                                    .totalRequested(parkReport.getTotalMotorcyclesFuel())
-                                    .year(parkReport.getYear())
-                                    .month(parkReport.getMonth())
-                                    .day(parkReport.getDay())
-                                    .build());
-
-                            break;
-                        case "electric":
-                            parkReportDTO.add(ParkReportDTO.builder()
-                                    .percentage(parkReport.getTotalMotorcyclesElectrics() / parkReport.getTotalVehicles() * 100)
-                                    .totalVehicles(parkReport.getTotalVehicles())
-                                    .totalRequested(parkReport.getTotalMotorcyclesElectrics())
-                                    .year(parkReport.getYear())
-                                    .month(parkReport.getMonth())
-                                    .day(parkReport.getDay())
-                                    .build());
-
-                            break;
-                        case "gpl":
-                            parkReportDTO.add(ParkReportDTO.builder()
-                                    .percentage(parkReport.getTotalMotorcyclesGPL() / parkReport.getTotalVehicles() * 100)
-                                    .totalVehicles(parkReport.getTotalVehicles())
-                                    .totalRequested(parkReport.getTotalMotorcyclesGPL())
-                                    .year(parkReport.getYear())
-                                    .month(parkReport.getMonth())
-                                    .day(parkReport.getDay())
-                                    .build());
-
-                            break;
-                        case "all":
-                            parkReportDTO.add(ParkReportDTO.builder()
-                                    .percentage(parkReport.getTotalMotorcycles() / parkReport.getTotalVehicles() * 100)
-                                    .totalVehicles(parkReport.getTotalVehicles())
-                                    .totalRequested(parkReport.getTotalMotorcycles())
-                                    .year(parkReport.getYear())
-                                    .month(parkReport.getMonth())
-                                    .day(parkReport.getDay())
-                                    .build());
-
-                            break;
-                        default:
-                            return null;
-                    }
-                    break;
-                case "vehicle":
-                    switch (fuelType) {
-                        case "fuel":
-                            parkReportDTO.add(ParkReportDTO.builder()
-                                    .percentage(parkReport.getTotalFuel() / parkReport.getTotalVehicles() * 100)
-                                    .totalVehicles(parkReport.getTotalVehicles())
-                                    .totalRequested(parkReport.getTotalFuel())
-                                    .year(parkReport.getYear())
-                                    .month(parkReport.getMonth())
-                                    .day(parkReport.getDay())
-                                    .build());
-
-                            break;
-                        case "electric":
-                            parkReportDTO.add(ParkReportDTO.builder()
-                                    .percentage(parkReport.getTotalElectrics() / parkReport.getTotalVehicles() * 100)
-                                    .totalVehicles(parkReport.getTotalVehicles())
-                                    .totalRequested(parkReport.getTotalElectrics())
-                                    .year(parkReport.getYear())
-                                    .month(parkReport.getMonth())
-                                    .day(parkReport.getDay())
-                                    .build());
-
-                            break;
-                        case "gpl":
-                            parkReportDTO.add(ParkReportDTO.builder()
-                                    .percentage(parkReport.getTotalGPL() / parkReport.getTotalVehicles() * 100)
-                                    .totalVehicles(parkReport.getTotalVehicles())
-                                    .totalRequested(parkReport.getTotalGPL())
-                                    .year(parkReport.getYear())
-                                    .month(parkReport.getMonth())
-                                    .day(parkReport.getDay())
-                                    .build());
-                            break;
-                        case "all":
-                            parkReportDTO.add(ParkReportDTO.builder()
-                                    .percentage(100.0)
-                                    .totalVehicles(parkReport.getTotalVehicles())
-                                    .totalRequested(parkReport.getTotalVehicles())
-                                    .year(parkReport.getYear())
-                                    .month(parkReport.getMonth())
-                                    .day(parkReport.getDay())
-                                    .build());
-                            break;
-                        default:
-                            return null;
-                    }
-                    break;
-                default:
-                    return null;
-            }
+            auxTotal = auxTotal + parkReport.getTotalVehicles();
+            auxTotalCar = auxTotalCar + parkReport.getTotalCars();
+            auxTotalMotor = auxTotalMotor + parkReport.getTotalMotorcycles();
+            auxTotalFuel = auxTotalFuel + parkReport.getTotalFuel();
+            auxTotalGas = auxTotalGas + parkReport.getTotalGPL();
+            auxTotalElectric = auxTotalElectric + parkReport.getTotalElectrics();
         }
 
-        Double totalVehiclesAux = 0.0;
-        Double totalRequestedAux = 0.0;
-
-        switch (timePeriod) {
-            case "day":
-                return parkReportDTO;
-            case "month":
-                List<ParkReportDTO> parkReportDTOMonth = new ArrayList<>();
-
-                for (ParkReportDTO reportDTO : parkReportDTO) {
-                    List<ParkReportDTO> parkReportDTOAux = parkReportDTO.stream().filter(parkReportDTO1 ->
-                            parkReportDTO1.getMonth().equals(reportDTO.getMonth()) &&
-                                    parkReportDTO1.getYear().equals(reportDTO.getYear())).toList();
-
-                    for (ParkReportDTO reportDTO1 : parkReportDTOAux) {
-                        parkReportDTO.remove(reportDTO1);
-
-                        totalVehiclesAux += reportDTO1.getTotalVehicles();
-                        totalRequestedAux += reportDTO1.getTotalRequested();
-                    }
-
-                    parkReportDTOMonth.add(ParkReportDTO.builder()
-                            .percentage(totalRequestedAux / totalVehiclesAux * 100)
-                            .totalVehicles(totalVehiclesAux)
-                            .totalRequested(totalRequestedAux)
-                            .year(reportDTO.getYear())
-                            .month(reportDTO.getMonth())
-                            .day(0)
-                            .build());
-
-                    totalVehiclesAux = 0.0;
-                    totalRequestedAux = 0.0;
-                }
-
-                return parkReportDTOMonth;
-            case "year":
-                List<ParkReportDTO> parkReportDTOYear = new ArrayList<>();
-
-                for (ParkReportDTO reportDTO : parkReportDTO) {
-                    List<ParkReportDTO> parkReportDTOAux = parkReportDTO.stream().filter(parkReportDTO1 ->
-                            parkReportDTO1.getYear().equals(reportDTO.getYear())).toList();
-
-                    for (ParkReportDTO reportDTO1 : parkReportDTOAux) {
-                        parkReportDTO.remove(reportDTO1);
-
-                        totalVehiclesAux += reportDTO1.getTotalVehicles();
-                        totalRequestedAux += reportDTO1.getTotalRequested();
-                    }
-
-                    parkReportDTOYear.add(ParkReportDTO.builder()
-                            .percentage(totalRequestedAux / totalVehiclesAux * 100)
-                            .totalVehicles(totalVehiclesAux)
-                            .totalRequested(totalRequestedAux)
-                            .year(reportDTO.getYear())
-                            .month(0)
-                            .day(0)
-                            .build());
-
-                    totalVehiclesAux = 0.0;
-                    totalRequestedAux = 0.0;
-                }
-
-                return parkReportDTOYear;
-            default:
-                return null;
-        }
+        return ParkPercentageReportDTO.builder().totalVehicles(auxTotal)
+                .percentageCar((auxTotalCar/auxTotal)*100)
+                .percentageMotorcycle((auxTotalMotor/auxTotal)*100)
+                .percentageFuel((auxTotalFuel/auxTotal)*100)
+                .percentageGPL((auxTotalGas/auxTotal)*100)
+                .percentageElectric((auxTotalElectric/auxTotal)*100)
+                .build();
     }
 }
