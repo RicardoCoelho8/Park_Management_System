@@ -644,12 +644,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8082/parks/getUserParkyFlag/5",
+							"raw": "http://localhost:8080/parks/getUserParkyFlag/5",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8082",
+							"port": "8080",
 							"path": [
 								"parks",
 								"getUserParkyFlag",
@@ -918,7 +918,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"customerID\": \"4\",\r\n  \"parkyFlag\": true\r\n}\r\n",
+							"raw": "{\r\n  \"customerID\": \"5\",\r\n  \"parkyFlag\": true\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -926,12 +926,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8082/parks/changeUserParkyFlag",
+							"raw": "http://localhost:8080/parks/changeUserParkyFlag",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8082",
+							"port": "8080",
 							"path": [
 								"parks",
 								"changeUserParkyFlag"

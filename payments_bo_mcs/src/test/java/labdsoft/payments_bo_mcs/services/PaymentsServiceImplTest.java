@@ -110,7 +110,7 @@ class PaymentsServiceImplTest {
         Calendar leftPark = Calendar.getInstance();
         leftPark.set(2023, Calendar.NOVEMBER, 7, 8, 45, 0);
 
-        BarrierInfoDTO barrierInfoDTO = BarrierInfoDTO.builder().licensePlateNumber("AA-00-00").enterPark(enterPark).leftPark(leftPark).parkID(1L).useParky(false).build();
+        BarrierInfoDTO barrierInfoDTO = BarrierInfoDTO.builder().licensePlateNumber("AA-00-00").enterPark(enterPark).leftPark(leftPark).parkID(1L).useParkyCoins(false).build();
 
         ArrayList<PaymentsTableRow> rows = new ArrayList<>();
 
