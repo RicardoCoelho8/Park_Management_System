@@ -157,7 +157,23 @@ export interface AssignParkyCoinsInput {
   amount: number;
   reason: "";
 }
+export interface ParkyEvent {
+  eventId: number;
+  amount: number;
+  reason: string;
+  managerId: number;
+  transactionTime: string;
+}
 
+export interface UserParkyWalletOutput {
+  userId: number;
+  parkies: number;
+  parkyEvents: ParkyEvent[];
+}
+export interface UserParkyCoinsWalletFlag {
+  customerID: string;
+  parkyFlag: boolean;
+}
 export enum UserRoles {
   PARK_MANAGER = "PARK_MANAGER",
   CUSTOMER = "CUSTOMER",

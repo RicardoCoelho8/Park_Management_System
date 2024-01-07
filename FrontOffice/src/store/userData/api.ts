@@ -17,6 +17,8 @@ import {
   OvernightFeeInput,
   GetAllUsersOutputItem,
   AssignParkyCoinsInput,
+  UserParkyWalletOutput,
+  UserParkyCoinsWalletFlag,
 } from "./types";
 import { getTokenFromLocalStorage } from "../../utils/jwtUtils";
 import { RootState } from "../store";
@@ -128,6 +130,16 @@ export const userDataApi = createApi({
         body: assignParkyCoinsInputBody,
       }),
     }),
+    changeUserParkyCoinsWalletFlag: build.mutation<
+      any,
+      UserParkyCoinsWalletFlag
+    >({
+      query: (assignParkyCoinsInputBody) => ({
+        url: `/parks/changeUserParkyFlag`,
+        method: "PUT",
+        body: assignParkyCoinsInputBody,
+      }),
+    }),
     getUserVehicles: build.query<UserDataAddNewVehicleInput[], string>({
       query: (userId) => ({ url: `/users/${userId}/vehicles` }),
     }),
@@ -179,6 +191,16 @@ export const userDataApi = createApi({
         url: `/parks/getQuantityOfHistoryByCustomerID/${userId}`,
       }),
     }),
+    getUserParkyWallet: build.query<UserParkyWalletOutput, string>({
+      query: (userId) => ({
+        url: `/users/parkies/${userId}`,
+      }),
+    }),
+    getUserParkyCoinsFlag: build.query<boolean, string>({
+      query: (userId) => ({
+        url: `/parks/getUserParkyFlag/${userId}`,
+      }),
+    }),
   }),
 });
 
@@ -192,6 +214,7 @@ export const {
   useChangeOvernightEnableMutation,
   useChangeOvernightFeeMutation,
   useAssignParkyCoinsMutation,
+  useChangeUserParkyCoinsWalletFlagMutation,
   useGetUserVehiclesQuery,
   useGetUserPaymentMethodQuery,
   useGetParksNearbyQuery,
@@ -204,4 +227,6 @@ export const {
   useChangePriceTableMutation,
   useGetAllUsersQuery,
   useGetUserNumberOfVisitsQuery,
+  useGetUserParkyWalletQuery,
+  useGetUserParkyCoinsFlagQuery,
 } = userDataApi;
