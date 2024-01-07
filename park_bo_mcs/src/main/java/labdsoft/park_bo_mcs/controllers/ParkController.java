@@ -83,15 +83,15 @@ class ParkController {
     }
 
     @Operation(summary = "Enable or disable overnight fee by park number")
-    @PutMapping("/enableDisableOvernightFee/{parkNumber}")
-    public ResponseEntity<String> enableDisableOvernightFeeByParkNumber(@RequestBody Boolean status, @PathVariable String parkNumber) {
-        return new ResponseEntity<>(service.enableDisableOvernightFeeByParkNumber(parkNumber, status), HttpStatus.OK);
+    @PutMapping("/enableDisableOvernightFee")
+    public ResponseEntity<String> enableDisableOvernightFeeByParkNumber(@RequestBody OvernightEnableDTO dto) {
+        return new ResponseEntity<>(service.enableDisableOvernightFeeByParkNumber(dto), HttpStatus.OK);
     }
 
     @Operation(summary = "Change overnight fee price by park number")
-    @PutMapping("/changeOvernightFeePrice/{parkNumber}")
-    public ResponseEntity<String> changeOvernightFeePriceByParkNumber(@PathVariable String parkNumber, @RequestBody Double newPrice) {
-        return new ResponseEntity<>(service.changeOvernightFeePriceByParkNumber(parkNumber, newPrice), HttpStatus.OK);
+    @PutMapping("/changeOvernightFeePrice")
+    public ResponseEntity<String> changeOvernightFeePriceByParkNumber(@RequestBody OvernightPriceDTO dto) {
+        return new ResponseEntity<>(service.changeOvernightFeePriceByParkNumber(dto), HttpStatus.OK);
     }
 
     //--------------Table of Prices-----------------

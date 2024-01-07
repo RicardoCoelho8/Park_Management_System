@@ -92,6 +92,21 @@ export interface PriceTableEntryOutput {
   thresholds: ThresholdCostOutput[];
 }
 
+export interface OvernightConfig{
+  overnightFee: number;
+  enabled: boolean;
+}
+
+export interface OvernightEnableInput{
+  parkNumber: string;
+  status: boolean;
+}
+
+export interface OvernightFeeInput{
+  parkNumber: string;
+  price: number;
+}
+
 export interface ThresholdCostOutput {
   thresholdMinutes: string;
   costPerMinuteAutomobiles: string;

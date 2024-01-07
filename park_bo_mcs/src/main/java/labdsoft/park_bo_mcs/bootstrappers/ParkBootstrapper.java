@@ -27,11 +27,11 @@ public class ParkBootstrapper implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        values(1L, 10, createSampleParkyConfig(), Location.builder().latitude(40.36841685539075).longitude(-8.659655996430294).build(), OvernightConfig.builder().enabled(true).overnightFee(5.0).build());
-        values(2L, 10, createSampleParkyConfig(), Location.builder().latitude(41.15932631626018).longitude(-8.659665314733802).build(), OvernightConfig.builder().enabled(true).overnightFee(4.0).build());
-        values(3L, 10, createSampleParkyConfig(), Location.builder().latitude(40.63197951206417).longitude(-8.631234173497187).build(), OvernightConfig.builder().enabled(false).overnightFee(8.0).build());
-        values(4L, 10, createSampleParkyConfig(), Location.builder().latitude(41.538183003885216).longitude(-8.431420332359862).build(), OvernightConfig.builder().enabled(false).overnightFee(6.0).build());
-        values(5L, 10, createSampleParkyConfig(), Location.builder().latitude(41.17643631180696).longitude(-8.55806931330527).build(), OvernightConfig.builder().enabled(true).overnightFee(7.0).build());
+        values(1L, 10, createSampleParkyConfig(), Location.builder().latitude(40.36841685539075).longitude(-8.659655996430294).build(), OvernightConfig.builder().enabled(true).overnightFee(5).build());
+        values(2L, 10, createSampleParkyConfig(), Location.builder().latitude(41.15932631626018).longitude(-8.659665314733802).build(), OvernightConfig.builder().enabled(true).overnightFee(4).build());
+        values(3L, 10, createSampleParkyConfig(), Location.builder().latitude(40.63197951206417).longitude(-8.631234173497187).build(), OvernightConfig.builder().enabled(false).overnightFee(8).build());
+        values(4L, 10, createSampleParkyConfig(), Location.builder().latitude(41.538183003885216).longitude(-8.431420332359862).build(), OvernightConfig.builder().enabled(false).overnightFee(6).build());
+        values(5L, 10, createSampleParkyConfig(), Location.builder().latitude(41.17643631180696).longitude(-8.55806931330527).build(), OvernightConfig.builder().enabled(true).overnightFee(7).build());
     }
 
     private void createSampleSpots(Long id) {

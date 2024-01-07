@@ -164,21 +164,21 @@ public class ParkServiceImpl implements ParkService {
     }
 
     @Override
-    public String enableDisableOvernightFeeByParkNumber(String parkNumber, Boolean status) {
-        Park park = parkRepository.findByParkNumber(Long.parseLong(parkNumber));
-        park.getOvernightConfig().setEnabled(status);
+    public String enableDisableOvernightFeeByParkNumber(OvernightEnableDTO dto) {
+        Park park = parkRepository.findByParkNumber(Long.parseLong(dto.getParkNumber()));
+        park.getOvernightConfig().setEnabled(dto.isStatus());
         parkRepository.save(park);
 
-        return "Park " + parkNumber + " overnight fee " + status;
+        return "Park " + dto.getParkNumber() + " overnight fee " + dto.isStatus();
     }
 
     @Override
-    public String changeOvernightFeePriceByParkNumber(String parkNumber, Double newPrice) {
-        Park park = parkRepository.findByParkNumber(Long.parseLong(parkNumber));
-        park.getOvernightConfig().setOvernightFee(newPrice);
+    public String changeOvernightFeePriceByParkNumber(OvernightPriceDTO dto) {
+        Park park = parkRepository.findByParkNumber(Long.parseLong(dto.getParkNumber()));
+        park.getOvernightConfig().setOvernightFee(dto.getPrice());
         parkRepository.save(park);
 
-        return "Park " + parkNumber + " overnight fee changed to " + newPrice;
+        return "Park " + dto.getParkNumber() + " overnight fee changed to " + dto.getPrice();
     }
 
     @Override

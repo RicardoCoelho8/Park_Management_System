@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class OvernightConfigDTO {
-    private Integer overnightFee;
-    private boolean enabled;
+public class OvernightEnableDTO {
+    private String parkNumber;
+    private boolean status;
 }
