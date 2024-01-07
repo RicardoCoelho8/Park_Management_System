@@ -38,7 +38,7 @@ public class CustomerBootstrapper implements CommandLineRunner {
 
     private void values(Long customerNif, List<String> licensePlates) {
         if (uRepo.findByNif(customerNif).isEmpty()) {
-            AppUser customer = AppUser.builder().nif(customerNif).vehicles(createSampleVehicle(licensePlates)).build();
+            AppUser customer = AppUser.builder().nif(customerNif).vehicles(createSampleVehicle(licensePlates)).totalParkies(50).build();
             uRepo.save(customer);
         }
     }

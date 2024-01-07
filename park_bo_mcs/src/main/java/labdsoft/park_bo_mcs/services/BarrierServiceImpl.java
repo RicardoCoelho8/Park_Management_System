@@ -92,7 +92,7 @@ public class BarrierServiceImpl implements BarrierService {
         }
 
         processParking(park, vehicle, barrierLicenseReaderDTO);
-        updateDisplayMessages(customer, barrierLicenseReaderDTO, false, 0.0, null);
+        updateDisplayMessages(customer, barrierLicenseReaderDTO, false, 0.0 + "€!", null);
 
         barrierDisplayDTO.setSuccess(true);
         barrierDisplayDTO.setMessage("Welcome to the park " + customer.getName() + "!");
@@ -272,7 +272,7 @@ public class BarrierServiceImpl implements BarrierService {
 
         Customer customer = customerRepository.findByCustomerID(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getCustomerID());
 
-        Double money = getMoneyFromPayment(barrierLicenseReaderDTO);
+        String money = getMoneyFromPayment(barrierLicenseReaderDTO);
 
         updateDisplayMessages(customer, barrierLicenseReaderDTO, true, money, null);
 
@@ -282,7 +282,7 @@ public class BarrierServiceImpl implements BarrierService {
         return barrierDisplayDTO;
     }
 
-    private Double getMoneyFromPayment(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
+    private String getMoneyFromPayment(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
         ParkingHistory parkingHistory = parkingHistoryRepository.findByCustomerIDLatest(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getCustomerID());
 
         parkingHistory.setEndTime(barrierLicenseReaderDTO.getDate());
@@ -314,9 +314,9 @@ public class BarrierServiceImpl implements BarrierService {
 
             processParkTimeReport(parkingHistory);
 
-            return paymentsDTO.getFinalPrice();
+            return paymentsDTO.getFinalPrice() + "€! With a discount of " + paymentsDTO.getDiscount() + "%.";
         } else {
-            return 0.0;
+            return 0.0 + "€!";
         }
     }
 
@@ -372,18 +372,18 @@ public class BarrierServiceImpl implements BarrierService {
         barrierDisplayDTO.setSuccess(false);
         barrierDisplayDTO.setMessage(message);
 
-        updateDisplayMessages(null, barrierLicenseReaderDTO, false, 0.0, message);
+        updateDisplayMessages(null, barrierLicenseReaderDTO, false, 0.0 + "€!", message);
 
         return barrierDisplayDTO;
     }
 
-    private void updateDisplayMessages(Customer customer, BarrierLicenseReaderDTO barrierLicenseReaderDTO, Boolean onExit, Double money, String message) {
+    private void updateDisplayMessages(Customer customer, BarrierLicenseReaderDTO barrierLicenseReaderDTO, Boolean onExit, String money, String message) {
         List<Display> displayList = displayRepository.findAllByBarrierNumber(barrierRepository.getBarrierByBarrierID(barrierLicenseReaderDTO.getBarrierID()).getBarrierNumber());
         for (Display display : displayList) {
             if (display.getState() == State.ACTIVE) {
                 if (message != null) display.setMessage(message);
                 else if (onExit)
-                    display.setMessage("Have a nice day " + customer.getName() + "! Your total will be " + money + "€!");
+                    display.setMessage("Have a nice day " + customer.getName() + "! Your total will be " + money);
                 else display.setMessage("Welcome to the park " + customer.getName() + "!");
             }
         }

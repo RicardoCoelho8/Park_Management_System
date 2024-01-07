@@ -64,6 +64,7 @@ public class Subscribe {
                     AppUser appUser = AppUser.builder()
                             .nif(Long.parseLong(user.getNif() + ""))
                             .vehicles(vehicles)
+                            .totalParkies(user.getTotalParkies())
                             .build();
 
                     System.out.println("User received: " + appUser.toString());
