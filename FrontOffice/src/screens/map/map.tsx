@@ -96,7 +96,9 @@ export const MapScreen: React.FC = () => {
             )} Park ${parkId} - ${distance} km away ${(<br />)} ${
               availableSpots[0].amount
             } available spots`
-          : `Park ${parkId} - ${distance} km away`,
+          : `Park ${parkId} - ${distance} km away ${(<br />)} ${
+              availableSpots[0].amount
+            } available spots`,
       };
     });
 
