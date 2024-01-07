@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { BottomNavBar } from "../../components/BottomNavBar/bottomNavBar";
 import { Container } from "react-bootstrap";
 import { useUserId } from "../../store/userData/useUserId";
 import { useUserName } from "../../store/userData/useUserName";
@@ -10,6 +9,7 @@ import {
 } from "../../store/userData/api";
 import { ModalErrorForm } from "../../components";
 import { PaymentMethodDropdown } from "../../components/PaymentMethodDropdown/paymentDropdown";
+import { NavBar } from "../../components/BottomNavBar/navBar";
 
 export const AccountScreen: React.FC = () => {
   const userId = useUserId();
@@ -86,7 +86,7 @@ export const AccountScreen: React.FC = () => {
         showModal={showModalError}
         setShowModal={setShowModalError}
       />
-      <BottomNavBar />
+      <NavBar />
     </>
   );
 };

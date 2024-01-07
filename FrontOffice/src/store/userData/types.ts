@@ -111,6 +111,8 @@ export interface ThresholdCost {
   costPerMinuteMotorcycles: string;
 }
 
-export const SET_USER_DATA = "SET_USER_DATA";
-
-export const POST_USER_DATA = "POST_USER_DATA";
+export enum UserRoles {
+  PARK_MANAGER = "PARK_MANAGER",
+  CUSTOMER = "CUSTOMER",
+  CUSTOMER_MANAGER = "CUSTOMER_MANAGER",
+}

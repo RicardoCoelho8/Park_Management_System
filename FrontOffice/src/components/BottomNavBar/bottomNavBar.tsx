@@ -27,11 +27,15 @@ export const BottomNavBar: React.FC = () => {
         color: "white",
       }}
     >
-      <Container fluid style={{ display: "flex", flexDirection: "column" }}>
+      <Container
+        fluid
+        style={{ display: "flex", flexDirection: "column" }}
+        onClick={() => navigate("/payments")}
+      >
         <i className="bi bi-wallet-fill"></i>
         <p>Wallet</p>
       </Container>
-      
+
       <Container
         fluid
         style={{ display: "flex", flexDirection: "column" }}
@@ -49,7 +53,7 @@ export const BottomNavBar: React.FC = () => {
         <i className="bi bi-house-door-fill"></i>
         <p>Home</p>
       </Container>
-      
+
       <Container
         fluid
         style={{ display: "flex", flexDirection: "column" }}
@@ -58,7 +62,7 @@ export const BottomNavBar: React.FC = () => {
         <i className="bi bi-map-fill"></i>
         <p>Map</p>
       </Container>
-      
+
       <Container
         fluid
         style={{ display: "flex", flexDirection: "column" }}

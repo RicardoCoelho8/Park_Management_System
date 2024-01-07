@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { CarDetailCard } from "../../components/CarDetailCard/carDetailCard";
-import { BottomNavBar } from "../../components/BottomNavBar/bottomNavBar";
 import { Button, Container } from "react-bootstrap";
 import {
   useAddNewVehicleMutation,
@@ -15,6 +14,7 @@ import {
   getRandomVehicleType,
 } from "../../utils/functions";
 import { ModalErrorForm } from "../../components";
+import { NavBar } from "../../components/BottomNavBar/navBar";
 
 export const AddVehicleScreen: React.FC = () => {
   const userId = useUserId();
@@ -94,7 +94,7 @@ export const AddVehicleScreen: React.FC = () => {
         showModal={showModalError}
         setShowModal={setShowModalError}
       />
-      <BottomNavBar />
+      <NavBar />
     </>
   );
 };
