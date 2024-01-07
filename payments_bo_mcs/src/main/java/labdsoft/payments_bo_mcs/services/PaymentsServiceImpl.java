@@ -69,18 +69,20 @@ public class PaymentsServiceImpl implements PaymentsService {
 
         rows = rows.stream().map(paymentsTableRow -> p_tr_Repo.save(paymentsTableRow)).collect(Collectors.toCollection(ArrayList::new));
 
-        float coinsPerPercentDiscount = 100; // 100 coins equivalent to 1% discount
-        float maxDiscountPercentage = 5; // Assume you want to set a maximum discount of 5%
+        double discount = 0;
+        if (barrierInfoDTO.isUseParky()) {
+            float coinsPerPercentDiscount = 100;
 
-        float finalCost = (float) rows.stream().mapToDouble(PaymentsTableRow::getPrice).sum();
-        int availableCoins = verification.get().getTotalParkies();
+            float finalCost = (float) rows.stream().mapToDouble(PaymentsTableRow::getPrice).sum();
+            int availableCoins = verification.get().getTotalParkies();
 
-        float maxDiscountInCoins = Math.min(availableCoins, finalCost * coinsPerPercentDiscount);
+            float maxDiscountInCoins = Math.min(availableCoins, finalCost * coinsPerPercentDiscount);
 
-        BigDecimal bigDecimalValue = new BigDecimal(maxDiscountInCoins * 0.01f);
-        BigDecimal roundedValue = bigDecimalValue.setScale(2, RoundingMode.HALF_UP);
+            BigDecimal bigDecimalValue = new BigDecimal(maxDiscountInCoins * 0.01f);
+            BigDecimal roundedValue = bigDecimalValue.setScale(2, RoundingMode.HALF_UP);
 
-        double discount = roundedValue.doubleValue();
+            discount = roundedValue.doubleValue();
+        }
 
         Payments p = Payments.builder().discount(0D).paymentsTableRows(rows).nif(verification.get().getNif()).discount(discount).build();
 
