@@ -162,14 +162,23 @@ public class BarrierServiceImpl implements BarrierService {
                         case FUEL:
                             parkReport.setTotalFuel(1.0);
                             parkReport.setTotalCarsFuel(1.0);
+                            parkReport.setTotalElectrics(0.0);
+                            parkReport.setTotalGPL(0.0);
+                            parkReport.setTotalMotorcycles(0.0);
                             break;
                         case ELECTRIC:
                             parkReport.setTotalElectrics(1.0);
                             parkReport.setTotalCarsElectrics(1.0);
+                            parkReport.setTotalFuel(0.0);
+                            parkReport.setTotalGPL(0.0);
+                            parkReport.setTotalMotorcycles(0.0);
                             break;
                         case GPL:
                             parkReport.setTotalGPL(1.0);
                             parkReport.setTotalCarsGPL(1.0);
+                            parkReport.setTotalFuel(0.0);
+                            parkReport.setTotalElectrics(0.0);
+                            parkReport.setTotalMotorcycles(0.0);
                             break;
                     }
                     break;
@@ -179,14 +188,23 @@ public class BarrierServiceImpl implements BarrierService {
                         case FUEL:
                             parkReport.setTotalFuel(1.0);
                             parkReport.setTotalMotorcyclesFuel(1.0);
+                            parkReport.setTotalElectrics(0.0);
+                            parkReport.setTotalGPL(0.0);
+                            parkReport.setTotalCars(0.0);
                             break;
                         case ELECTRIC:
                             parkReport.setTotalElectrics(1.0);
                             parkReport.setTotalMotorcyclesElectrics(1.0);
+                            parkReport.setTotalFuel(0.0);
+                            parkReport.setTotalGPL(0.0);
+                            parkReport.setTotalCars(0.0);
                             break;
                         case GPL:
                             parkReport.setTotalGPL(1.0);
                             parkReport.setTotalMotorcyclesGPL(1.0);
+                            parkReport.setTotalFuel(0.0);
+                            parkReport.setTotalElectrics(0.0);
+                            parkReport.setTotalCars(0.0);
                             break;
                     }
                     break;
