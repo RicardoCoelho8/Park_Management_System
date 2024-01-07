@@ -17,7 +17,9 @@ public interface ParkService {
     OvernightConfigDTO getOvernightConfigByParkNumber(String parkNumber);
     Integer getQuantityOfHistoryByCustomerID(String customerID);
     void createPark(String string);
+    String changeUserParkyFlag(ParkyFlagDTO parkyFlagDTO);
     List<String> getAllParks();
     List<SpotDTO> getSpotsByParkNumber(String parkNumber);
+    Boolean getUserParkyFlagByCustomerID(String customerID);
     List<PriceTableEntryDTO> defineTimePeriods(String parkNumber, List<PriceTableEntryDTO> priceTableEntryDTO);
 }

@@ -23,4 +23,7 @@ public class Customer {
 
     @Column(nullable = false)
     private Status status;
+
+    @Column(nullable = false)
+    private Boolean useParkyCoins;
 }

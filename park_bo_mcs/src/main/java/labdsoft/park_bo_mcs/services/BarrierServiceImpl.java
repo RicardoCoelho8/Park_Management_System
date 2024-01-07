@@ -272,8 +272,9 @@ public class BarrierServiceImpl implements BarrierService {
 
         Customer customer = customerRepository.findByCustomerID(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getCustomerID());
 
-        String money = getMoneyFromPayment(barrierLicenseReaderDTO);
+        String money = getMoneyFromPayment(barrierLicenseReaderDTO, customer.getUseParkyCoins());
 
+        customer.setUseParkyCoins(false);
         updateDisplayMessages(customer, barrierLicenseReaderDTO, true, money, null);
 
         barrierDisplayDTO.setSuccess(true);
@@ -282,7 +283,7 @@ public class BarrierServiceImpl implements BarrierService {
         return barrierDisplayDTO;
     }
 
-    private String getMoneyFromPayment(BarrierLicenseReaderDTO barrierLicenseReaderDTO) {
+    private String getMoneyFromPayment(BarrierLicenseReaderDTO barrierLicenseReaderDTO,  Boolean useParkyCoins) {
         ParkingHistory parkingHistory = parkingHistoryRepository.findByCustomerIDLatest(vehicleRepository.getVehicleByPlateNumber(barrierLicenseReaderDTO.getPlateNumber()).getCustomerID());
 
         parkingHistory.setEndTime(barrierLicenseReaderDTO.getDate());
@@ -302,7 +303,7 @@ public class BarrierServiceImpl implements BarrierService {
         parkingHistory.setMinutesBetweenEntranceExit(minutes);
 
         SendToPaymentDTO sendToPaymentDTO = SendToPaymentDTO.builder().parkID(barrierLicenseReaderDTO.getParkID()).enterPark(parkingHistory.getStartTime())
-                .leftPark(parkingHistory.getEndTime()).licensePlateNumber(barrierLicenseReaderDTO.getPlateNumber()).build();
+                .leftPark(parkingHistory.getEndTime()).licensePlateNumber(barrierLicenseReaderDTO.getPlateNumber()).useParkyCoins(useParkyCoins).build();
 
         PaymentsDTO paymentsDTO = paymentCommunication.postForPayment(sendToPaymentDTO);
 

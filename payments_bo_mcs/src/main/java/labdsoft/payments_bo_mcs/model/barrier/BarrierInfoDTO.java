@@ -17,6 +17,5 @@ public class BarrierInfoDTO {
     private Calendar leftPark;
     private Long parkID;
     private String licensePlateNumber;
-
-    private boolean useParky;
+    private boolean useParkyCoins;
 }

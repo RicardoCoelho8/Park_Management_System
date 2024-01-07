@@ -70,7 +70,7 @@ public class PaymentsServiceImpl implements PaymentsService {
         rows = rows.stream().map(paymentsTableRow -> p_tr_Repo.save(paymentsTableRow)).collect(Collectors.toCollection(ArrayList::new));
 
         double discount = 0;
-        if (barrierInfoDTO.isUseParky()) {
+        if (barrierInfoDTO.isUseParkyCoins()) {
             float coinsPerPercentDiscount = 100;
 
             float finalCost = (float) rows.stream().mapToDouble(PaymentsTableRow::getPrice).sum();

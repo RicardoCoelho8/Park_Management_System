@@ -41,7 +41,7 @@ public class CustomerBootstrapper implements CommandLineRunner {
 
     private void values(Long customerId, Long customerNif, String customerName, List<String> licensePlates) {
         if (cRepo.findByNif(customerNif) == null) {
-            Customer customer = Customer.builder().nif(customerNif).name(customerName).status(Status.ENABLED)
+            Customer customer = Customer.builder().nif(customerNif).name(customerName).status(Status.ENABLED).useParkyCoins(false)
                     .customerID(customerId).build();
             cRepo.save(customer);
             createSampleVehicle(customer.getCustomerID(), licensePlates);

@@ -100,6 +100,18 @@ class ParkController {
         return new ResponseEntity<>(service.getQuantityOfHistoryByCustomerID(customerID), HttpStatus.OK);
     }
 
+    @Operation(summary = "Change user parky flag by customer id")
+    @PutMapping("/changeUserParkyFlag")
+    public ResponseEntity<String> changeUserParkyFlag(@RequestBody ParkyFlagDTO dto) {
+        return new ResponseEntity<>(service.changeUserParkyFlag(dto), HttpStatus.OK);
+    }
+
+    @Operation(summary = "get user parky flag by customer id")
+    @GetMapping("/getUserParkyFlag/{customerID}")
+    public ResponseEntity<Boolean> getUserParkyFlagByCustomerID(@PathVariable String customerID) {
+        return new ResponseEntity<>(service.getUserParkyFlagByCustomerID(customerID), HttpStatus.OK);
+    }
+
     //--------------Table of Prices-----------------
 
     @Operation(summary = "Get all price table entries by park id")

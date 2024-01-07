@@ -629,6 +629,37 @@
 					"response": []
 				},
 				{
+					"name": "Get user parky flag by customer id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/parks/getUserParkyFlag/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"parks",
+								"getUserParkyFlag",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Enable/Disable parking spot",
 					"request": {
 						"auth": {
@@ -854,6 +885,56 @@
 								"parks",
 								"defineTimePeriods",
 								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change user parky flag by customer id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-UserRole",
+								"value": "{{user_role}}",
+								"type": "text"
+							},
+							{
+								"key": "X-UserId",
+								"value": "{{user_id}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"customerID\": \"4\",\r\n  \"parkyFlag\": true\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/parks/changeUserParkyFlag",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"parks",
+								"changeUserParkyFlag"
 							]
 						}
 					},

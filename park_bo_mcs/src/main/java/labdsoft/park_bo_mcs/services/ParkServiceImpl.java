@@ -3,7 +3,9 @@ package labdsoft.park_bo_mcs.services;
 import jakarta.transaction.Transactional;
 import labdsoft.park_bo_mcs.dtos.park.*;
 import labdsoft.park_bo_mcs.models.park.*;
+import labdsoft.park_bo_mcs.models.user.Customer;
 import labdsoft.park_bo_mcs.repositories.park.*;
+import labdsoft.park_bo_mcs.repositories.user.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,9 @@ public class ParkServiceImpl implements ParkService {
 
     @Autowired
     private ParkRepository parkRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @Autowired
     private ParkingHistoryRepository parkHistoryRepository;
@@ -215,6 +220,15 @@ public class ParkServiceImpl implements ParkService {
     }
 
     @Override
+    public String changeUserParkyFlag(ParkyFlagDTO parkyFlagDTO) {
+        Customer customer = customerRepository.findByCustomerID(Long.parseLong(parkyFlagDTO.getCustomerID()));
+        customer.setUseParkyCoins(parkyFlagDTO.getParkyFlag());
+        customerRepository.save(customer);
+
+        return "Success";
+    }
+
+    @Override
     public List<String> getAllParks() {
         List<String> listParks = new ArrayList<>();
 
@@ -247,6 +261,12 @@ public class ParkServiceImpl implements ParkService {
         }
 
         return listSpotDTO;
+    }
+
+    @Override
+    public Boolean getUserParkyFlagByCustomerID(String customerID) {
+        Customer customer = customerRepository.findByCustomerID(Long.parseLong(customerID));
+        return customer.getUseParkyCoins();
     }
 
     @Override

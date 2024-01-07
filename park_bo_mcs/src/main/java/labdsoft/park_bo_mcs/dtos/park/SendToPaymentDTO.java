@@ -16,4 +16,5 @@ public class SendToPaymentDTO {
     private Calendar leftPark;
     private Long parkID;
     private String licensePlateNumber;
+    private Boolean useParkyCoins;
 }
