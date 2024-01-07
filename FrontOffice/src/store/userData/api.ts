@@ -19,6 +19,7 @@ import {
   AssignParkyCoinsInput,
   UserParkyWalletOutput,
   UserParkyCoinsWalletFlag,
+  ParkReportOutput,
 } from "./types";
 import { getTokenFromLocalStorage } from "../../utils/jwtUtils";
 import { RootState } from "../store";
@@ -201,6 +202,11 @@ export const userDataApi = createApi({
         url: `/parks/getUserParkyFlag/${userId}`,
       }),
     }),
+    getParkUsageReport: build.query<ParkReportOutput, number>({
+      query: (parkId) => ({
+        url: `/parkReport/percentageOf/${parkId}`,
+      }),
+    }),
   }),
 });
 
@@ -229,4 +235,5 @@ export const {
   useGetUserNumberOfVisitsQuery,
   useGetUserParkyWalletQuery,
   useGetUserParkyCoinsFlagQuery,
+  useGetParkUsageReportQuery,
 } = userDataApi;

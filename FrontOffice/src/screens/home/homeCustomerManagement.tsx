@@ -11,7 +11,7 @@ import {
   useGetAllUsersQuery,
   useGetUserNumberOfVisitsQuery,
 } from "../../store/userData/api";
-import { GetAllUsersOutputItem } from "../../store";
+import { GetAllUsersOutputItem, UserRoles } from "../../store";
 import { ModalAssignParkyCoins } from "../../components/ModalAssignParkyCoins/modal";
 
 export const HomeScreenCustomerManager: React.FC = () => {
@@ -39,16 +39,18 @@ export const HomeScreenCustomerManager: React.FC = () => {
       usersList.map((user: GetAllUsersOutputItem, index) => {
         setUserId(user.id.toString());
         setTimeout(() => fetchUserNumberOfVisits(), 10);
-        items.push({
-          id: user.id,
-          name: user.firstName + " " + user.lastName,
-          numberOfVisits: userNumberOfVisits as number,
-          parkyCoins: user.totalParkies,
-          onClickAssignParkyCoins: () => {
-            setShowModalAssignParkyCoins(true);
-            setUsersToAssignParkyCoins([user.id]);
-          },
-        });
+        if (user.role === UserRoles.CUSTOMER) {
+          items.push({
+            id: user.id,
+            name: user.firstName + " " + user.lastName,
+            numberOfVisits: userNumberOfVisits as number,
+            parkyCoins: user.totalParkies,
+            onClickAssignParkyCoins: () => {
+              setShowModalAssignParkyCoins(true);
+              setUsersToAssignParkyCoins([user.id]);
+            },
+          });
+        }
       });
       console.log("items", items);
       setClientUsageItems(items);

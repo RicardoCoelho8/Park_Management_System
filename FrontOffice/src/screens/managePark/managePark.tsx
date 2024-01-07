@@ -12,6 +12,7 @@ import {
   useGetOvernightConfigByParkNumberQuery,
   useChangeOvernightEnableMutation,
   useChangeOvernightFeeMutation,
+  useGetParkUsageReportQuery,
 } from "../../store/userData/api";
 import {
   SpotsDetailsInput,
@@ -20,6 +21,10 @@ import {
 } from "../../store/userData/types";
 import { ModalErrorForm } from "../../components";
 import { NavBar } from "../../components/BottomNavBar/navBar";
+import {
+  GraphData,
+  ReportParkUsageGraph,
+} from "../../components/ReportParkUsage/reportParkUsage";
 
 export const ManageParkScreen: React.FC = () => {
   const userName = useUserName();
@@ -40,6 +45,8 @@ export const ManageParkScreen: React.FC = () => {
   const [showModalError, setShowModalError] = useState(false);
   const [changeOperational, { error: errorOperational, data: newOperational }] =
     useChangeOperationalMutation();
+  const { data: parkUsageData, refetch: fetchParkUsageData } =
+    useGetParkUsageReportQuery(parseInt(parkNumber));
   const [
     changeOvernightEnable,
     { error: errorOvernightEnable, data: newOvernightEnable },
@@ -62,6 +69,23 @@ export const ManageParkScreen: React.FC = () => {
     var selectedParkNumber = event.target.value.split(" ")[1];
     setParkNumber(selectedParkNumber);
   };
+  const [parkUsage, setParkUsage] = useState<GraphData[]>([]);
+  useEffect(() => {
+    if (parkUsageData?.percentageCar !== undefined) {
+      console.log("PARKUSAGEDATA", parkUsageData);
+      const parkUsage: GraphData[] = [];
+      parkUsage.push(
+        { name: "Cars", value: parkUsageData.percentageCar },
+        { name: "Motorcycles", value: parkUsageData.percentageMotorcycle },
+        { name: "Fuel", value: parkUsageData.percentageFuel },
+        { name: "GPL", value: parkUsageData.percentageGPL },
+        { name: "Electric", value: parkUsageData.percentageElectric },
+        { name: "Total", value: parkUsageData.totalVehicles }
+      );
+
+      setParkUsage(parkUsage);
+    }
+  }, [parkUsageData]);
 
   useEffect(() => {
     if (data) {
@@ -134,6 +158,7 @@ export const ManageParkScreen: React.FC = () => {
       refecthTableEntries();
       refecthThresholds();
       refetchOvernightConfigs();
+      fetchParkUsageData();
     } else if (newOperational) {
       refetchSpots();
     } else if (newThresholds) {
@@ -452,300 +477,317 @@ export const ManageParkScreen: React.FC = () => {
               textAlign: "center",
             }}
           >
-            <Table striped bordered hover responsive>
-              <thead>
-                <tr>
-                  <th>Spot Number</th>
-                  <th>Spot Type</th>
-                  <th>Vehicle Type</th>
-                  <th>Floor</th>
-                  <th>Operational</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {spotsCards.map((spot) => (
-                  <tr key={spot.spotNumber}>
-                    <td>{spot.spotNumber}</td>
-                    <td>{spot.spotType}</td>
-                    <td>{spot.spotVehicleType}</td>
-                    <td>{spot.floorLevel}</td>
-                    <td>{spot.operational ? "Yes" : "No"}</td>
-                    <td>
-                      <Form.Check
-                        type="switch"
-                        id={`enable-disable-switch-${spot.spotNumber}`}
-                        label=""
-                        onChange={(e) =>
-                          handleEnableDisable(spot.spotNumber, e.target.checked)
-                        }
-                        checked={spot.operational}
-                      />
-                    </td>
+            {parkNumber !== "" && (
+              <Table striped bordered hover responsive>
+                <thead>
+                  <tr>
+                    <th>Spot Number</th>
+                    <th>Spot Type</th>
+                    <th>Vehicle Type</th>
+                    <th>Floor</th>
+                    <th>Operational</th>
+                    <th>Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </Table>
-          </div>
-          <br />
-          <h3>Time Periods</h3>
-          <div
-            style={{
-              overflowY: "auto",
-              maxHeight: "300px",
-              textAlign: "center",
-            }}
-          >
-            <Table striped bordered hover responsive>
-              <thead>
-                <tr>
-                  <th>Period Start</th>
-                  <th>Period End</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {priceTableEntries.map((entry, index) => (
-                  <React.Fragment key={index}>
-                    <tr>
+                </thead>
+                <tbody>
+                  {spotsCards.map((spot) => (
+                    <tr key={spot.spotNumber}>
+                      <td>{spot.spotNumber}</td>
+                      <td>{spot.spotType}</td>
+                      <td>{spot.spotVehicleType}</td>
+                      <td>{spot.floorLevel}</td>
+                      <td>{spot.operational ? "Yes" : "No"}</td>
                       <td>
-                        <input
-                          id={`period_start_${index}`}
-                          type="string"
-                          className="form-control"
-                          defaultValue={entry.periodStart}
-                          onBlur={() => compareDatesStartEnd(index)}
-                          onChange={(e) => {
-                            entry.periodStart = e.target.value;
-                          }}
+                        <Form.Check
+                          type="switch"
+                          id={`enable-disable-switch-${spot.spotNumber}`}
+                          label=""
+                          onChange={(e) =>
+                            handleEnableDisable(
+                              spot.spotNumber,
+                              e.target.checked
+                            )
+                          }
+                          checked={spot.operational}
                         />
-                      </td>
-                      <td>
-                        <input
-                          id={`period_end_${index}`}
-                          type="string"
-                          className="form-control"
-                          defaultValue={entry.periodEnd}
-                          onBlur={() => compareDatesStartEnd(index)}
-                          onChange={(e) => {
-                            entry.periodEnd = e.target.value;
-                          }}
-                        />
-                      </td>
-                      <td>
-                        <Button
-                          type="button"
-                          onClick={() => handleDeleteRowPriceTable(index)}
-                        >
-                          Delete
-                        </Button>
                       </td>
                     </tr>
+                  ))}
+                </tbody>
+              </Table>
+            )}
+          </div>
+          {parkNumber !== "" && (
+            <>
+              <h3>Time Periods</h3>
+              <div
+                style={{
+                  overflowY: "auto",
+                  maxHeight: "300px",
+                  textAlign: "center",
+                }}
+              >
+                <Table striped bordered hover responsive>
+                  <thead>
                     <tr>
-                      <td colSpan={3}>
-                        <Table>
-                          <thead>
-                            <tr>
-                              <th>Threshold Minutes</th>
-                              <th>Automobiles</th>
-                              <th>Motorcycles</th>
-                              <th></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {entry.thresholds.map(
-                              (threshold: ThresholdCost, i) => (
-                                <tr key={i}>
-                                  <td>
-                                    <input
-                                      type="number"
-                                      className="form-control"
-                                      defaultValue={threshold.thresholdMinutes}
-                                      onChange={(e) => {
-                                        e.target.value < 0
-                                          ? (e.target.value = 0)
-                                          : (e.target.value = Number.parseInt(
-                                              e.target.value
-                                            ));
-                                        threshold.thresholdMinutes =
-                                          e.target.value;
-                                      }}
-                                    />
-                                  </td>
-                                  <td>
-                                    <input
-                                      type="number"
-                                      className="form-control"
-                                      defaultValue={
-                                        threshold.costPerMinuteAutomobiles
-                                      }
-                                      onChange={(e) => {
-                                        e.target.value < 0
-                                          ? (e.target.value = 0)
-                                          : (e.target.value = Number.parseFloat(
-                                              e.target.value
-                                            ));
-                                        threshold.costPerMinuteAutomobiles =
-                                          e.target.value;
-                                      }}
-                                    />
-                                  </td>
-                                  <td>
-                                    <input
-                                      type="number"
-                                      className="form-control"
-                                      defaultValue={
-                                        threshold.costPerMinuteMotorcycles
-                                      }
-                                      onChange={(e) => {
-                                        e.target.value < 0
-                                          ? (e.target.value = 0)
-                                          : (e.target.value = Number.parseFloat(
-                                              e.target.value
-                                            ));
-                                        threshold.costPerMinuteMotorcycles =
-                                          e.target.value;
-                                      }}
-                                    />
-                                  </td>
-                                  <td>
+                      <th>Period Start</th>
+                      <th>Period End</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {priceTableEntries.map((entry, index) => (
+                      <React.Fragment key={index}>
+                        <tr>
+                          <td>
+                            <input
+                              id={`period_start_${index}`}
+                              type="string"
+                              className="form-control"
+                              defaultValue={entry.periodStart}
+                              onBlur={() => compareDatesStartEnd(index)}
+                              onChange={(e) => {
+                                entry.periodStart = e.target.value;
+                              }}
+                            />
+                          </td>
+                          <td>
+                            <input
+                              id={`period_end_${index}`}
+                              type="string"
+                              className="form-control"
+                              defaultValue={entry.periodEnd}
+                              onBlur={() => compareDatesStartEnd(index)}
+                              onChange={(e) => {
+                                entry.periodEnd = e.target.value;
+                              }}
+                            />
+                          </td>
+                          <td>
+                            <Button
+                              type="button"
+                              onClick={() => handleDeleteRowPriceTable(index)}
+                            >
+                              Delete
+                            </Button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colSpan={3}>
+                            <Table>
+                              <thead>
+                                <tr>
+                                  <th>Threshold Minutes</th>
+                                  <th>Automobiles</th>
+                                  <th>Motorcycles</th>
+                                  <th></th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {entry.thresholds.map(
+                                  (threshold: ThresholdCost, i) => (
+                                    <tr key={i}>
+                                      <td>
+                                        <input
+                                          type="number"
+                                          className="form-control"
+                                          defaultValue={
+                                            threshold.thresholdMinutes
+                                          }
+                                          onChange={(e) => {
+                                            e.target.value < 0
+                                              ? (e.target.value = 0)
+                                              : (e.target.value =
+                                                  Number.parseInt(
+                                                    e.target.value
+                                                  ));
+                                            threshold.thresholdMinutes =
+                                              e.target.value;
+                                          }}
+                                        />
+                                      </td>
+                                      <td>
+                                        <input
+                                          type="number"
+                                          className="form-control"
+                                          defaultValue={
+                                            threshold.costPerMinuteAutomobiles
+                                          }
+                                          onChange={(e) => {
+                                            e.target.value < 0
+                                              ? (e.target.value = 0)
+                                              : (e.target.value =
+                                                  Number.parseFloat(
+                                                    e.target.value
+                                                  ));
+                                            threshold.costPerMinuteAutomobiles =
+                                              e.target.value;
+                                          }}
+                                        />
+                                      </td>
+                                      <td>
+                                        <input
+                                          type="number"
+                                          className="form-control"
+                                          defaultValue={
+                                            threshold.costPerMinuteMotorcycles
+                                          }
+                                          onChange={(e) => {
+                                            e.target.value < 0
+                                              ? (e.target.value = 0)
+                                              : (e.target.value =
+                                                  Number.parseFloat(
+                                                    e.target.value
+                                                  ));
+                                            threshold.costPerMinuteMotorcycles =
+                                              e.target.value;
+                                          }}
+                                        />
+                                      </td>
+                                      <td>
+                                        <Button
+                                          type="button"
+                                          onClick={() =>
+                                            handleDeleteRowPriceTableThresholdCost(
+                                              index,
+                                              i
+                                            )
+                                          }
+                                        >
+                                          Delete
+                                        </Button>
+                                      </td>
+                                    </tr>
+                                  )
+                                )}
+                                <tr>
+                                  <td colSpan={4}>
                                     <Button
                                       type="button"
                                       onClick={() =>
-                                        handleDeleteRowPriceTableThresholdCost(
-                                          index,
-                                          i
-                                        )
+                                        addRowPriceTableThresholdCost(index)
                                       }
                                     >
-                                      Delete
+                                      New Threshold Cost
                                     </Button>
                                   </td>
                                 </tr>
-                              )
-                            )}
-                            <tr>
-                              <td colSpan={4}>
-                                <Button
-                                  type="button"
-                                  onClick={() =>
-                                    addRowPriceTableThresholdCost(index)
-                                  }
-                                >
-                                  New Threshold Cost
-                                </Button>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </Table>
+                              </tbody>
+                            </Table>
+                          </td>
+                        </tr>
+                      </React.Fragment>
+                    ))}
+                    <tr>
+                      <td colSpan={3}>
+                        <Button
+                          type="button"
+                          onClick={() => addRowPriceTable()}
+                        >
+                          New Time Period
+                        </Button>
                       </td>
                     </tr>
-                  </React.Fragment>
-                ))}
-                <tr>
-                  <td colSpan={3}>
-                    <Button type="button" onClick={() => addRowPriceTable()}>
-                      New Time Period
-                    </Button>
-                  </td>
-                </tr>
-              </tbody>
-            </Table>
-          </div>
-          <Button
-            onClick={() => handleChangeTimePeriods()}
-            style={{ width: "100%" }}
-          >
-            Change Time Peridos
-          </Button>
-          <br />
-          <h3>Thresholds</h3>
-          <div className="input-group mb-3">
-            <span className="input-group-text">
-              <i className="bi bi-coin"></i>/H
-            </span>
-            <input
-              id={`input-${thresholdsHour}`}
-              type="number"
-              className="form-control"
-              placeholder={
-                thresholdsHour == -1 ? "Per hour" : `${thresholdsHour}`
-              }
-              onChange={(e) =>
-                setThresholdsHour(
-                  e.target.value === "" ? -1 : Number(e.target.value)
-                )
-              }
-            />
-            <span className="input-group-text">
-              <i className="bi bi-coin"></i>/M
-            </span>
-            <input
-              id={`input-${thresholdsMin}`}
-              type="number"
-              className="form-control"
-              placeholder={
-                thresholdsMin == -1 ? "Per minute" : `${thresholdsMin}`
-              }
-              onChange={(e) =>
-                setThresholdsMin(
-                  e.target.value === "" ? -1 : Number(e.target.value)
-                )
-              }
-            />
-          </div>
-          <Button
-            onClick={() =>
-              handleChangeThresholds(
-                Number(`${thresholdsHour}`),
-                Number(`${thresholdsMin}`)
-              )
-            }
-            style={{ width: "100%" }}
-          >
-            Change Thresholds
-          </Button>
-          <br />
-          <h3>Overnight fee config</h3>
-          <div className="input-group mb-3">
-            <Form.Check
-              type="switch"
-              id={`enable-disable-switch-overnightfee`}
-              label=""
-              onChange={(e) =>
-                handleEnableDisableOvernightConfig(e.target.checked)
-              }
-              checked={overnightEnabled}
-            />
-            <input
-              id={`input-overnightprice`}
-              type="number"
-              className="form-control"
-              placeholder={
-                overnightFee == -1 ? "Overnight Price" : `${overnightFee}`
-              }
-              onChange={(e) =>
-                setOvernightFee(
-                  e.target.value === "" ? -1 : Number(e.target.value)
-                )
-              }
-              hidden={!overnightEnabled}
-            />
-          </div>
-          <Button
-            onClick={() => handleChangeOvernightFee(overnightFee)}
-            style={{ width: "100%" }}
-          >
-            Change Overnight fee
-          </Button>
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
+                  </tbody>
+                </Table>
+              </div>{" "}
+              <Button
+                onClick={() => handleChangeTimePeriods()}
+                style={{ width: "100%" }}
+              >
+                Change Time Peridos
+              </Button>
+            </>
+          )}
+          {parkNumber !== "" && (
+            <>
+              <h3>Thresholds</h3>
+              <div className="input-group mb-3">
+                <span className="input-group-text">
+                  <i className="bi bi-coin"></i>/H
+                </span>
+                <input
+                  id={`input-${thresholdsHour}`}
+                  type="number"
+                  className="form-control"
+                  placeholder={
+                    thresholdsHour == -1 ? "Per hour" : `${thresholdsHour}`
+                  }
+                  onChange={(e) =>
+                    setThresholdsHour(
+                      e.target.value === "" ? -1 : Number(e.target.value)
+                    )
+                  }
+                />
+                <span className="input-group-text">
+                  <i className="bi bi-coin"></i>/M
+                </span>
+                <input
+                  id={`input-${thresholdsMin}`}
+                  type="number"
+                  className="form-control"
+                  placeholder={
+                    thresholdsMin == -1 ? "Per minute" : `${thresholdsMin}`
+                  }
+                  onChange={(e) =>
+                    setThresholdsMin(
+                      e.target.value === "" ? -1 : Number(e.target.value)
+                    )
+                  }
+                />
+              </div>
+              <Button
+                onClick={() =>
+                  handleChangeThresholds(
+                    Number(`${thresholdsHour}`),
+                    Number(`${thresholdsMin}`)
+                  )
+                }
+                style={{ width: "100%" }}
+              >
+                Change Thresholds
+              </Button>{" "}
+            </>
+          )}
+          {parkNumber !== "" && (
+            <>
+              <h3>Overnight fee config</h3>
+              <div className="input-group mb-3">
+                <Form.Check
+                  type="switch"
+                  id={`enable-disable-switch-overnightfee`}
+                  label=""
+                  onChange={(e) =>
+                    handleEnableDisableOvernightConfig(e.target.checked)
+                  }
+                  checked={overnightEnabled}
+                />
+                <input
+                  id={`input-overnightprice`}
+                  type="number"
+                  className="form-control"
+                  placeholder={
+                    overnightFee == -1 ? "Overnight Price" : `${overnightFee}`
+                  }
+                  onChange={(e) =>
+                    setOvernightFee(
+                      e.target.value === "" ? -1 : Number(e.target.value)
+                    )
+                  }
+                  hidden={!overnightEnabled}
+                />
+              </div>
+              <Button
+                onClick={() => handleChangeOvernightFee(overnightFee)}
+                style={{ width: "100%" }}
+              >
+                Change Overnight fee
+              </Button>{" "}
+            </>
+          )}
         </form>
       </Container>
+      {parkNumber !== "" && <ReportParkUsageGraph data={parkUsage} />}
       <ModalErrorForm
         showModal={showModalError}
         setShowModal={setShowModalError}

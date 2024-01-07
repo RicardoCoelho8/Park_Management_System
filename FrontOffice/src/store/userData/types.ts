@@ -174,6 +174,15 @@ export interface UserParkyCoinsWalletFlag {
   customerID: string;
   parkyFlag: boolean;
 }
+
+export interface ParkReportOutput {
+  percentageCar: number;
+  percentageMotorcycle: number;
+  percentageFuel: number;
+  percentageGPL: number;
+  percentageElectric: number;
+  totalVehicles: number;
+}
 export enum UserRoles {
   PARK_MANAGER = "PARK_MANAGER",
   CUSTOMER = "CUSTOMER",

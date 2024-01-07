@@ -34,7 +34,9 @@ export const HomeScreenParkManager: React.FC = () => {
           <h3>{userName}</h3>
         </Container>
       </Container>
-      <ManageParkScreen />
+      <Container>
+        <ManageParkScreen />
+      </Container>
       <NavBar />
     </>
   );
