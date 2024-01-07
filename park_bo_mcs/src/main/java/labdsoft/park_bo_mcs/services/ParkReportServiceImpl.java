@@ -153,12 +153,22 @@ public class ParkReportServiceImpl implements ParkReportService {
             auxTotalElectric = auxTotalElectric + parkReport.getTotalElectrics();
         }
 
-        return ParkPercentageReportDTO.builder().totalVehicles(auxTotal)
-                .percentageCar((auxTotalCar/auxTotal)*100)
-                .percentageMotorcycle((auxTotalMotor/auxTotal)*100)
-                .percentageFuel((auxTotalFuel/auxTotal)*100)
-                .percentageGPL((auxTotalGas/auxTotal)*100)
-                .percentageElectric((auxTotalElectric/auxTotal)*100)
-                .build();
+        if (auxTotal != 0.0) {
+            return ParkPercentageReportDTO.builder().totalVehicles(auxTotal)
+                    .percentageCar((auxTotalCar/auxTotal)*100)
+                    .percentageMotorcycle((auxTotalMotor/auxTotal)*100)
+                    .percentageFuel((auxTotalFuel/auxTotal)*100)
+                    .percentageGPL((auxTotalGas/auxTotal)*100)
+                    .percentageElectric((auxTotalElectric/auxTotal)*100)
+                    .build();
+        } else {
+            return ParkPercentageReportDTO.builder().totalVehicles(auxTotal)
+                    .percentageCar(0.0)
+                    .percentageMotorcycle(0.0)
+                    .percentageFuel(0.0)
+                    .percentageGPL(0.0)
+                    .percentageElectric(0.0)
+                    .build();
+        }
     }
 }
