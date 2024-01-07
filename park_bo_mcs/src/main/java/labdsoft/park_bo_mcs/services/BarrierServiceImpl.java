@@ -315,7 +315,7 @@ public class BarrierServiceImpl implements BarrierService {
 
             processParkTimeReport(parkingHistory);
 
-            return paymentsDTO.getFinalPrice() + "€! With a discount of " + paymentsDTO.getDiscount() + "%.";
+            return paymentsDTO.getFinalPrice() + "€! With a discount of " + paymentsDTO.getDiscount() + "€.";
         } else {
             return 0.0 + "€!";
         }
