@@ -15,6 +15,7 @@ export const LoginScreen: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [loginUser, { data, error }] = useLoginMutation();
   const navigate = useNavigate();
+  const innerWidth = window.innerWidth;
 
   useEffect(() => {
     if (data) {
@@ -47,17 +48,21 @@ export const LoginScreen: React.FC = () => {
     review image drag 
     */
     <>
-      <Container style={{ padding: "20px" }}>
-        <Container style={{ display: "flex", height: "auto" }}>
+      <Container
+        style={{
+          padding: "20px",
+          display: "flex",
+          flexDirection: innerWidth > 1024 ? "row" : "column",
+          alignItems: "center",
+        }}
+      >
+        <Container style={{ height: "auto" }}>
           <Image src={logo} fluid style={{ width: "100%" }} />
         </Container>
         {/* Form */}
         <Container>
-          <Form style={{ display: "flex", flexDirection: "column" }}>
-            <Form.Group
-              controlId="formBasicEmail"
-              style={{ display: "flex", flexDirection: "column" }}
-            >
+          <Form>
+            <Form.Group controlId="formBasicEmail">
               <Form.Label style={{ margin: "0 0 5px 0" }}>
                 Email address
               </Form.Label>
@@ -74,10 +79,7 @@ export const LoginScreen: React.FC = () => {
               />
             </Form.Group>
 
-            <Form.Group
-              controlId="formBasicPassword"
-              style={{ display: "flex", flexDirection: "column" }}
-            >
+            <Form.Group controlId="formBasicPassword">
               <Form.Label style={{ margin: "0 0 5px 0" }}>Password</Form.Label>
               <Form.Control
                 style={{
@@ -94,22 +96,24 @@ export const LoginScreen: React.FC = () => {
             <Button
               variant="primary"
               onClick={handleOnClickSubmit}
-              style={{ marginTop: "0.313rem" }}
+              style={{ marginTop: "0.313rem", width: "100%" }}
             >
               Sign in
             </Button>
           </Form>
         </Container>
-        <Container
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "0.625rem",
-          }}
-        >
-          <p style={{ marginRight: "0.313rem" }}> Not registered yet? </p>
-          <Link to={"/register"}>Register Here!</Link>
-        </Container>
+        {innerWidth < 1024 && (
+          <Container
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "0.625rem",
+            }}
+          >
+            <p style={{ marginRight: "0.313rem" }}> Not registered yet? </p>
+            <Link to={"/register"}>Register Here!</Link>
+          </Container>
+        )}
       </Container>
       <ModalErrorForm showModal={showModal} setShowModal={setShowModal} />
     </>

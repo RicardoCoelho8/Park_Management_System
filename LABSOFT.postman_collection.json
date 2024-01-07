@@ -598,6 +598,37 @@
 					"response": []
 				},
 				{
+					"name": "Get quantity of history by customer id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/parks/getQuantityOfHistoryByCustomerID/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"parks",
+								"getQuantityOfHistoryByCustomerID",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Enable/Disable parking spot",
 					"request": {
 						"auth": {

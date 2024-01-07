@@ -94,6 +94,12 @@ class ParkController {
         return new ResponseEntity<>(service.changeOvernightFeePriceByParkNumber(dto), HttpStatus.OK);
     }
 
+    @Operation(summary = "Get quantity of history by customer id")
+    @GetMapping("/getQuantityOfHistoryByCustomerID/{customerID}")
+    public ResponseEntity<Integer> getQuantityOfHistoryByCustomerID(@PathVariable String customerID) {
+        return new ResponseEntity<>(service.getQuantityOfHistoryByCustomerID(customerID), HttpStatus.OK);
+    }
+
     //--------------Table of Prices-----------------
 
     @Operation(summary = "Get all price table entries by park id")

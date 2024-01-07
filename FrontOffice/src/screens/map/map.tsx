@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { MapLocationCard } from "../../components/MapLocationCard/mapLocationCard";
+
 import { BottomNavBar } from "../../components/BottomNavBar/bottomNavBar";
 import { Container } from "react-bootstrap";
 import { useUserId } from "../../store/userData/useUserId";
@@ -13,6 +13,7 @@ import {
   UserNearbyParksType,
 } from "../../store";
 import { MapDisplay, MapMarker } from "../../components/MapDisplay/mapDisplay";
+import { NavBar } from "../../components/BottomNavBar/navBar";
 
 export const MapScreen: React.FC = () => {
   let sortedParks: UserNearbyParksType[] = [];
@@ -115,7 +116,7 @@ export const MapScreen: React.FC = () => {
           />
         )}
       </Container>
-      <BottomNavBar />
+      <NavBar />
     </>
   );
 };

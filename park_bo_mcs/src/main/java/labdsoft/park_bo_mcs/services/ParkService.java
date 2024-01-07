@@ -15,6 +15,7 @@ public interface ParkService {
     String changeOvernightFeePriceByParkNumber(OvernightPriceDTO dto);
     ParkyConfigDTO getParkyThresholds(String parkNumber);
     OvernightConfigDTO getOvernightConfigByParkNumber(String parkNumber);
+    Integer getQuantityOfHistoryByCustomerID(String customerID);
     void createPark(String string);
     List<String> getAllParks();
     List<SpotDTO> getSpotsByParkNumber(String parkNumber);
