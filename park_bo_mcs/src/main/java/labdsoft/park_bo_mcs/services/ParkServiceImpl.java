@@ -202,6 +202,13 @@ public class ParkServiceImpl implements ParkService {
     }
 
     @Override
+    public Integer getQuantityOfHistoryByCustomerID(String customerID) {
+        List<ParkingHistory> listParkHistory = parkHistoryRepository.findAllByCustomerID(Long.parseLong(customerID));
+
+        return listParkHistory.size();
+    }
+
+    @Override
     public void createPark(String string) {
         Park park = Park.builder().build();
         parkRepository.save(park);
