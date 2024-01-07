@@ -209,25 +209,40 @@ export const ManageParkScreen: React.FC = () => {
 
         const isConflict = (start1: string, end1: string, start2: string, end2: string) => {
             // Convert time strings to numerical representations
-            const start1Numeric = convertToNumeric(start1);
-            const end1Numeric = convertToNumeric(end1);
-            const start2Numeric = convertToNumeric(start2);
-            const end2Numeric = convertToNumeric(end2);
+            const start1Numeric: number = convertToNumeric(start1);
+            const end1Numeric: number = convertToNumeric(end1);
+            const start2Numeric: number = convertToNumeric(start2);
+            const end2Numeric: number = convertToNumeric(end2);
 
-            // Check for conflicts
+            //22 05 04 23
 
-            if (start1Numeric <= end1Numeric && start2Numeric <= end2Numeric) {
-                // Both periods are in the same day
-                return end1Numeric > start2Numeric && start1Numeric < end2Numeric;
-            } else if (start1Numeric > end1Numeric && start2Numeric > end2Numeric) {
-                // Both periods are in the same day (after midnight)
-                return end1Numeric > start2Numeric || start1Numeric < end2Numeric;
+            if (start1Numeric >= 720 && end1Numeric <= 720) {
+                if (start2Numeric >= 720 && end2Numeric <= 720) {
+                    if (start2Numeric >= end1Numeric && start2Numeric <= start1Numeric) {
+                        return false;
+                    }
+                    if (end2Numeric >= end1Numeric && end2Numeric <= start1Numeric) {
+                        return false;
+                    }
+                    return true
+                } else{
+                    if (start2Numeric < start1Numeric && start2Numeric < end1Numeric) {
+                        return true;
+                    }
+                    if (end2Numeric > start1Numeric && end2Numeric < end1Numeric+ (24*60)) {
+                        return true;
+                    }
+                }
             } else {
-                // One period spans across midnight
-                return true;
-            }
 
-        };
+                    if (start2Numeric > start1Numeric && start2Numeric < end1Numeric) {
+                        return true;
+                    }
+                    if (end2Numeric > start1Numeric && end2Numeric < end1Numeric) {
+                        return true;
+                    }
+            }
+        }
 
 
         const handleChangeTimePeriods = () => {
