@@ -12,8 +12,7 @@ Special thanks to all the team members whose dedication and expertise were cruci
 * Member 5: Rui Soares
 
 ## Documentation
-For more information on Park Management System, please refer to our comprehensive documentation included in this repository.         
-[System details and team details documentation](./Sprint%20A)
+For more information on Park Management System, please refer to our comprehensive documentation included in the Wiki repository.        
 
 ## How to Use and Clone the System
 ### Prerequisites
