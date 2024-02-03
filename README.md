@@ -1,6 +1,6 @@
 ## Overview
 
-This is a project developed to manage Park20 parks.
+This is a project developed to manage parks.
 
 ## Inside the Wiki repository you will find this content
 
